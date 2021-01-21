@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import 'react-native-gesture-handler';
 import HomeScreen from '../screens/Home/HomeScreenView';
 import SettingsScreen from '../screens/Settings/SettingsScreenView';
 
