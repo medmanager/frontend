@@ -1,14 +1,19 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
+import FloatingActionButton from '../../components/FloatingActionButton';
 
 function HomeScreen() {
   return (
-    <SafeAreaView>
+    <RootView>
       <BlueText>Home Screen</BlueText>
-    </SafeAreaView>
+      <FloatingActionButton />
+    </RootView>
   );
 }
+
+const RootView = styled.SafeAreaView`
+  flex: 1;
+`;
 
 const BlueText = styled.Text`
   font-size: 18px;
