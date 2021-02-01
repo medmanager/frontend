@@ -1,4 +1,3 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import 'react-native-gesture-handler';
@@ -12,9 +11,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <BottomSheetModalProvider>
-          <Root />
-        </BottomSheetModalProvider>
+        <Root />
       </NavigationContainer>
     </SafeAreaProvider>
   );
