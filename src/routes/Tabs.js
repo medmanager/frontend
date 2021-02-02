@@ -5,6 +5,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import AddMedicationButton from '../screens/AddMedication/AddMedicationButton';
 import HomeScreen from '../screens/Home/HomeView';
 import ProfileScreen from '../screens/Profile/ProfileView';
+import { Colors } from '../utils';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,7 +32,8 @@ const Tabs = ({ navigation, route }) => {
   }, [navigation, route]);
 
   return (
-    <Tab.Navigator tabBarOptions={{ showLabel: false }}>
+    <Tab.Navigator
+      tabBarOptions={{ showLabel: false, activeTintColor: Colors.blue[500] }}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}

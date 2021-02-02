@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
+import { Colors } from '../../utils';
 
 const AddMedicationButton = () => {
   const navigator = useNavigation();
@@ -12,7 +13,7 @@ const AddMedicationButton = () => {
 
   return (
     <Button onPress={handleOnPress} activeOpacity={0.8}>
-      <Icon name="plus" size={30} color="blue" />
+      <Icon name="plus" size={30} color={Colors.blue[500]} />
     </Button>
   );
 };

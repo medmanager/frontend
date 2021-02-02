@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
+import { Colors } from '../utils';
 
 const Button = ({
   text,
@@ -29,7 +30,7 @@ const Button = ({
 };
 
 const ButtonContainer = styled.TouchableOpacity`
-  background-color: grey;
+  background-color: ${Colors.blue[500]};
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 16px;

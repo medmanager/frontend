@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import RadioButtonGroup from '../../components/RadioButtonGroup';
+import { Colors } from '../../utils';
 
 const AddMedicationReminderView = () => {
   const [selected, setSelected] = useState('onTime');
@@ -20,7 +21,7 @@ const AddMedicationReminderView = () => {
     },
     {
       label: '30 minutes early',
-      value: 'thiryMinutesEarly',
+      value: 'thirtyMinutesEarly',
     },
     {
       label: '1 hour early',
@@ -58,8 +59,8 @@ const OuterCircle = styled.View`
   width: 24px;
   border-radius: 12px;
   border-width: 2px;
-  border-color: #000;
-  background-color: #000;
+  border-color: ${Colors.blue[500]};
+  background-color: ${Colors.blue[500]};
   align-items: center;
   justify-content: center;
   margin-right: 16px;
@@ -81,7 +82,7 @@ const CustomFrequencyButton = styled.TouchableOpacity`
 
 const Label = styled.Text`
   font-size: 18px;
-  color: #000;
+  color: ${Colors.blue[500]};
 `;
 
 export default AddMedicationReminderView;

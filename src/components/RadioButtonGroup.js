@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import { Colors } from '../utils';
 
 const RadioButton = (props) => {
   return (
@@ -14,7 +15,7 @@ const OuterCircle = styled.View`
   width: 24px;
   border-radius: 12px;
   border-width: 2px;
-  border-color: #000;
+  border-color: ${Colors.blue[500]};
   align-items: center;
   justify-content: center;
   margin-right: 16px;
@@ -24,7 +25,7 @@ const SelectedCircle = styled.View`
   height: 14px;
   width: 14px;
   border-radius: 6px;
-  background-color: #000;
+  background-color: ${Colors.blue[500]};
 `;
 
 const RadioButtonGroup = ({ data, selectedValue, onChange }) => {
@@ -67,7 +68,7 @@ const RadioButtonItem = styled.TouchableOpacity`
 
 const Label = styled.Text`
   font-size: 18px;
-  color: #000;
+  color: ${Colors.gray[900]};
 `;
 
 export default RadioButtonGroup;
