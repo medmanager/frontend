@@ -1,10 +1,8 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import SegmentedControl from '@react-native-community/segmented-control';
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
 
 const AddMedicationTimeView = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [time, setTime] = useState(new Date());
 
   const onChange = (event, selectedTime) => {
@@ -16,13 +14,6 @@ const AddMedicationTimeView = () => {
     <SafeArea>
       <Container>
         <Label>Frequency per Day</Label>
-        <Control
-          values={['Once', 'Twice', 'Custom']}
-          selectedIndex={selectedIndex}
-          onChange={(event) => {
-            setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
-          }}
-        />
         <Label>Time</Label>
         <DateTimePicker
           testID="dateTimePicker"
@@ -44,12 +35,6 @@ const SafeArea = styled.SafeAreaView`
 
 const Container = styled.View`
   padding: 16px;
-`;
-
-const Control = styled(SegmentedControl)`
-  margin-top: 10px;
-  margin-bottom: 10px;
-  height: 50px;
 `;
 
 const Label = styled.Text`

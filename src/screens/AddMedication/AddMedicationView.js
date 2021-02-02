@@ -1,4 +1,3 @@
-import SegmentedControl from '@react-native-community/segmented-control';
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
@@ -25,13 +24,6 @@ const AddMedicationView = ({ navigator }) => {
               multiline
               numberOfLines={10}
               label="Description"
-            />
-            <Control
-              values={['Non-critical', 'Critical']}
-              selectedIndex={selectedIndex}
-              onChange={(event) => {
-                setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
-              }}
             />
             <ClickThroughSetting
               setting="Frequency"
@@ -81,12 +73,6 @@ const Row = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
-`;
-
-const Control = styled(SegmentedControl)`
-  margin-top: 10px;
-  margin-bottom: 10px;
-  height: 50px;
 `;
 
 const ButtonContainer = styled.View`

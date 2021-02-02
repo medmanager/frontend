@@ -10,10 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^2",
     "@react-native-community/datetimepicker": "^3.0.9",
     "@react-native-community/masked-view": "^0.1.10",
-    "@react-native-community/segmented-control": "^2.2.2",
     "@react-native-picker/picker": "^1.9.10",
     "@react-navigation/bottom-tabs": "^5.11.3",
     "@react-navigation/native": "^5.9.0",
