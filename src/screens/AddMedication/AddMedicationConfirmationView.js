@@ -17,7 +17,7 @@ const AddMedicationConfirmationView = ({ route, navigation }) => {
     notes,
     selectedFrequency,
     selectedTimes,
-  } = route;
+  } = route.params;
 
   return (
     <Container>

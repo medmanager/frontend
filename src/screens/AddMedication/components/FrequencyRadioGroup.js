@@ -1,4 +1,5 @@
 import React from 'react';
+import shallow from 'zustand/shallow';
 import RadioButtonGroup from '../../../components/RadioButtonGroup';
 import { useAddMedicationSettings } from '../../../store/useAddMedicationSettings';
 
@@ -7,17 +8,20 @@ const FrequencyRadioGroup = () => {
     frequencies,
     selectedFrequency,
     setSelectedFrequency,
-  } = useAddMedicationSettings((state) => ({
-    frequencies: state.frequencies,
-    selectedFrequency: state.selectedFrequency,
-    setSelectedFrequency: state.setSelectedFrequency,
-  }));
+  } = useAddMedicationSettings(
+    (state) => ({
+      frequencies: state.frequencies,
+      selectedFrequency: state.selectedFrequency,
+      setSelectedFrequency: state.setSelectedFrequency,
+    }),
+    shallow,
+  );
 
   return (
     <RadioButtonGroup
       data={frequencies}
       selectedId={selectedFrequency}
-      onChange={(value) => setSelectedFrequency(value.id)}
+      onChange={(id) => setSelectedFrequency(id)}
     />
   );
 };

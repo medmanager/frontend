@@ -4,6 +4,7 @@ import React, { Fragment } from 'react';
 import { Switch, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
+import shallow from 'zustand/shallow';
 import { useAddMedicationSettings } from '../../../store/useAddMedicationSettings';
 import { Colors, range } from '../../../utils';
 
@@ -42,15 +43,18 @@ const TimeMultiSelect = () => {
     setMedicationAmount,
     setReminderTime,
     toggleReminder,
-  } = useAddMedicationSettings((state) => ({
-    times: state.times,
-    selectedTimes: state.selectedTimes,
-    amountUnit: state.amountUnit,
-    toggleSelectTime: state.toggleSelectTime,
-    setMedicationAmount: state.setMedicationAmount,
-    setReminderTime: state.setReminderTime,
-    toggleReminder: state.toggleReminder,
-  }));
+  } = useAddMedicationSettings(
+    (state) => ({
+      times: state.times,
+      selectedTimes: state.selectedTimes,
+      amountUnit: state.amountUnit,
+      toggleSelectTime: state.toggleSelectTime,
+      setMedicationAmount: state.setMedicationAmount,
+      setReminderTime: state.setReminderTime,
+      toggleReminder: state.toggleReminder,
+    }),
+    shallow,
+  );
 
   const itemStyle = {
     height: 45,
@@ -60,9 +64,8 @@ const TimeMultiSelect = () => {
 
   return (
     <Container>
-      {times.map(({ value, label }) => {
-        const selected = selectedTimes.includes(value.id);
-        const id = value.id;
+      {times.map(({ value, label, id }) => {
+        const selected = selectedTimes.includes(id);
 
         return (
           <View key={id}>

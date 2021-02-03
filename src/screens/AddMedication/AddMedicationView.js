@@ -2,6 +2,7 @@ import { Formik } from 'formik';
 import React, { Fragment } from 'react';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
+import shallow from 'zustand/shallow';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Label from '../../components/Label';
@@ -19,12 +20,15 @@ const AddMedicationView = ({ navigation }) => {
     amount: null,
     notes: '',
   };
-  const settings = useAddMedicationSettings((state) => ({
-    selectedFrequency: state.selectedFrequency,
-    selectedTimes: state.selectedTimes,
-    amountUnit: state.amountUnit,
-    dosageUnit: state.dosageUnit,
-  }));
+  const settings = useAddMedicationSettings(
+    (state) => ({
+      selectedFrequency: state.selectedFrequency,
+      selectedTimes: state.selectedTimes,
+      amountUnit: state.amountUnit,
+      dosageUnit: state.dosageUnit,
+    }),
+    shallow,
+  );
 
   return (
     <View>

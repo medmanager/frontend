@@ -16,11 +16,17 @@ const Root = () => {
     <RootStack.Navigator
       mode="modal"
       initialRouteName="Main"
-      screenOptions={TransitionPresets.ModalSlideFromBottomIOS}
+      screenOptions={{
+        ...TransitionPresets.ModalSlideFromBottomIOS,
+        animationEnabled: false,
+      }}
       headerMode="none">
       <RootStack.Screen
         name="AddMedicationModal"
         component={AddMedicationModal}
+        options={{
+          animationEnabled: true,
+        }}
       />
       <RootStack.Screen name="Main" component={Main} />
     </RootStack.Navigator>

@@ -1,21 +1,24 @@
+import produce from 'immer';
 import { create, immer } from '.';
-import { days, nthDay, uuidv4 } from '../utils';
+import { capitalize, days, getStatusText, nthDay } from '../utils';
 
 const now = new Date();
-const frequencyChoices = [
+const frequencyRadioInputChoices = [
   {
+    id: 0,
+    type: 'RadioButton',
     label: 'Daily',
     value: {
-      id: uuidv4(),
       interval: 1,
       intervalUnits: 'days',
       weeksdays: null,
     },
   },
   {
-    label: `Weekly (${days[now.getDay()]})`,
+    id: 1,
+    type: 'RadioButton',
+    label: `Weekly (${capitalize(days[now.getDay()])})`,
     value: {
-      id: uuidv4(),
       interval: 1,
       intervalUnits: 'weeks',
       weekdays: {
@@ -24,9 +27,10 @@ const frequencyChoices = [
     },
   },
   {
-    label: `Bi-Weekly (${days[now.getDay()]})`,
+    id: 2,
+    type: 'RadioButton',
+    label: `Bi-Weekly (${capitalize(days[now.getDay()])})`,
     value: {
-      id: uuidv4(),
       interval: 2,
       intervalUnits: 'weeks',
       weekdays: {
@@ -35,9 +39,10 @@ const frequencyChoices = [
     },
   },
   {
+    id: 3,
+    type: 'RadioButton',
     label: `Monthly (the ${nthDay(now)})`,
     value: {
-      id: uuidv4(),
       interval: 4,
       intervalUnits: 'weeks',
       weekdays: {
@@ -45,15 +50,36 @@ const frequencyChoices = [
       },
     },
   },
+  {
+    id: 4,
+    type: 'RadioButtonClickThrough',
+    label: (value, selected) =>
+      `Custom ${selected ? `(${getStatusText(value)})` : ''}`,
+    route: 'AddMedicationCustomFrequency',
+    value: {
+      interval: 1,
+      intervalUnits: 'days',
+      weekdays: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
+        [days[now.getDay()]]: true, // enable current day by default
+      },
+    },
+  },
 ];
 
 now.setMinutes(0);
 
-const timeChoices = [
+const timeMultiSelectChoices = [
   {
+    id: 0,
     label: 'Morning',
     value: {
-      id: uuidv4(),
       name: 'morning',
       medicationAmount: 1,
       sendReminder: true,
@@ -61,9 +87,9 @@ const timeChoices = [
     },
   },
   {
+    id: 1,
     label: 'Midday',
     value: {
-      id: uuidv4(),
       name: 'midday',
       medicationAmount: 1,
       sendReminder: true,
@@ -71,9 +97,9 @@ const timeChoices = [
     },
   },
   {
+    id: 2,
     label: 'Evening',
     value: {
-      id: uuidv4(),
       name: 'evening',
       medicationAmount: 1,
       sendReminder: true,
@@ -84,12 +110,15 @@ const timeChoices = [
 
 const useAddMedicationSettings = create(
   immer((set) => ({
+    // default state
     dosageUnit: 'mg',
     amountUnit: 'tablets',
-    frequencies: frequencyChoices,
-    selectedFrequency: frequencyChoices[0].value.id,
-    times: timeChoices,
-    selectedTimes: [timeChoices[0].value.id, timeChoices[2].value.id],
+    frequencies: frequencyRadioInputChoices,
+    selectedFrequency: frequencyRadioInputChoices[0].id,
+    times: timeMultiSelectChoices,
+    selectedTimes: [timeMultiSelectChoices[0].id, timeMultiSelectChoices[2].id],
+
+    // state actions
     setDosageUnit: (unit) =>
       set((state) => {
         state.dosageUnit = unit;
@@ -101,6 +130,28 @@ const useAddMedicationSettings = create(
     setSelectedFrequency: (id) =>
       set((state) => {
         state.selectedFrequency = id;
+      }),
+    setCustomFrequencyInterval: (id, interval) =>
+      set((state) => {
+        const frequency = state.frequencies.find(
+          (frequency) => frequency.id === id,
+        );
+        frequency.value.interval = interval;
+      }),
+    setCustomFrequencyIntervalUnits: (id, intervalUnits) =>
+      set((state) => {
+        const frequency = state.frequencies.find(
+          (frequency) => frequency.id === id,
+        );
+        frequency.value.intervalUnits = intervalUnits;
+      }),
+    toggleCustomFrequencyWeekday: (id, weekday) =>
+      set((state) => {
+        const frequency = state.frequencies.find(
+          (frequency) => frequency.id === id,
+        );
+        const currentValue = frequency.value.weekdays[weekday] || false;
+        frequency.value.weekdays[weekday] = !currentValue;
       }),
     toggleSelectTime: (id) =>
       set((state) => {
@@ -114,19 +165,20 @@ const useAddMedicationSettings = create(
       }),
     setMedicationAmount: (id, medicationAmount) =>
       set((state) => {
-        const time = state.times.find((time) => time.value.id === id);
+        const time = state.times.find((time) => time.id === id);
         time.value.medicationAmount = medicationAmount;
       }),
     setReminderTime: (id, reminderTime) =>
       set((state) => {
-        const time = state.times.find((time) => time.value.id === id);
+        const time = state.times.find((time) => time.id === id);
         time.value.reminderTime = reminderTime;
       }),
     toggleReminder: (id) =>
       set((state) => {
-        const time = state.times.find((time) => time.value.id === id);
+        const time = state.times.find((time) => time.id === id);
         time.value.sendReminder = !time.value.sendReminder;
       }),
+    setState: (fn) => set(produce(fn)),
   })),
 );
 

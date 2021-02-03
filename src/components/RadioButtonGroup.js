@@ -1,4 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import { Colors } from '../utils';
 
@@ -29,18 +31,38 @@ const SelectedCircle = styled.View`
 `;
 
 const RadioButtonGroup = ({ data, selectedId, onChange }) => {
-  const handleChange = (value) => {
-    onChange(value);
+  const navigator = useNavigation();
+  const handleChange = (id, value) => {
+    onChange(id, value);
   };
 
   return (
     <Container>
-      {data.map(({ value, label }) => {
-        const id = value.id;
+      {data.map(({ value, label, type, route, id }) => {
+        const selected = selectedId === id;
+
+        if (type === 'RadioButtonClickThrough') {
+          return (
+            <RadioButtonItem
+              key={id}
+              onPress={() => {
+                navigator.navigate(route, { id });
+                handleChange(id, value);
+              }}>
+              <RadioButton selected={selected} />
+              <Label numberOfLines={1}>
+                {typeof label === 'function' ? label(value, selected) : label}
+              </Label>
+              <Spacer />
+              <ClickThroughIcon name="chevron-right" size={18} />
+            </RadioButtonItem>
+          );
+        }
+
         return (
           <RadioButtonItem
             key={id}
-            onPress={() => handleChange(value)}
+            onPress={() => handleChange(id, value)}
             activeOpacity={0.6}>
             <RadioButton selected={selectedId === id} />
             <Label>{label}</Label>
@@ -53,6 +75,15 @@ const RadioButtonGroup = ({ data, selectedId, onChange }) => {
 
 const Container = styled.View``;
 
+const Spacer = styled.View`
+  flex-grow: 1;
+`;
+
+const ClickThroughIcon = styled(Icon)`
+  color: ${Colors.gray[400]};
+  align-self: flex-end;
+`;
+
 const RadioButtonItem = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
@@ -63,6 +94,7 @@ const RadioButtonItem = styled.TouchableOpacity`
 const Label = styled.Text`
   font-size: 16px;
   color: ${Colors.gray[900]};
+  flex-shrink: 1;
 `;
 
 export default RadioButtonGroup;
