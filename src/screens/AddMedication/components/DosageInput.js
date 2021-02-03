@@ -1,14 +1,21 @@
 import { Picker } from '@react-native-picker/picker';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
+import Label from '../../../components/Label';
+import { useAddMedicationSettings } from '../../../store/useAddMedicationSettings';
+import { Colors } from '../../../utils';
 
 const Item = Picker.Item;
 
-const DosageInput = () => {
-  const [medicationDosageUnits, setMedicationDosageUnits] = useState('ml');
+const DosageInput = ({ touched, error, ...props }) => {
+  const { dosageUnit, setDosageUnit } = useAddMedicationSettings((state) => ({
+    dosageUnit: state.dosageUnit,
+    setDosageUnit: state.setDosageUnit,
+  }));
 
   const itemStyle = {
-    height: 70,
+    height: 50,
+    color: Colors.blue[500],
   };
 
   return (
@@ -16,55 +23,60 @@ const DosageInput = () => {
       <Label>Dosage</Label>
       <DosageInputContainer>
         <DosageNumericInput
-          placeholder="200"
           underlineColorAndroid="transparent"
           keyboardType="numeric"
+          {...props}
         />
         <DosageUnitsPicker
-          selectedValue={medicationDosageUnits}
-          mode="dropdown"
+          selectedValue={dosageUnit}
           itemStyle={itemStyle}
-          onValueChange={(value) => setMedicationDosageUnits(value)}>
-          <Item label="mL" value="ml" />
+          onValueChange={(value) => setDosageUnit(value)}>
           <Item label="mg" value="mg" />
+          <Item label="grams" value="grams" />
           <Item label="mcg" value="mcg" />
-          <Item label="g" value="g" />
+          <Item label="mL" value="ml" />
         </DosageUnitsPicker>
       </DosageInputContainer>
+      {touched && error && <Error>{error}</Error>}
     </Container>
   );
 };
 
 const Container = styled.View`
-  display: flex;
   flex-direction: column;
   flex-basis: 100%;
   flex: 1;
-  margin-right: 16px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-right: 4px;
+  margin-bottom: 20px;
 `;
 
 const DosageInputContainer = styled.View`
-  display: flex;
   flex-direction: row;
-  border-bottom-width: 1px;
-  border-bottom-color: black;
 `;
 
 const DosageNumericInput = styled.TextInput`
-  flex-grow: 1;
-  font-size: 18px;
-  font-weight: 700;
+  width: 48%;
+  font-size: 16px;
+  color: black;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 8px;
+  background-color: ${Colors.gray[100]};
 `;
 
 const DosageUnitsPicker = styled(Picker)`
-  width: 100px;
+  flex-grow: 1;
+  min-width: 50px;
 `;
 
-const Label = styled.Text`
-  font-size: 14px;
-  color: #828282;
+const Error = styled.Text`
+  color: red;
+  font-size: 12px;
+  margin-top: 8px;
 `;
 
 export default DosageInput;

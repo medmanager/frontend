@@ -17,7 +17,11 @@ const colors = {
     400: '#9CA3AF',
     300: '#D1D5DB',
     200: '#E5E7EB',
-    100: '#F3F4F6',
+    100: '#EEEEEF',
+    50: '#F9FAFB',
+  },
+  lightGray: {
+    600: '#828282',
   },
 };
 

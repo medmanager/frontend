@@ -1,6 +1,5 @@
 import {
   createStackNavigator,
-  HeaderStyleInterpolators,
   TransitionPresets,
 } from '@react-navigation/stack';
 import React from 'react';
@@ -17,16 +16,7 @@ const Root = () => {
     <RootStack.Navigator
       mode="modal"
       initialRouteName="Main"
-      screenOptions={({ route, navigation }) => ({
-        gestureEnabled: true,
-        cardOverlayEnabled: true,
-        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-        headerStatusBarHeight:
-          navigation.dangerouslyGetState().routes.indexOf(route) > 0
-            ? 0
-            : undefined,
-        ...TransitionPresets.ModalPresentationIOS,
-      })}
+      screenOptions={TransitionPresets.ModalSlideFromBottomIOS}
       headerMode="none">
       <RootStack.Screen
         name="AddMedicationModal"

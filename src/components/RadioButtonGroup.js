@@ -11,8 +11,8 @@ const RadioButton = (props) => {
 };
 
 const OuterCircle = styled.View`
-  height: 24px;
-  width: 24px;
+  height: 20px;
+  width: 20px;
   border-radius: 12px;
   border-width: 2px;
   border-color: ${Colors.blue[500]};
@@ -22,34 +22,31 @@ const OuterCircle = styled.View`
 `;
 
 const SelectedCircle = styled.View`
-  height: 14px;
-  width: 14px;
+  height: 12px;
+  width: 12px;
   border-radius: 6px;
   background-color: ${Colors.blue[500]};
 `;
 
-const RadioButtonGroup = ({ data, selectedValue, onChange }) => {
+const RadioButtonGroup = ({ data, selectedId, onChange }) => {
   const handleChange = (value) => {
-    const event = {
-      nativeEvent: {
-        value,
-      },
-    };
-
-    onChange(event);
+    onChange(value);
   };
 
   return (
     <Container>
-      {data.map(({ value, label }) => (
-        <RadioButtonItem
-          key={value}
-          onPress={() => handleChange(value)}
-          activeOpacity={0.6}>
-          <RadioButton selected={value === selectedValue} />
-          <Label>{label}</Label>
-        </RadioButtonItem>
-      ))}
+      {data.map(({ value, label }) => {
+        const id = value.id;
+        return (
+          <RadioButtonItem
+            key={id}
+            onPress={() => handleChange(value)}
+            activeOpacity={0.6}>
+            <RadioButton selected={selectedId === id} />
+            <Label>{label}</Label>
+          </RadioButtonItem>
+        );
+      })}
     </Container>
   );
 };
@@ -57,17 +54,14 @@ const RadioButtonGroup = ({ data, selectedValue, onChange }) => {
 const Container = styled.View``;
 
 const RadioButtonItem = styled.TouchableOpacity`
-  display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: 32px;
-  padding-right: 32px;
   padding-top: 10px;
   padding-bottom: 10px;
 `;
 
 const Label = styled.Text`
-  font-size: 18px;
+  font-size: 16px;
   color: ${Colors.gray[900]};
 `;
 

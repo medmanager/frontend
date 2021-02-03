@@ -1,25 +1,11 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import { Colors } from '../utils';
 
-const Button = ({
-  text,
-  instructions,
-  containerStyle,
-  textStyle,
-  isSubmitting,
-  disabled,
-  indicatorColor,
-  ...props
-}) => {
+const Button = ({ text, isSubmitting, disabled, indicatorColor, ...props }) => {
   return (
-    <ButtonContainer
-      onPress={() => {
-        if (instructions) instructions();
-      }}
-      disabled={disabled || isSubmitting}>
+    <ButtonContainer disabled={disabled || isSubmitting} {...props}>
       {isSubmitting ? (
         <ActivityIndicator color={indicatorColor} />
       ) : (
@@ -48,16 +34,6 @@ Button.defaultProps = {
   text: '',
   isSubmitting: false,
   indicatorColor: 'white',
-};
-
-const stylePropsType = PropTypes.oneOfType([
-  PropTypes.arrayOf(PropTypes.object),
-  PropTypes.object,
-]);
-
-Button.propTypes = {
-  containerStyle: stylePropsType,
-  textStyle: stylePropsType,
 };
 
 export default Button;

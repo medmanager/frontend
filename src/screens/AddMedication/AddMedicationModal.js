@@ -3,10 +3,11 @@ import {
   HeaderStyleInterpolators,
 } from '@react-navigation/stack';
 import React from 'react';
+import BackButton from '../../components/BackButton';
+import { Colors } from '../../utils';
 import AddMedicationCamera from './AddMedicationCameraView';
-import AddMedicationFrequencyView from './AddMedicationFrequencyView';
-import AddMedicationReminderView from './AddMedicationReminderView';
-import AddMedicationTimeView from './AddMedicationTimeView';
+import AddMedicationConfirmationView from './AddMedicationConfirmationView';
+import AddMedicationCustomFrequencyView from './AddMedicationCustomFrequencyView';
 import AddMedicationView from './AddMedicationView';
 
 const Stack = createStackNavigator();
@@ -16,6 +17,8 @@ const AddMedicationModal = () => {
     <Stack.Navigator
       screenOptions={{
         headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+        headerLeft: BackButton,
+        headerTintColor: Colors.blue[500],
       }}>
       <Stack.Screen
         name="AddMedication"
@@ -23,19 +26,14 @@ const AddMedicationModal = () => {
         options={{ title: 'Add Medication' }}
       />
       <Stack.Screen
-        name="AddMedicationFrequency"
-        component={AddMedicationFrequencyView}
-        options={{ title: 'Frequency' }}
+        name="AddMedicationCustomFrequency"
+        component={AddMedicationCustomFrequencyView}
+        options={{ title: 'Custom Frequency' }}
       />
       <Stack.Screen
-        name="AddMedicationTime"
-        component={AddMedicationTimeView}
-        options={{ title: 'Time' }}
-      />
-      <Stack.Screen
-        name="AddMedicationReminder"
-        component={AddMedicationReminderView}
-        options={{ title: 'Reminder' }}
+        name="AddMedicationConfirmation"
+        component={AddMedicationConfirmationView}
+        options={{ title: 'Confirm' }}
       />
       <Stack.Screen
         name="AddMedicationCamera"
