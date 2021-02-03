@@ -5,66 +5,126 @@ const PORT = '4000';
 //you must use the local ip address of your computer
 const APIHOST = 'http://10.0.2.2:' + PORT;
 
-export default {
-  async addMedication(medication) {
-    const url = APIHOST + '/medication';
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(medication)
-      });
-      return response.json();
-    } catch(error) {
-      return error;
-    }
-  },
-  async getMedications() {
-    const url = APIHOST + '/medication';
-    try {
-      const response = await fetch(url);
-      return response.json();
-    } catch (error) {
-      return error;
-    }
-  },
-  async getMedicationFromID(medicationID) {
-    const url = APIHOST + '/medication/' + medicationID;
-    try {
-      const response = await fetch(url);
-      return response.json();
-    } catch (error) {
-      return error;
-    }
-  },
-  async updateMedicationFromID(medication, medicationID) {
-    const url = APIHOST + '/medication/' + medicationID;
-    try {
-      const response = await fetch(url, {        
-        method: 'PUT',
-        headers: {
+
+/* adds a medication to the database
+ * medication should be a javascript object
+ * that will be stringified into a JSON object before
+ * being send to the database
+ * An example medication
+ *  { 
+ *    name: "tylenol",
+ *    notes: "Do not take with advil",
+ *    dosage: 200,
+ *    dosageUnits: "milligrams",
+ *    amount: 100,
+ *    amountUnits: "pills",
+ *    frequency: {
+ *      interval: 1,
+ *      intervalUnit: "weeks",
+ *      weekdays {
+ *        monday: true,
+ *        thursday: true
+ *      }
+ *    },
+ *    times: [
+ *    {
+ *      medicationAmount: 1,
+ *      setReminder: true,
+ *      reminderTime: 9am (date object)
+ *    }, 
+ *      medicationAmount: 1,
+ *      setReminder: true,
+ *      reminderTime: 9pm (date object)
+ *    ]
+ *  }
+ *  
+ *  To write out this scheduling example a sentence:
+ *  Take Tylenol every week, twice a day on Monday and Thursday at 9am
+ *  and 9pm
+ *  
+ *  Note: if setReminder is false, you do NOT need to store a reminderTime
+ */
+async function addMedication(medication) {
+  const url = APIHOST + '/medication';
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
         Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(medication)
-      });
-      return response.json();
-    } catch (error) {
-      return error;
-    }
-  },
-  async deleteMedicationFromID(medicationID) {
-    const url = APIHOST + '/medication/' + medicationID;
-    try {
-      const response = await fetch(url, {        
-        method: 'DELETE'
-      });
-      return response.json();
-    } catch (error) {
-      return error;
-    }
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(medication)
+    });
+    return response.json();
+  } catch(error) {
+    return error;
   }
 }
+
+
+async function getMedications() {
+  const url = APIHOST + '/medication';
+  try {
+    const response = await fetch(url);
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+}
+
+async function getMedicationFromID(medicationID) {
+  const url = APIHOST + '/medication/' + medicationID;
+  try {
+    const response = await fetch(url);
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+}
+
+async function updateMedicationFromID(medication, medicationID) {
+  const url = APIHOST + '/medication/' + medicationID;
+  try {
+    const response = await fetch(url, {        
+      method: 'PUT',
+      headers: {
+      Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(medication)
+    });
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+}
+
+async function deleteMedicationFromID(medicationID) {
+  const url = APIHOST + '/medication/' + medicationID;
+  try {
+    const response = await fetch(url, {        
+      method: 'DELETE'
+    });
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+}
+
+/*  returns a JSON array of 5 drug names similar to searchStr
+ *  Ex: lisinop ->
+ *  ["lysine","lisinopril","Lispro","Listenon","Lysinum"]
+ */
+async function searchAutoComplete(searchStr) {
+  const url = APIHOST + '/medication/search' + searchStr;
+  try {
+    const response = await fetch(url, {        
+      method: 'GET'
+    });
+    return response.json();
+  } catch (error) {
+    return error;
+  }
+}
+
+export default api-calls;
