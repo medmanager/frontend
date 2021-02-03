@@ -1,6 +1,7 @@
 import { Picker } from '@react-native-picker/picker';
 import React from 'react';
 import styled from 'styled-components/native';
+import Error from '../../../components/Error';
 import Label from '../../../components/Label';
 import { useAddMedicationSettings } from '../../../store/useAddMedicationSettings';
 import { Colors } from '../../../utils';
@@ -71,12 +72,6 @@ const DosageNumericInput = styled.TextInput`
 const DosageUnitsPicker = styled(Picker)`
   flex-grow: 1;
   min-width: 50px;
-`;
-
-const Error = styled.Text`
-  color: red;
-  font-size: 12px;
-  margin-top: 8px;
 `;
 
 export default DosageInput;

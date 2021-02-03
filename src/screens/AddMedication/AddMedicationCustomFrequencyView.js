@@ -1,5 +1,5 @@
 import { Picker } from '@react-native-picker/picker';
-import React, { useMemo } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import styled from 'styled-components/native';
 import shallow from 'zustand/shallow';
 import Label from '../../components/Label';
@@ -105,13 +105,16 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
           </IntervalUnitsPicker>
         </PickerContainer>
         {customFrequency.value.intervalUnits === 'weeks' && (
-          <DayMultiSelect
-            selectedItems={selectedDays}
-            data={dayChoices}
-            onToggle={(day) => {
-              toggleCustomFrequencyWeekday(id, day);
-            }}
-          />
+          <Fragment>
+            <Label>Days</Label>
+            <DayMultiSelect
+              selectedItems={selectedDays}
+              data={dayChoices}
+              onToggle={(day) => {
+                toggleCustomFrequencyWeekday(id, day);
+              }}
+            />
+          </Fragment>
         )}
         <StatusText>{getStatusText(customFrequency.value)}</StatusText>
       </Container>
@@ -133,12 +136,13 @@ const SafeArea = styled.SafeAreaView`
 `;
 
 const Container = styled.View`
-  padding: 16px;
+  padding: 24px;
 `;
 
 const PickerContainer = styled.View`
   flex-direction: row;
   margin-top: 8px;
+  margin-bottom: 16px;
 `;
 
 const StatusText = styled.Text`

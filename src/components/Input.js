@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { Colors } from '../utils';
+import Error from './Error';
 import Label from './Label';
 
 const Input = ({ label, inputStyle, touched, error, ...props }) => {
@@ -27,12 +28,6 @@ const TextInput = styled.TextInput`
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 8px;
-`;
-
-const Error = styled.Text`
-  color: red;
-  font-size: 12px;
-  margin-top: 8px;
 `;
 
 export default Input;

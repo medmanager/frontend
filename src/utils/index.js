@@ -44,7 +44,7 @@ export const getStatusText = (customFrequency) => {
   } else {
     const selectedDays = getSelectedDays(customFrequency);
     const selectedDaysShort = selectedDays.map((day) =>
-      (day.charAt(0).toUpperCase() + day.slice(1)).substring(0, 3),
+      capitalize(day).substring(0, 3),
     );
 
     if (customFrequency.interval === 1) {
