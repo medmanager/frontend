@@ -12,6 +12,9 @@ import AmountInput from './components/AmountInput';
 import DosageInput from './components/DosageInput';
 import FrequencyRadioGroup from './components/FrequencyRadioGroup';
 import TimeMultiSelect from './components/TimeMultiSelect';
+import Autocomplete from './components/Autocomplete';
+import apiCalls from '../../utils/api-calls'
+
 
 const AddMedicationView = ({ navigation }) => {
   const initialValues = {
@@ -29,6 +32,12 @@ const AddMedicationView = ({ navigation }) => {
     }),
     shallow,
   );
+
+  const searchMedicationNames = async (searchStr) => {
+    console.log("str: " + searchStr);
+    let namesFromSearch = await apiCalls.searchAutoComplete(searchStr);
+    console.log(namesFromSearch);
+  }
 
   return (
     <View>
@@ -67,7 +76,7 @@ const AddMedicationView = ({ navigation }) => {
             <Scrollable keyboardShouldPersistTaps="always">
               <Form behavior="padding">
                 <Input
-                  onChangeText={handleChange('name')}
+                  onChangeText={(text) => {handleChange('name'); searchMedicationNames(text);}}
                   onBlur={handleBlur('name')}
                   value={values.name}
                   touched={touched}
