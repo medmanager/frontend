@@ -1,7 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import React, { Fragment } from 'react';
-import { Switch, View } from 'react-native';
+import { Switch, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import shallow from 'zustand/shallow';
@@ -43,6 +43,7 @@ const TimeMultiSelect = () => {
     setMedicationAmount,
     setReminderTime,
     toggleReminder,
+    sendTimePicker,
   } = useAddMedicationSettings(
     (state) => ({
       times: state.times,
@@ -52,6 +53,7 @@ const TimeMultiSelect = () => {
       setMedicationAmount: state.setMedicationAmount,
       setReminderTime: state.setReminderTime,
       toggleReminder: state.toggleReminder,
+      sendTimePicker: state.sendTimePicker,
     }),
     shallow,
   );
@@ -61,6 +63,14 @@ const TimeMultiSelect = () => {
     color: Colors.blue[500],
     borderTopRightRadius: 0,
   };
+
+  const formatTime = (time) => {
+    let hours = time.getHours();
+    let minutes = time.getMinutes();
+    return (hours > 12 ? hours - 12 : hours).toString() + ":" +
+      (minutes.toString().length < 2 ? "0" + minutes.toString() : minutes.toString())
+      + (hours > 12 ? "pm" : "am");
+  }
 
   return (
     <Container>
@@ -111,16 +121,29 @@ const TimeMultiSelect = () => {
                       }}
                       value={value.sendReminder}
                     />
+                    <Opacity onPress={() => {
+                      if (value.sendReminder == false) {
+                        toggleReminder(id);
+                        sendTimePicker(id);
+                      }
+                      else {
+                        sendTimePicker(id);
+                      }
+                    }}>
+                      <Text>{formatTime(value.reminderTime)}</Text>
+                    </Opacity>
                   </HBox>
-                  {value.sendReminder && (
+                  {(value.sendTimePicker && value.sendReminder) && (
                     <TimePicker
                       testID="dateTimePicker"
                       value={value.reminderTime}
                       mode="time"
                       is24Hour={true}
                       display="default"
-                      onChange={(_, selectedTime) =>
-                        setReminderTime(id, selectedTime || value.reminderTime)
+                      onChange={(_, selectedTime) => {
+                        sendTimePicker(id);
+                        setReminderTime(id, selectedTime || value.reminderTime);
+                        }
                       }
                     />
                   )}
@@ -162,6 +185,12 @@ const TimeSettings = styled.View`
 
 const TimePicker = styled(DateTimePicker)`
   margin-top: 16px;
+`;
+
+const Opacity = styled(TouchableOpacity)`
+  padding: 10px;
+  border-radius: 5px;
+  background-color: ${Colors.gray[100]};
 `;
 
 const Container = styled.View``;
