@@ -43,7 +43,6 @@ function HomeScreen() {
 
   return (
     <Container>
-      <FlatList>
 `      {medications.map((medication) => (
         <MedicationItem key={medication._id}>
           <View>
@@ -55,7 +54,6 @@ function HomeScreen() {
           <Icon name="chevron-right" size={18} color={Colors.gray[500]} />
         </MedicationItem>
       ))}`
-      </FlatList>
     </Container>
   );
 }
