@@ -8,6 +8,7 @@ import Root from './routes/Root';
 enableScreens();
 
 export default function App() {
+  
   return (
     <SafeAreaProvider>
       <NavigationContainer>

@@ -83,6 +83,7 @@ const timeMultiSelectChoices = [
       dose: 1,
       sendReminder: true,
       reminderTime: new Date(now.setHours(8)),
+      sendTimePicker: false,
     },
   },
   {
@@ -92,16 +93,17 @@ const timeMultiSelectChoices = [
       dose: 1,
       sendReminder: true,
       reminderTime: new Date(now.setHours(12)),
+      sendTimePicker: false,
     },
   },
   {
     id: 2,
     label: 'Evening',
     value: {
-      name: 'evening',
       dose: 1,
       sendReminder: true,
       reminderTime: new Date(now.setHours(16)),
+      sendTimePicker: false,
     },
   },
   {
@@ -111,6 +113,7 @@ const timeMultiSelectChoices = [
       dose: 1,
       sendReminder: true,
       reminderTime: new Date(now.setHours(20)),
+      sendTimePicker: false,
     },
   },
 ];
@@ -189,6 +192,11 @@ const useAddMedication = create(
       set((state) => {
         const time = state.times.find((time) => time.id === id);
         time.value.sendReminder = !time.value.sendReminder;
+      }),
+    sendTimePicker: (id) =>
+      set((state) => {
+        const time = state.times.find((time) => time.id === id);
+        time.value.sendTimePicker = !time.value.sendTimePicker;
       }),
     setState: (fn) => set(produce(fn)),
   })),

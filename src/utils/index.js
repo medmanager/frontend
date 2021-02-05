@@ -29,6 +29,14 @@ export const range = (num) =>
 
 export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
+export const formatTime = (time) => {
+  let hours = time.getHours();
+  let minutes = time.getMinutes();
+  return (hours > 12 ? hours - 12 : hours).toString() + ":" +
+    (minutes.toString().length < 2 ? "0" + minutes.toString() : minutes.toString())
+    + (hours > 12 ? " PM" : " AM");
+}
+
 export const getSelectedDays = (customFrequency) =>
   Object.entries(customFrequency.weekdays || {})
     .filter(([key, value]) => !!value) // only get days which are marked as true

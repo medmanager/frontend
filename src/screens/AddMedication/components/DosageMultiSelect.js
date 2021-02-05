@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import shallow from 'zustand/shallow';
 import { useAddMedication } from '../../../store/useAddMedication';
-import { Colors } from '../../../utils';
+import { Colors, formatTime } from '../../../utils';
 
 const Checkbox = ({ selected }) => {
   return (
@@ -42,6 +42,7 @@ const DosageMultiSelect = () => {
     setDose,
     setReminderTime,
     toggleReminder,
+    sendTimePicker,
   } = useAddMedication(
     (state) => ({
       times: state.times,
@@ -50,6 +51,7 @@ const DosageMultiSelect = () => {
       setDose: state.setDose,
       setReminderTime: state.setReminderTime,
       toggleReminder: state.toggleReminder,
+      sendTimePicker: state.sendTimePicker,
     }),
     shallow,
   );
@@ -117,19 +119,31 @@ const DosageMultiSelect = () => {
                     }}
                     value={value.sendReminder}
                   />
+                  <Opacity
+                    onPress={() => {
+                      if (value.sendReminder === false) {
+                        toggleReminder(id);
+                        sendTimePicker(id);
+                      } else {
+                        sendTimePicker(id);
+                      }
+                    }}>
+                    <Text>{formatTime(value.reminderTime)}</Text>
+                  </Opacity>
+                  {value.sendTimePicker && value.sendReminder && (
+                    <TimePicker
+                      testID="dateTimePicker"
+                      value={value.reminderTime}
+                      mode="time"
+                      is24Hour={true}
+                      display="default"
+                      onChange={(_, selectedTime) => {
+                        sendTimePicker(id);
+                        setReminderTime(id, selectedTime || value.reminderTime);
+                      }}
+                    />
+                  )}
                 </ReminderInputContainer>
-                {value.sendReminder && (
-                  <TimePicker
-                    testID="dateTimePicker"
-                    value={value.reminderTime}
-                    mode="time"
-                    is24Hour={true}
-                    display="default"
-                    onChange={(_, selectedTime) =>
-                      setReminderTime(id, selectedTime || value.reminderTime)
-                    }
-                  />
-                )}
               </DosageSettingsContainer>
             )}
           </View>
@@ -194,6 +208,12 @@ const Text = styled.Text`
 
 const DosageSettingsContainer = styled.View`
   padding: 16px;
+`;
+
+const Opacity = styled.TouchableOpacity`
+  padding: 10px;
+  border-radius: 5px;
+  background-color: ${Colors.gray[100]};
 `;
 
 const TimePicker = styled(DateTimePicker)`
