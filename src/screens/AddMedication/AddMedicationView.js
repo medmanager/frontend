@@ -62,9 +62,14 @@ const AddMedicationView = ({ navigation }) => {
       return [];
     }
     if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
-      return api.searchAutoComplete(query);
+      try {
+        const results = api.searchAutoComplete(query);
+        return results;
+      } catch (e) {
+        return [];
+      }
     }
-    setMedicationNameSuggestions([]);
+    return [];
   };
 
   const clearAutocompleteSuggestions = () => {
@@ -76,8 +81,10 @@ const AddMedicationView = ({ navigation }) => {
       clearAutocompleteSuggestions();
     } else {
       (async () => {
-        const suggestions = await filterMedications(values.name);
-        setMedicationNameSuggestions(suggestions);
+        try {
+          const suggestions = await filterMedications(values.name);
+          setMedicationNameSuggestions(suggestions);
+        } catch (e) {}
       })();
     }
     clearAutocomplete.current = false;

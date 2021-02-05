@@ -15,8 +15,10 @@ function HomeScreen() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const medications = await apiCalls.getMedications();
-      setMedications(medications);
+      try {
+        const results = await apiCalls.getMedications();
+        setMedications(results);
+      } catch (e) {}
       setLoading(false);
     })();
   }, [isFocused]);
@@ -31,7 +33,7 @@ function HomeScreen() {
     );
   }
 
-  if (!medications || medications.length === 0) {
+  if (!medications || medications === undefined || medications.length === 0) {
     return (
       <Container>
         <Text>No Medications Found.</Text>

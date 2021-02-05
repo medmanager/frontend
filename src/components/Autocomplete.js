@@ -253,9 +253,6 @@ const iosStyles = {
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: 'white',
-    height: 40,
-    paddingLeft: 3,
     ...border,
     ...inputStyles,
   },
