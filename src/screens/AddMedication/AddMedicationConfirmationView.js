@@ -61,7 +61,10 @@ const AddMedicationConfirmationView = ({ navigation }) => {
 
   const dosageTimesString = medication.dosages
     .sort((a, b) => a.reminderTime - b.reminderTime)
-    .map((dosage) => formatTime(dosage.reminderTime))
+    .map(
+      (dosage) =>
+        `${dosage.dose} ${amountUnit} at ${formatTime(dosage.reminderTime)}`,
+    )
     .join(', ');
 
   const handleAddAnotherMed = () => {
@@ -95,8 +98,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
           <Field>
             <Label>Schedule</Label>
             <Text>
-              Take {medication.dosages.length} {medication.amountUnit} at{' '}
-              {dosageTimesString} {getStatusText(medication.frequency)}
+              Take {dosageTimesString} {getStatusText(medication.frequency)}
             </Text>
           </Field>
         </InfoContainer>
