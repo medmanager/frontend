@@ -3,7 +3,7 @@ const PORT = '4000';
 //10.0.2.2 maps to localhost on computer from android emulator
 //***only works for android emulators***
 //you must use the local ip address of your computer
-const APIHOST = 'http://192.168.1.141:' + PORT;
+const APIHOST = 'http://10.0.2.2:' + PORT;
 
 export default {
   /* adds a medication to the database
