@@ -123,7 +123,7 @@ export default {
       });
       return response.json();
     } catch (error) {
-      return error;
+      throw error;
     }
   },
 };
