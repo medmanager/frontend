@@ -30,7 +30,7 @@ const SelectedCircle = styled.View`
   background-color: ${Colors.blue[500]};
 `;
 
-const RadioButtonGroup = ({ data, selectedId, onChange }) => {
+const RadioGroupIdSelector = ({ data, selectedId, onChange }) => {
   const navigator = useNavigation();
   const handleChange = (id, value) => {
     onChange(id, value);
@@ -73,6 +73,30 @@ const RadioButtonGroup = ({ data, selectedId, onChange }) => {
   );
 };
 
+const RadioGroupValueSelector = ({ data, selectedValue, onChange }) => {
+  const handleChange = (value) => {
+    onChange(value);
+  };
+
+  return (
+    <Container>
+      {data.map(({ value, label }, index) => {
+        const selected = value === selectedValue;
+
+        return (
+          <RadioButtonItem
+            key={index.toString()}
+            onPress={() => handleChange(value)}
+            activeOpacity={0.6}>
+            <RadioButton selected={selected} />
+            <Label>{label}</Label>
+          </RadioButtonItem>
+        );
+      })}
+    </Container>
+  );
+};
+
 const Container = styled.View``;
 
 const Spacer = styled.View`
@@ -97,4 +121,5 @@ const Label = styled.Text`
   flex-shrink: 1;
 `;
 
-export default RadioButtonGroup;
+export default RadioGroupIdSelector;
+export { RadioGroupValueSelector };

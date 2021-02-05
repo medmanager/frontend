@@ -8,7 +8,7 @@ const Input = ({ label, inputStyle, touched, error, ...props }) => {
   return (
     <Container>
       <Label>{label}</Label>
-      <TextInput style={inputStyle} {...props} />
+      <TextInput clearButtonMode="always" style={inputStyle} {...props} />
       {touched && error && <Error>{error}</Error>}
     </Container>
   );
@@ -21,7 +21,9 @@ const Container = styled.View`
 const TextInput = styled.TextInput`
   font-size: 16px;
   color: black;
-  background-color: ${Colors.gray[100]}
+  background-color: white;
+  border-width: 0.5px;
+  border-color: ${Colors.gray[300]}
   min-height: 40px;
   padding-left: 16px;
   padding-right: 16px;

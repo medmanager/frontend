@@ -1,24 +1,21 @@
-import {
-  createStackNavigator,
-  HeaderStyleInterpolators,
-} from '@react-navigation/stack';
 import React from 'react';
-import BackButton from '../../components/BackButton';
+import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import { Colors } from '../../utils';
 import AddMedicationCamera from './AddMedicationCameraView';
 import AddMedicationConfirmationView from './AddMedicationConfirmationView';
 import AddMedicationCustomFrequencyView from './AddMedicationCustomFrequencyView';
+import AddMedicationScheduleView from './AddMedicationScheduleView';
 import AddMedicationView from './AddMedicationView';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const AddMedicationModal = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-        headerLeft: BackButton,
+        statusBarAnimation: 'slide',
         headerTintColor: Colors.blue[500],
+        headerBackTitle: '',
       }}>
       <Stack.Screen
         name="AddMedication"
@@ -29,6 +26,11 @@ const AddMedicationModal = () => {
         name="AddMedicationCustomFrequency"
         component={AddMedicationCustomFrequencyView}
         options={{ title: 'Custom Frequency' }}
+      />
+      <Stack.Screen
+        name="AddMedicationSchedule"
+        component={AddMedicationScheduleView}
+        options={{ title: 'Schedule' }}
       />
       <Stack.Screen
         name="AddMedicationConfirmation"

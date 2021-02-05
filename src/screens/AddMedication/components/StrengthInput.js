@@ -7,13 +7,13 @@ import Modal from '../../../components/Modal';
 import NumericInput from '../../../components/NumericInput';
 import { RadioGroupValueSelector } from '../../../components/RadioButtonGroup';
 import { useAddMedication } from '../../../store/useAddMedication';
-import { amountUnitChoices, capitalize, Colors } from '../../../utils';
+import { Colors, strengthUnitChoices } from '../../../utils';
 
-const AmountInput = ({ touched, error, ...props }) => {
+const StrengthInput = ({ touched, error, ...props }) => {
   const [showModal, setShowModal] = useState(false);
-  const { amountUnit, setAmountUnit } = useAddMedication((state) => ({
-    amountUnit: state.amountUnit,
-    setAmountUnit: state.setAmountUnit,
+  const { strengthUnit, setStrengthUnit } = useAddMedication((state) => ({
+    strengthUnit: state.strengthUnit,
+    setStrengthUnit: state.setStrengthUnit,
   }));
 
   const toggleModal = () => {
@@ -22,26 +22,26 @@ const AmountInput = ({ touched, error, ...props }) => {
 
   return (
     <Container>
-      <Label>Amount</Label>
+      <Label>Strength</Label>
       <AmountInputContainer>
         <LeftCol>
           <NumericInput {...props} />
         </LeftCol>
         <RightCol>
-          <AmountUnitsPicker
+          <StrengthUnitsPicker
             activeOpacity={0.6}
             onPress={() => setShowModal(true)}>
-            <Text>{capitalize(amountUnit)}</Text>
+            <Text>{strengthUnit}</Text>
             <Icon name="chevron-right" size={18} color={Colors.gray[400]} />
-          </AmountUnitsPicker>
+          </StrengthUnitsPicker>
         </RightCol>
       </AmountInputContainer>
       {touched && error && <Error>{error}</Error>}
       <Modal title="Units" toggleModal={toggleModal} showModal={showModal}>
         <RadioGroupValueSelector
-          data={amountUnitChoices}
-          selectedValue={amountUnit}
-          onChange={(value) => setAmountUnit(value)}
+          data={strengthUnitChoices}
+          selectedValue={strengthUnit}
+          onChange={(value) => setStrengthUnit(value)}
         />
       </Modal>
     </Container>
@@ -71,7 +71,7 @@ const RightCol = styled.View`
   padding-left: 4px;
 `;
 
-const AmountUnitsPicker = styled.TouchableOpacity`
+const StrengthUnitsPicker = styled.TouchableOpacity`
   flex-basis: 50%;
   margin-top: auto;
   margin-bottom: auto;
@@ -92,4 +92,4 @@ const Text = styled.Text`
   font-size: 16px;
 `;
 
-export default AmountInput;
+export default StrengthInput;

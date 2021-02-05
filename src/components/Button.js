@@ -3,9 +3,20 @@ import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import { Colors } from '../utils';
 
-const Button = ({ text, isSubmitting, disabled, indicatorColor, ...props }) => {
+const Button = ({
+  text,
+  isSubmitting,
+  disabled,
+  indicatorColor,
+  onPress,
+  ...props
+}) => {
   return (
-    <ButtonContainer disabled={disabled || isSubmitting} {...props}>
+    <ButtonContainer
+      activeOpacity={disabled ? 1 : 0.7}
+      disabled={disabled || isSubmitting}
+      onPress={!disabled && onPress}
+      {...props}>
       {isSubmitting ? (
         <ActivityIndicator color={indicatorColor} />
       ) : (
@@ -16,7 +27,8 @@ const Button = ({ text, isSubmitting, disabled, indicatorColor, ...props }) => {
 };
 
 const ButtonContainer = styled.TouchableOpacity`
-  background-color: ${Colors.blue[500]};
+  background-color: ${(props) =>
+    props.disabled ? Colors.blue[800] : Colors.blue[500]};
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 16px;

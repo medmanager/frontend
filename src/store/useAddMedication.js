@@ -5,7 +5,7 @@ import { capitalize, days, getStatusText, nthDay } from '../utils';
 const now = new Date();
 const frequencyRadioInputChoices = [
   {
-    id: 0,
+    id: 1,
     type: 'RadioButton',
     label: 'Daily',
     value: {
@@ -15,7 +15,7 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 1,
+    id: 2,
     type: 'RadioButton',
     label: `Weekly (${capitalize(days[now.getDay()])})`,
     value: {
@@ -27,7 +27,7 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 2,
+    id: 3,
     type: 'RadioButton',
     label: `Bi-Weekly (${capitalize(days[now.getDay()])})`,
     value: {
@@ -39,7 +39,7 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 3,
+    id: 4,
     type: 'RadioButton',
     label: `Monthly (the ${nthDay(now)})`,
     value: {
@@ -51,7 +51,7 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 4,
+    id: 5,
     type: 'RadioButtonClickThrough',
     label: (value, selected) =>
       `Custom ${selected ? `(${getStatusText(value)})` : ''}`,
@@ -80,20 +80,18 @@ const timeMultiSelectChoices = [
     id: 0,
     label: 'Morning',
     value: {
-      name: 'morning',
-      medicationAmount: 1,
+      dose: 1,
       sendReminder: true,
       reminderTime: new Date(now.setHours(8)),
     },
   },
   {
     id: 1,
-    label: 'Midday',
+    label: 'Afternoon',
     value: {
-      name: 'midday',
-      medicationAmount: 1,
+      dose: 1,
       sendReminder: true,
-      reminderTime: new Date(now.setHours(14)),
+      reminderTime: new Date(now.setHours(12)),
     },
   },
   {
@@ -101,27 +99,41 @@ const timeMultiSelectChoices = [
     label: 'Evening',
     value: {
       name: 'evening',
-      medicationAmount: 1,
+      dose: 1,
+      sendReminder: true,
+      reminderTime: new Date(now.setHours(16)),
+    },
+  },
+  {
+    id: 3,
+    label: 'Night',
+    value: {
+      dose: 1,
       sendReminder: true,
       reminderTime: new Date(now.setHours(20)),
     },
   },
 ];
 
-const useAddMedicationSettings = create(
+const useAddMedication = create(
   immer((set) => ({
     // default state
-    dosageUnit: 'mg',
+    strengthUnit: 'mg',
     amountUnit: 'tablets',
     frequencies: frequencyRadioInputChoices,
     selectedFrequency: frequencyRadioInputChoices[0].id,
     times: timeMultiSelectChoices,
-    selectedTimes: [timeMultiSelectChoices[0].id, timeMultiSelectChoices[2].id],
+    selectedTimes: [timeMultiSelectChoices[0].id, timeMultiSelectChoices[3].id],
+    formValues: null,
 
     // state actions
-    setDosageUnit: (unit) =>
+    setFormValues: (formValues) =>
       set((state) => {
-        state.dosageUnit = unit;
+        state.formValues = formValues;
+      }),
+    setStrengthUnit: (unit) =>
+      set((state) => {
+        state.strengthUnit = unit;
       }),
     setAmountUnit: (unit) =>
       set((state) => {
@@ -163,10 +175,10 @@ const useAddMedicationSettings = create(
           state.selectedTimes.push(id);
         }
       }),
-    setMedicationAmount: (id, medicationAmount) =>
+    setDose: (id, dose) =>
       set((state) => {
         const time = state.times.find((time) => time.id === id);
-        time.value.medicationAmount = medicationAmount;
+        time.value.dose = dose;
       }),
     setReminderTime: (id, reminderTime) =>
       set((state) => {
@@ -182,4 +194,4 @@ const useAddMedicationSettings = create(
   })),
 );
 
-export { useAddMedicationSettings };
+export { useAddMedication };

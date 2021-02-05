@@ -3,8 +3,14 @@ import React, { Fragment, useMemo } from 'react';
 import styled from 'styled-components/native';
 import shallow from 'zustand/shallow';
 import Label from '../../components/Label';
-import { useAddMedicationSettings } from '../../store/useAddMedicationSettings';
-import { Colors, getSelectedDays, getStatusText, range } from '../../utils';
+import { useAddMedication } from '../../store/useAddMedication';
+import {
+  Colors,
+  dayChoices,
+  getSelectedDays,
+  getStatusText,
+  range,
+} from '../../utils';
 import DayMultiSelect from './components/DayMultiSelect';
 
 const Item = Picker.Item;
@@ -12,7 +18,7 @@ const Item = Picker.Item;
 const AddMedicationCustomFrequencyView = ({ route }) => {
   const { id } = route.params;
   const itemStyle = {
-    height: 50,
+    height: 120,
     color: Colors.blue[500],
     borderTopRightRadius: 0,
   };
@@ -24,7 +30,7 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
     setCustomFrequencyInterval,
     setCustomFrequencyIntervalUnits,
     toggleCustomFrequencyWeekday,
-  } = useAddMedicationSettings(
+  } = useAddMedication(
     (state) => ({
       customFrequency: state.frequencies.find(
         (frequency) => frequency.id === id,
@@ -35,37 +41,6 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
     }),
     shallow,
   );
-
-  const dayChoices = [
-    {
-      value: 'monday',
-      label: 'Monday',
-    },
-    {
-      value: 'tuesday',
-      label: 'Tuesday',
-    },
-    {
-      value: 'wednesday',
-      label: 'Wednesday',
-    },
-    {
-      value: 'thursday',
-      label: 'Thursday',
-    },
-    {
-      value: 'friday',
-      label: 'Friday',
-    },
-    {
-      value: 'saturday',
-      label: 'Saturday',
-    },
-    {
-      value: 'sunday',
-      label: 'Sunday',
-    },
-  ];
 
   const selectedDays = useMemo(() => getSelectedDays(customFrequency.value), [
     customFrequency.value,
@@ -132,7 +107,6 @@ const IntervalUnitsPicker = styled(Picker)`
 
 const SafeArea = styled.SafeAreaView`
   flex: 1;
-  background-color: #fff;
 `;
 
 const Container = styled.View`

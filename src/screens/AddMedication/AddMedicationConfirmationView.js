@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
-import { useAddMedicationSettings } from '../../store/useAddMedicationSettings';
+import { useAddMedication } from '../../store/useAddMedication';
 import { Colors } from '../../utils';
 
 const AddMedicationConfirmationView = ({ route, navigation }) => {
-  const { times, frequencies } = useAddMedicationSettings((state) => ({
+  const { times, frequencies } = useAddMedication((state) => ({
     times: state.times,
     frequencies: state.frequencies,
   }));

@@ -1,34 +1,23 @@
 import { Formik } from 'formik';
 import React, { Fragment } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
-import shallow from 'zustand/shallow';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import Label from '../../components/Label';
-import { useAddMedicationSettings } from '../../store/useAddMedicationSettings';
+import { useAddMedication } from '../../store/useAddMedication';
 import { Colors } from '../../utils';
 import AmountInput from './components/AmountInput';
-import DosageInput from './components/DosageInput';
-import FrequencyRadioGroup from './components/FrequencyRadioGroup';
-import TimeMultiSelect from './components/TimeMultiSelect';
+import StrengthInput from './components/StrengthInput';
 
 const AddMedicationView = ({ navigation }) => {
   const initialValues = {
     name: '',
-    dosage: null,
+    strength: null,
     amount: null,
     notes: '',
   };
-  const settings = useAddMedicationSettings(
-    (state) => ({
-      selectedFrequency: state.selectedFrequency,
-      selectedTimes: state.selectedTimes,
-      amountUnit: state.amountUnit,
-      dosageUnit: state.dosageUnit,
-    }),
-    shallow,
-  );
+  const setFormValues = useAddMedication((state) => state.setFormValues);
 
   return (
     <View>
@@ -39,10 +28,10 @@ const AddMedicationView = ({ navigation }) => {
             .string()
             .required('Name is a required field')
             .max(100, 'Name must not be more than 100 characters'),
-          dosage: yup
+          strength: yup
             .number()
             .nullable()
-            .required('Dosage is a required field'),
+            .required('Strength is a required field'),
           amount: yup
             .number()
             .nullable()
@@ -50,21 +39,20 @@ const AddMedicationView = ({ navigation }) => {
           notes: yup.string(),
         })}
         onSubmit={(values) => {
-          navigation.navigate('AddMedicationConfirmation', {
-            ...values,
-            ...settings,
-          });
+          setFormValues(values);
+          navigation.navigate('AddMedicationSchedule');
         }}>
         {({
           values,
           touched,
           errors,
+          isValid,
           handleSubmit,
           handleChange,
           handleBlur,
         }) => (
           <Fragment>
-            <Scrollable keyboardShouldPersistTaps="always">
+            <KeyboardAwareScrollView>
               <Form behavior="padding">
                 <Input
                   onChangeText={handleChange('name')}
@@ -74,22 +62,20 @@ const AddMedicationView = ({ navigation }) => {
                   error={errors.name}
                   label="Name"
                 />
-                <Row>
-                  <DosageInput
-                    onChangeText={handleChange('dosage')}
-                    onBlur={handleBlur('dosage')}
-                    value={values.dosage}
-                    touched={touched}
-                    error={errors.dosage}
-                  />
-                  <AmountInput
-                    onChangeText={handleChange('amount')}
-                    onBlur={handleBlur('amount')}
-                    value={values.amount}
-                    touched={touched}
-                    error={errors.amount}
-                  />
-                </Row>
+                <StrengthInput
+                  onChangeText={handleChange('strength')}
+                  onBlur={handleBlur('strength')}
+                  value={values.strength}
+                  touched={touched}
+                  error={errors.strength}
+                />
+                <AmountInput
+                  onChangeText={handleChange('amount')}
+                  onBlur={handleBlur('amount')}
+                  value={values.amount}
+                  touched={touched}
+                  error={errors.amount}
+                />
                 <Input
                   onChangeText={handleChange('notes')}
                   onBlur={handleBlur('notes')}
@@ -101,18 +87,18 @@ const AddMedicationView = ({ navigation }) => {
                   numberOfLines={10}
                   label="Notes"
                 />
-                <FormField>
+                {/* <FormField>
                   <Label>Frequency</Label>
                   <FrequencyRadioGroup />
                 </FormField>
                 <FormField>
                   <Label>Dosage Times</Label>
-                  <TimeMultiSelect />
-                </FormField>
+                  <DosageMultiSelect />
+                </FormField> */}
               </Form>
-            </Scrollable>
+            </KeyboardAwareScrollView>
             <ButtonContainer>
-              <Button onPress={handleSubmit} text="Save" />
+              <Button disabled={!isValid} onPress={handleSubmit} text="Next" />
             </ButtonContainer>
           </Fragment>
         )}
@@ -123,13 +109,9 @@ const AddMedicationView = ({ navigation }) => {
 
 const View = styled.SafeAreaView`
   flex: 1;
-  background-color: #fff;
 `;
 
-const Scrollable = styled.ScrollView``;
-
-const Form = styled.KeyboardAvoidingView`
-  flex: 1;
+const Form = styled.View`
   flex-direction: column;
   padding: 24px;
 `;
@@ -138,15 +120,9 @@ const FormField = styled.View`
   margin-bottom: 24px;
 `;
 
-const Row = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-`;
-
 const ButtonContainer = styled.View`
   border-top-width: 1px;
-  border-top-color: ${Colors.gray[100]}
+  border-top-color: ${Colors.gray[300]};
   width: 100%;
   padding-left: 24px;
   padding-right: 24px;
