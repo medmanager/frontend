@@ -224,7 +224,6 @@ const androidStyles = {
     flex: 1,
   },
   inputContainer: {
-    ...border,
     marginBottom: 0,
   },
   list: {
