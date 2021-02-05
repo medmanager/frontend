@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import Error from '../../../components/Error';
@@ -21,22 +21,24 @@ const StrengthInput = ({ touched, error, ...props }) => {
   };
 
   return (
-    <Container>
-      <Label>Strength</Label>
-      <AmountInputContainer>
-        <LeftCol>
-          <NumericInput {...props} />
-        </LeftCol>
-        <RightCol>
-          <StrengthUnitsPicker
-            activeOpacity={0.6}
-            onPress={() => setShowModal(true)}>
-            <Text>{strengthUnit}</Text>
-            <Icon name="chevron-right" size={18} color={Colors.gray[400]} />
-          </StrengthUnitsPicker>
-        </RightCol>
-      </AmountInputContainer>
-      {touched && error && <Error>{error}</Error>}
+    <Fragment>
+      <Container>
+        <Label>Strength</Label>
+        <AmountInputContainer>
+          <LeftCol>
+            <NumericInput {...props} />
+          </LeftCol>
+          <RightCol>
+            <StrengthUnitsPicker
+              activeOpacity={0.6}
+              onPress={() => setShowModal(true)}>
+              <Text>{strengthUnit}</Text>
+              <Icon name="chevron-right" size={18} color={Colors.gray[400]} />
+            </StrengthUnitsPicker>
+          </RightCol>
+        </AmountInputContainer>
+        {touched && error && <Error>{error}</Error>}
+      </Container>
       <Modal title="Units" toggleModal={toggleModal} showModal={showModal}>
         <RadioGroupValueSelector
           data={strengthUnitChoices}
@@ -44,20 +46,15 @@ const StrengthInput = ({ touched, error, ...props }) => {
           onChange={(value) => setStrengthUnit(value)}
         />
       </Modal>
-    </Container>
+    </Fragment>
   );
 };
 
 const Container = styled.View`
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-  margin-left: 4px;
   margin-bottom: 20px;
 `;
 
 const AmountInputContainer = styled.View`
-  flex: 1;
   flex-direction: row;
 `;
 
@@ -72,9 +69,6 @@ const RightCol = styled.View`
 `;
 
 const StrengthUnitsPicker = styled.TouchableOpacity`
-  flex-basis: 50%;
-  margin-top: auto;
-  margin-bottom: auto;
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 10px;

@@ -12,7 +12,7 @@ const AddMedicationScheduleView = () => {
   const navigator = useNavigation();
 
   const handleSubmit = () => {
-    navigator.navigate('');
+    navigator.navigate('AddMedicationConfirmation');
   };
 
   return (

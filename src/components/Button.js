@@ -27,8 +27,8 @@ const Button = ({
 };
 
 const ButtonContainer = styled.TouchableOpacity`
-  background-color: ${(props) =>
-    props.disabled ? Colors.blue[800] : Colors.blue[500]};
+  background-color: ${Colors.blue[500]};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 16px;

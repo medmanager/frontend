@@ -46,6 +46,22 @@ export const amountUnitChoices = [
     value: 'capsules',
     label: 'Capsules',
   },
+  {
+    value: 'sprays',
+    label: 'Sprays',
+  },
+  {
+    value: 'gummies',
+    label: 'Gummies',
+  },
+  {
+    value: 'tbsp',
+    label: 'Tablespoons',
+  },
+  {
+    value: 'injections',
+    label: 'Injections',
+  },
 ];
 
 export const dayChoices = [

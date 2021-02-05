@@ -1,12 +1,14 @@
-import { Formik } from 'formik';
-import React, { Fragment } from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useFormik } from 'formik';
+import React, { useEffect, useRef, useState } from 'react';
+import { Text } from 'react-native';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
+import Autocomplete from '../../components/Autocomplete';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useAddMedication } from '../../store/useAddMedication';
 import { Colors } from '../../utils';
+import api from '../../utils/api-calls';
 import AmountInput from './components/AmountInput';
 import StrengthInput from './components/StrengthInput';
 
@@ -17,107 +19,149 @@ const AddMedicationView = ({ navigation }) => {
     amount: null,
     notes: '',
   };
+  const {
+    values,
+    touched,
+    errors,
+    isValid,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    setFieldValue,
+  } = useFormik({
+    initialValues,
+    validationSchema: yup.object().shape({
+      name: yup
+        .string()
+        .required('Name is a required field')
+        .max(100, 'Name must not be more than 100 characters'),
+      strength: yup
+        .number()
+        .nullable()
+        .required('Strength is a required field'),
+      amount: yup.number().nullable().required('Amount is a required field'),
+      notes: yup.string(),
+    }),
+    onSubmit: (formValues) => {
+      setFormValues(formValues);
+      navigation.navigate('AddMedicationSchedule');
+    },
+  });
   const setFormValues = useAddMedication((state) => state.setFormValues);
+  const clearAutoCompleteData = useRef(false);
+  const [medicationNameSuggestions, setMedicationNameSuggestions] = useState(
+    [],
+  );
+
+  const filterMedications = async (query) => {
+    if (query === '') {
+      return [];
+    }
+    if (query.length >= 3) {
+      return api.searchAutoComplete(query);
+    }
+    setMedicationNameSuggestions([]);
+  };
+
+  const clearAutocompleteSuggestions = () => {
+    setMedicationNameSuggestions([]);
+  };
+
+  useEffect(() => {
+    if (clearAutoCompleteData.current) {
+      clearAutocompleteSuggestions();
+    } else {
+      (async () => {
+        const suggestions = await filterMedications(values.name);
+        setMedicationNameSuggestions(suggestions);
+      })();
+    }
+    clearAutoCompleteData.current = false;
+  }, [values.name, clearAutoCompleteData]);
+
+  const handleMedNameBlur = () => {
+    clearAutocompleteSuggestions();
+    handleBlur('name');
+  };
+
+  const textAreaInputStyle = {
+    height: 150,
+    justifyContent: 'flex-start',
+  };
 
   return (
-    <View>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={yup.object().shape({
-          name: yup
-            .string()
-            .required('Name is a required field')
-            .max(100, 'Name must not be more than 100 characters'),
-          strength: yup
-            .number()
-            .nullable()
-            .required('Strength is a required field'),
-          amount: yup
-            .number()
-            .nullable()
-            .required('Amount is a required field'),
-          notes: yup.string(),
-        })}
-        onSubmit={(values) => {
-          setFormValues(values);
-          navigation.navigate('AddMedicationSchedule');
-        }}>
-        {({
-          values,
-          touched,
-          errors,
-          isValid,
-          handleSubmit,
-          handleChange,
-          handleBlur,
-        }) => (
-          <Fragment>
-            <KeyboardAwareScrollView>
-              <Form behavior="padding">
-                <Input
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                  touched={touched}
-                  error={errors.name}
-                  label="Name"
-                />
-                <StrengthInput
-                  onChangeText={handleChange('strength')}
-                  onBlur={handleBlur('strength')}
-                  value={values.strength}
-                  touched={touched}
-                  error={errors.strength}
-                />
-                <AmountInput
-                  onChangeText={handleChange('amount')}
-                  onBlur={handleBlur('amount')}
-                  value={values.amount}
-                  touched={touched}
-                  error={errors.amount}
-                />
-                <Input
-                  onChangeText={handleChange('notes')}
-                  onBlur={handleBlur('notes')}
-                  value={values.notes}
-                  touched={touched}
-                  error={errors.notes}
-                  inputStyle={{ height: 150, justifyContent: 'flex-start' }}
-                  multiline
-                  numberOfLines={10}
-                  label="Notes"
-                />
-                {/* <FormField>
-                  <Label>Frequency</Label>
-                  <FrequencyRadioGroup />
-                </FormField>
-                <FormField>
-                  <Label>Dosage Times</Label>
-                  <DosageMultiSelect />
-                </FormField> */}
-              </Form>
-            </KeyboardAwareScrollView>
-            <ButtonContainer>
-              <Button disabled={!isValid} onPress={handleSubmit} text="Next" />
-            </ButtonContainer>
-          </Fragment>
-        )}
-      </Formik>
-    </View>
+    <SafeArea>
+      <Form>
+        <Autocomplete
+          data={medicationNameSuggestions}
+          onChangeText={handleChange('name')}
+          onBlur={handleMedNameBlur}
+          value={values.name}
+          touched={touched}
+          error={errors.name}
+          label="Name"
+          keyExtractor={(item) => item.toString()}
+          renderItem={({ item }) => (
+            <AutoCompleteSuggestion
+              onPress={() => {
+                if (values.name === item) {
+                  clearAutocompleteSuggestions();
+                } else {
+                  setFieldValue('name', item);
+                  clearAutoCompleteData.current = true;
+                }
+              }}>
+              <Text>{item}</Text>
+            </AutoCompleteSuggestion>
+          )}
+        />
+        <StrengthInput
+          onChangeText={handleChange('strength')}
+          onBlur={handleBlur('strength')}
+          value={values.strength}
+          touched={touched}
+          error={errors.strength}
+        />
+        <AmountInput
+          onChangeText={handleChange('amount')}
+          onBlur={handleBlur('amount')}
+          value={values.amount}
+          touched={touched}
+          error={errors.amount}
+        />
+        <Input
+          onChangeText={handleChange('notes')}
+          onBlur={handleBlur('notes')}
+          value={values.notes}
+          touched={touched}
+          error={errors.notes}
+          inputStyle={textAreaInputStyle}
+          multiline
+          numberOfLines={10}
+          label="Notes"
+        />
+      </Form>
+      <ButtonContainer>
+        <Button disabled={!isValid} onPress={handleSubmit} text="Next" />
+      </ButtonContainer>
+    </SafeArea>
   );
 };
 
-const View = styled.SafeAreaView`
+const AutoCompleteSuggestion = styled.TouchableOpacity`
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+`;
+
+const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const Form = styled.View`
-  flex-direction: column;
+const Form = styled.KeyboardAvoidingView`
+  flex: 1;
   padding: 24px;
-`;
-
-const FormField = styled.View`
-  margin-bottom: 24px;
 `;
 
 const ButtonContainer = styled.View`
