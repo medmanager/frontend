@@ -15,8 +15,6 @@ const Input = styled.TextInput`
   position: relative;
   font-size: 16px;
   color: black;
-  margin-top: auto;
-  margin-bottom: auto;
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 10px;
@@ -24,6 +22,7 @@ const Input = styled.TextInput`
   border-radius: 8px;
   background-color: #fff;
   border-width: 0.5px;
+  align-items: center;
   border-color: ${Colors.gray[300]};
 `;
 

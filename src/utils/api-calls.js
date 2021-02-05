@@ -56,9 +56,9 @@ export default {
         body: JSON.stringify(medication),
       });
       const resp = response.json();
-      return { isError: false, response: resp };
+      return resp;
     } catch (error) {
-      return { isError: true, error: error };
+      throw error;
     }
   },
 
@@ -68,7 +68,7 @@ export default {
       const response = await fetch(url);
       return response.json();
     } catch (error) {
-      return error;
+      throw error;
     }
   },
 
@@ -78,7 +78,7 @@ export default {
       const response = await fetch(url);
       return response.json();
     } catch (error) {
-      return error;
+      throw error;
     }
   },
 

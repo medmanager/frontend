@@ -225,7 +225,6 @@ const androidStyles = {
   },
   inputContainer: {
     ...border,
-    ...inputStyles,
     marginBottom: 0,
   },
   list: {
@@ -242,10 +241,6 @@ const iosStyles = {
     zIndex: 1,
     marginBottom: 24,
   },
-  input: {
-    ...border,
-    ...inputStyles,
-  },
   list: {
     ...border,
     marginTop: 4,
@@ -259,9 +254,8 @@ const iosStyles = {
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: 'white',
-    height: 40,
-    paddingLeft: 3,
+    ...border,
+    ...inputStyles,
   },
   listContainer: {
     zIndex: 10,
