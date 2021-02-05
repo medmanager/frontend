@@ -29,11 +29,11 @@ export default {
   *    times: [
   *    {
   *      medicationAmount: 1,
-  *      setReminder: true,
+  *      sendReminder: true,
   *      reminderTime: 9am (date object)
   *    }, 
   *      medicationAmount: 1,
-  *      setReminder: true,
+  *      sendReminder: true,
   *      reminderTime: 9pm (date object)
   *    ]
   *  }
@@ -55,9 +55,10 @@ export default {
         },
         body: JSON.stringify(medication)
       });
-      return response.json();
+      const resp = response.json();
+      return {isError: false, response: resp};
     } catch(error) {
-      return error;
+      return {isError: true, error: error};
     }
   },
 

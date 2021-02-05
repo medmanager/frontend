@@ -12,7 +12,6 @@ import AmountInput from './components/AmountInput';
 import DosageInput from './components/DosageInput';
 import FrequencyRadioGroup from './components/FrequencyRadioGroup';
 import TimeMultiSelect from './components/TimeMultiSelect';
-import Autocomplete from './components/Autocomplete';
 import apiCalls from '../../utils/api-calls'
 
 
@@ -76,7 +75,7 @@ const AddMedicationView = ({ navigation }) => {
             <Scrollable keyboardShouldPersistTaps="always">
               <Form behavior="padding">
                 <Input
-                  onChangeText={(text) => {handleChange('name'); searchMedicationNames(text);}}
+                  onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
                   value={values.name}
                   touched={touched}

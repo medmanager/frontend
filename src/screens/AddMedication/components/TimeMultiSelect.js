@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import shallow from 'zustand/shallow';
 import { useAddMedicationSettings } from '../../../store/useAddMedicationSettings';
 import { Colors, range } from '../../../utils';
+import { formatTime } from '../../../utils/index'
 
 const Checkbox = ({ selected }) => {
   return (
@@ -63,14 +64,6 @@ const TimeMultiSelect = () => {
     color: Colors.blue[500],
     borderTopRightRadius: 0,
   };
-
-  const formatTime = (time) => {
-    let hours = time.getHours();
-    let minutes = time.getMinutes();
-    return (hours > 12 ? hours - 12 : hours).toString() + ":" +
-      (minutes.toString().length < 2 ? "0" + minutes.toString() : minutes.toString())
-      + (hours > 12 ? "pm" : "am");
-  }
 
   return (
     <Container>
