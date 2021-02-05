@@ -15,10 +15,8 @@ function HomeScreen() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      try {
-        const results = await apiCalls.getMedications();
-        setMedications(results);
-      } catch (e) {}
+      const medications = await apiCalls.getMedications();
+      setMedications(medications);
       setLoading(false);
     })();
   }, [isFocused]);
@@ -33,7 +31,7 @@ function HomeScreen() {
     );
   }
 
-  if (!medications || medications === undefined || medications.length === 0) {
+  if (!medications || medications.length === 0) {
     return (
       <Container>
         <Text>No Medications Found.</Text>
@@ -43,7 +41,7 @@ function HomeScreen() {
 
   return (
     <Container>
-`      {medications.map((medication) => (
+      {medications.map((medication) => (
         <MedicationItem key={medication._id}>
           <View>
             <MedicationName>{medication.name}</MedicationName>
@@ -53,7 +51,7 @@ function HomeScreen() {
           </View>
           <Icon name="chevron-right" size={18} color={Colors.gray[500]} />
         </MedicationItem>
-      ))}`
+      ))}
     </Container>
   );
 }
