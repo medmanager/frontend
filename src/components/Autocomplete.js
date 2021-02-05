@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
-  FlatList,
   Platform,
   StyleSheet,
   Text,
@@ -80,7 +79,7 @@ class Autocomplete extends Component {
      * renders custom TextInput. All props passed to this function.
      */
     renderTextInput: PropTypes.func,
-    flatListProps: PropTypes.object,
+    listContainerProps: PropTypes.object,
   };
 
   static defaultProps = {
@@ -92,7 +91,7 @@ class Autocomplete extends Component {
     renderTextInput: (props) => (
       <TextInput clearButtonMode="always" {...props} />
     ),
-    flatListProps: {},
+    listContainerProps: {},
   };
 
   constructor(props) {
@@ -100,17 +99,12 @@ class Autocomplete extends Component {
     this.resultList = null;
     this.textInput = null;
 
-    this.onRefListView = this.onRefListView.bind(this);
     this.onRefTextInput = this.onRefTextInput.bind(this);
     this.onEndEditing = this.onEndEditing.bind(this);
   }
 
   onEndEditing(e) {
     this.props.onEndEditing && this.props.onEndEditing(e);
-  }
-
-  onRefListView(resultList) {
-    this.resultList = resultList;
   }
 
   onRefTextInput(textInput) {
@@ -147,26 +141,15 @@ class Autocomplete extends Component {
       listStyle,
       renderItem,
       keyExtractor,
-      renderSeparator,
-      keyboardShouldPersistTaps,
-      flatListProps,
-      onEndReached,
-      onEndReachedThreshold,
+      listContainerProps,
     } = this.props;
 
     return (
-      <FlatList
-        ref={this.onRefListView}
-        data={data}
-        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        renderSeparator={renderSeparator}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={onEndReachedThreshold}
-        style={[styles.list, listStyle]}
-        {...flatListProps}
-      />
+      <View style={[styles.list, listStyle]} {...listContainerProps}>
+        {data.map((item) => (
+          <Fragment key={keyExtractor(item)}>{renderItem(item)}</Fragment>
+        ))}
+      </View>
     );
   }
 

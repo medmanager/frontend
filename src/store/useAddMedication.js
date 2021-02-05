@@ -5,7 +5,7 @@ import { capitalize, days, getStatusText, nthDay } from '../utils';
 const now = new Date();
 const frequencyRadioInputChoices = [
   {
-    id: 1,
+    id: 0,
     type: 'RadioButton',
     label: 'Daily',
     value: {
@@ -15,7 +15,7 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 2,
+    id: 1,
     type: 'RadioButton',
     label: `Weekly (${capitalize(days[now.getDay()])})`,
     value: {
@@ -27,7 +27,7 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 3,
+    id: 2,
     type: 'RadioButton',
     label: `Bi-Weekly (${capitalize(days[now.getDay()])})`,
     value: {
@@ -39,7 +39,7 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 4,
+    id: 3,
     type: 'RadioButton',
     label: `Monthly (the ${nthDay(now)})`,
     value: {
@@ -51,10 +51,10 @@ const frequencyRadioInputChoices = [
     },
   },
   {
-    id: 5,
+    id: 4,
     type: 'RadioButtonClickThrough',
     label: (value, selected) =>
-      `Custom ${selected ? `(${getStatusText(value)})` : ''}`,
+      `Custom ${selected ? `(${capitalize(getStatusText(value))})` : ''}`,
     route: 'AddMedicationCustomFrequency',
     value: {
       interval: 1,
@@ -75,7 +75,7 @@ const frequencyRadioInputChoices = [
 
 now.setMinutes(0);
 
-const timeMultiSelectChoices = [
+const dosageMultiSelectChoices = [
   {
     id: 0,
     label: 'Morning',
@@ -125,9 +125,17 @@ const useAddMedication = create(
     amountUnit: 'tablets',
     frequencies: frequencyRadioInputChoices,
     selectedFrequency: frequencyRadioInputChoices[0].id,
-    times: timeMultiSelectChoices,
-    selectedTimes: [timeMultiSelectChoices[0].id, timeMultiSelectChoices[3].id],
-    formValues: null,
+    dosages: dosageMultiSelectChoices,
+    selectedDosages: [
+      dosageMultiSelectChoices[0].id,
+      dosageMultiSelectChoices[3].id,
+    ],
+    formValues: {
+      name: '',
+      strength: null,
+      amount: null,
+      notes: '',
+    },
 
     // state actions
     setFormValues: (formValues) =>
@@ -170,32 +178,32 @@ const useAddMedication = create(
       }),
     toggleSelectTime: (id) =>
       set((state) => {
-        if (state.selectedTimes.includes(id)) {
-          state.selectedTimes = state.selectedTimes.filter(
-            (timeId) => timeId !== id,
+        if (state.selectedDosages.includes(id)) {
+          state.selectedDosages = state.selectedDosages.filter(
+            (dosageId) => dosageId !== id,
           );
         } else {
-          state.selectedTimes.push(id);
+          state.selectedDosages.push(id);
         }
       }),
     setDose: (id, dose) =>
       set((state) => {
-        const time = state.times.find((time) => time.id === id);
+        const time = state.dosages.find((dosage) => dosage.id === id);
         time.value.dose = dose;
       }),
     setReminderTime: (id, reminderTime) =>
       set((state) => {
-        const time = state.times.find((time) => time.id === id);
+        const time = state.dosages.find((dosage) => dosage.id === id);
         time.value.reminderTime = reminderTime;
       }),
     toggleReminder: (id) =>
       set((state) => {
-        const time = state.times.find((time) => time.id === id);
+        const time = state.dosages.find((dosage) => dosage.id === id);
         time.value.sendReminder = !time.value.sendReminder;
       }),
     sendTimePicker: (id) =>
       set((state) => {
-        const time = state.times.find((time) => time.id === id);
+        const time = state.dosages.find((dosage) => dosage.id === id);
         time.value.sendTimePicker = !time.value.sendTimePicker;
       }),
     setState: (fn) => set(produce(fn)),

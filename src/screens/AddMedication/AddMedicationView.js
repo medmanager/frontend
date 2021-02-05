@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
 import { Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
 import Autocomplete from '../../components/Autocomplete';
@@ -11,6 +12,8 @@ import { Colors } from '../../utils';
 import api from '../../utils/api-calls';
 import AmountInput from './components/AmountInput';
 import StrengthInput from './components/StrengthInput';
+
+const MIN_SEARCH_QUERY_LENGTH = 2;
 
 const AddMedicationView = ({ navigation }) => {
   const initialValues = {
@@ -44,11 +47,12 @@ const AddMedicationView = ({ navigation }) => {
     }),
     onSubmit: (formValues) => {
       setFormValues(formValues);
+      clearAutocompleteSuggestions();
       navigation.navigate('AddMedicationSchedule');
     },
   });
   const setFormValues = useAddMedication((state) => state.setFormValues);
-  const clearAutoCompleteData = useRef(false);
+  const clearAutocomplete = useRef(false);
   const [medicationNameSuggestions, setMedicationNameSuggestions] = useState(
     [],
   );
@@ -57,7 +61,7 @@ const AddMedicationView = ({ navigation }) => {
     if (query === '') {
       return [];
     }
-    if (query.length >= 3) {
+    if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
       return api.searchAutoComplete(query);
     }
     setMedicationNameSuggestions([]);
@@ -68,7 +72,7 @@ const AddMedicationView = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (clearAutoCompleteData.current) {
+    if (clearAutocomplete.current) {
       clearAutocompleteSuggestions();
     } else {
       (async () => {
@@ -76,8 +80,8 @@ const AddMedicationView = ({ navigation }) => {
         setMedicationNameSuggestions(suggestions);
       })();
     }
-    clearAutoCompleteData.current = false;
-  }, [values.name, clearAutoCompleteData]);
+    clearAutocomplete.current = false;
+  }, [values.name, clearAutocomplete]);
 
   const handleMedNameBlur = () => {
     clearAutocompleteSuggestions();
@@ -91,56 +95,58 @@ const AddMedicationView = ({ navigation }) => {
 
   return (
     <SafeArea>
-      <Form>
-        <Autocomplete
-          data={medicationNameSuggestions}
-          onChangeText={handleChange('name')}
-          onBlur={handleMedNameBlur}
-          value={values.name}
-          touched={touched}
-          error={errors.name}
-          label="Name"
-          keyExtractor={(item) => item.toString()}
-          renderItem={({ item }) => (
-            <AutoCompleteSuggestion
-              onPress={() => {
-                if (values.name === item) {
-                  clearAutocompleteSuggestions();
-                } else {
-                  setFieldValue('name', item);
-                  clearAutoCompleteData.current = true;
-                }
-              }}>
-              <Text>{item}</Text>
-            </AutoCompleteSuggestion>
-          )}
-        />
-        <StrengthInput
-          onChangeText={handleChange('strength')}
-          onBlur={handleBlur('strength')}
-          value={values.strength}
-          touched={touched}
-          error={errors.strength}
-        />
-        <AmountInput
-          onChangeText={handleChange('amount')}
-          onBlur={handleBlur('amount')}
-          value={values.amount}
-          touched={touched}
-          error={errors.amount}
-        />
-        <Input
-          onChangeText={handleChange('notes')}
-          onBlur={handleBlur('notes')}
-          value={values.notes}
-          touched={touched}
-          error={errors.notes}
-          inputStyle={textAreaInputStyle}
-          multiline
-          numberOfLines={10}
-          label="Notes"
-        />
-      </Form>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <Form>
+          <Autocomplete
+            data={medicationNameSuggestions}
+            onChangeText={handleChange('name')}
+            onBlur={handleMedNameBlur}
+            value={values.name}
+            touched={touched}
+            error={errors.name}
+            label="Name"
+            keyExtractor={(item) => item.toString()}
+            renderItem={(item) => (
+              <AutoCompleteSuggestion
+                onPress={() => {
+                  if (values.name === item) {
+                    clearAutocompleteSuggestions();
+                  } else {
+                    setFieldValue('name', item);
+                    clearAutocomplete.current = true;
+                  }
+                }}>
+                <Text>{item}</Text>
+              </AutoCompleteSuggestion>
+            )}
+          />
+          <StrengthInput
+            onChangeText={handleChange('strength')}
+            onBlur={handleBlur('strength')}
+            value={values.strength}
+            touched={touched}
+            error={errors.strength}
+          />
+          <AmountInput
+            onChangeText={handleChange('amount')}
+            onBlur={handleBlur('amount')}
+            value={values.amount}
+            touched={touched}
+            error={errors.amount}
+          />
+          <Input
+            onChangeText={handleChange('notes')}
+            onBlur={handleBlur('notes')}
+            value={values.notes}
+            touched={touched}
+            error={errors.notes}
+            inputStyle={textAreaInputStyle}
+            multiline
+            numberOfLines={10}
+            label="Notes"
+          />
+        </Form>
+      </KeyboardAwareScrollView>
       <ButtonContainer>
         <Button disabled={!isValid} onPress={handleSubmit} text="Next" />
       </ButtonContainer>
@@ -159,7 +165,7 @@ const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const Form = styled.KeyboardAvoidingView`
+const Form = styled.View`
   flex: 1;
   padding: 24px;
 `;

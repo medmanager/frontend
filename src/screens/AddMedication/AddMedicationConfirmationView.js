@@ -1,144 +1,215 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
+import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
+import Label from '../../components/Label';
+import Modal from '../../components/Modal';
 import { useAddMedication } from '../../store/useAddMedication';
 import { Colors, formatTime, getStatusText } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 
-const AddMedicationConfirmationView = ({ route, navigation }) => {
-  const { times, frequencies } = useAddMedication((state) => ({
-    times: state.times,
-    frequencies: state.frequencies,
-  }));
+const AddMedicationConfirmationView = ({ navigation }) => {
   const {
+    frequency,
+    dosages,
+    amount,
+    amountUnit,
+    name,
+    strength,
+    strengthUnit,
+    notes,
+  } = useAddMedication((state) => ({
+    dosages: state.selectedDosages.map(
+      (id) => state.dosages.find((dosage) => dosage.id === id).value,
+    ),
+    frequency: state.frequencies.find(
+      (frequency) => frequency.id === state.selectedFrequency,
+    ).value,
+    name: state.formValues.name,
+    amount: state.formValues.amount,
+    amountUnit: state.amountUnit,
+    strength: state.formValues.strength,
+    strengthUnit: state.strengthUnit,
+    notes: state.formValues.notes,
+  }));
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+
+  const postMedication = async (medication) => {
+    try {
+      const result = await apiCalls.addMedication(medication);
+      if (result.error) {
+        setShowErrorModal(true);
+      } else {
+        setShowSuccessModal(true);
+      }
+    } catch (e) {
+      setShowErrorModal(true);
+    }
+  };
+
+  const medication = {
     name,
     amount,
     amountUnit,
-    dosage,
-    dosageUnit,
+    strength,
+    strengthUnit,
     notes,
-    selectedFrequency,
-    selectedTimes,
-  } = route.params;
-
-  let medication;
-
-  const postMedication = async () => {
-    const result = await apiCalls.addMedication(medication);
-    if (result.error) {
-      //do something
-    }
-    console.log(result);
+    frequency,
+    dosages,
   };
 
-  function wrapInformation() {
-    const wrapTimes = [];
-    let i;
-    for (i = 0; i < selectedTimes.length; i++) {
-      wrapTimes.push({
-        medicationAmount: times[selectedTimes[i]].value.medicationAmount,
-        sendReminder: times[selectedTimes[i]].value.sendReminder,
-        reminderTime: times[selectedTimes[i]].value.reminderTime,
-      });
-    }
-    const medication = {
-      name: name,
-      amount: amount,
-      amountUnit: amountUnit,
-      dosage: dosage,
-      dosageUnit: dosageUnit,
-      notes: notes,
-      frequency: frequencies[selectedFrequency].value,
-      times: wrapTimes,
-    };
-    return medication;
-  }
-  medication = wrapInformation();
+  const dosageTimesString = medication.dosages
+    .sort((a, b) => a.reminderTime - b.reminderTime)
+    .map((dosage) => formatTime(dosage.reminderTime))
+    .join(', ');
 
-  let reminderString = '';
-  let reminders = [];
-  let reminderVals = '';
+  const handleAddAnotherMed = () => {
+    navigation.navigate('Home');
+    navigation.navigate('AddMedicationModal');
+  };
 
-  function formatReminderString() {
-    let i;
-    for (i = 0; i < medication.times.length; i++) {
-      if (medication.times[i].sendReminder) {
-        reminders.push(times[i]);
-        reminderVals += formatTime(medication.times[i].reminderTime);
-        if (i < medication.times.length - 1) reminderVals += ', ';
-      }
-    }
-    reminderString = ' Reminder' + (reminders.length > 1 ? 's ' : ' ');
-    reminderString += 'at ';
-  }
-
-  formatReminderString();
-  console.log(medication.frequency);
+  const handleContinueHome = () => {
+    navigation.navigate('Home');
+  };
 
   return (
-    <Container>
-      <InfoContainer>
-        <Title>{medication.name}</Title>
-        <HBox>
-          <Label>Dosage:</Label>
-          <InputLabel>
-            {medication.dosage + ' ' + medication.dosageUnit}
-          </InputLabel>
-          <Label>Amount:</Label>
-          <InputLabel>
-            {medication.amount + ' ' + medication.amountUnit}
-          </InputLabel>
-        </HBox>
-        <HBox>
-          <Label>{'Take '}</Label>
-          <InputLabel> {medication.times.length} </InputLabel>
-          <Label>{medication.times.length > 1 ? ' times' : ' time'}</Label>
-          {medication.frequency.intervalUnits == 'days' && (
-            <InputLabel>
-              {medication.frequency.interval > 1
-                ? 'every ' + medication.frequency.interval + ' days'
-                : 'everyday'}
-            </InputLabel>
-          )}
-        </HBox>
-        {medication.frequency.intervalUnits == 'weeks' && (
-          <HBox>
-            <InputLabel>{getStatusText(medication.frequency)}</InputLabel>
-          </HBox>
-        )}
-        {reminders.length > 0 && (
-          <HBox>
-            <Label>{reminderString}</Label>
-            <InputLabel>{reminderVals}</InputLabel>
-          </HBox>
-        )}
-        {medication.notes.length > 0 && (
-          <HBox>
-            <Label>Notes: </Label>
-            <InputLabel>{medication.notes}</InputLabel>
-          </HBox>
-        )}
-      </InfoContainer>
-      <ButtonContainer>
-        <Button
-          onPress={() => {
-            postMedication();
-          }}
-          text="Confirm"
-        />
-      </ButtonContainer>
-    </Container>
+    <Fragment>
+      <Container>
+        <InfoContainer>
+          <Title>{medication.name}</Title>
+          <Field>
+            <Label>Strength</Label>
+            <Text>{medication.strength + ' ' + medication.strengthUnit}</Text>
+          </Field>
+          <Field>
+            <Label>Amount</Label>
+            <Text>{medication.amount + ' ' + medication.amountUnit}</Text>
+          </Field>
+          <Field>
+            <Label>Notes</Label>
+            <Text>
+              {medication.notes.length > 0 ? medication.notes : 'Empty'}
+            </Text>
+          </Field>
+          <Field>
+            <Label>Schedule</Label>
+            <Text>
+              Take {medication.dosages.length} {medication.amountUnit} at{' '}
+              {dosageTimesString} {getStatusText(medication.frequency)}
+            </Text>
+          </Field>
+        </InfoContainer>
+        <ButtonContainer>
+          <Button
+            onPress={() => {
+              postMedication(medication);
+            }}
+            text="Confirm"
+          />
+        </ButtonContainer>
+      </Container>
+      <Modal
+        title={`${medication.name} added successfuly!`}
+        showModal={showSuccessModal}
+        showActionBar={false}
+        backdropDismiss={false}>
+        <SuccessIconContainer>
+          <Icon name="check-circle" color="#10B981" size={48} />
+        </SuccessIconContainer>
+        <AddMedButton onPress={handleAddAnotherMed}>
+          <AddMedButtonText>Add Another Med</AddMedButtonText>
+        </AddMedButton>
+        <ContinueButton onPress={handleContinueHome}>
+          <ContinueButtonText>Continue to Home Screen</ContinueButtonText>
+        </ContinueButton>
+      </Modal>
+      <Modal
+        title={`${medication.name} could not be added`}
+        showModal={showErrorModal}
+        showActionBar={false}
+        backdropDismiss={false}>
+        <SuccessIconContainer>
+          <Icon name="alert-circle" color="#EF4444" size={48} />
+        </SuccessIconContainer>
+        <ErrorText>
+          We are sorry, but there was a problem adding {medication.name} to your
+          medications. Please try again later.
+        </ErrorText>
+        <AddMedButton onPress={handleAddAnotherMed}>
+          <AddMedButtonText>Try again</AddMedButtonText>
+        </AddMedButton>
+        <ContinueButton onPress={handleContinueHome}>
+          <ContinueButtonText>Continue to Home Screen</ContinueButtonText>
+        </ContinueButton>
+      </Modal>
+    </Fragment>
   );
 };
 
 const Container = styled.SafeAreaView`
   flex: 1;
-  background-color: #fff;
+`;
+
+const ErrorText = styled.Text`
+  font-size: 16px;
+  color: ${Colors.gray[700]};
+  margin-bottom: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+`;
+
+const AddMedButton = styled.TouchableOpacity`
+  background-color: ${Colors.blue[500]};
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  align-items: center;
+  border-radius: 8px;
+`;
+
+const AddMedButtonText = styled.Text`
+  color: white;
+  font-size: 16px;
+`;
+
+const ContinueButton = styled.TouchableOpacity`
+  margin-top: 8px;
+  background-color: transparent;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  align-items: center;
+`;
+
+const ContinueButtonText = styled.Text`
+  color: ${Colors.blue[500]};
+  font-size: 16px;
+`;
+
+const SuccessIconContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+`;
+
+const Text = styled.Text`
+  font-size: 16px;
+`;
+
+const Field = styled.View`
+  margin-top: 16px;
 `;
 
 const ButtonContainer = styled.View`
   border-top-width: 1px;
-  border-top-color: ${Colors.gray[100]}
+  border-top-color: ${Colors.gray[300]};
   width: 100%;
   padding-left: 24px;
   padding-right: 24px;
@@ -147,33 +218,12 @@ const ButtonContainer = styled.View`
 `;
 
 const InfoContainer = styled.View`
-  align-items: center;
-  margin-top: 15;
+  flex: 1;
+  padding: 24px;
 `;
 
 const Title = styled.Text`
   font-size: 24px;
-`;
-
-const InputLabel = styled.Text`
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: ${Colors.gray[200]};
-  margin-top: 7px;
-`;
-
-const Label = styled.Text`
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 7px;
-`;
-
-const HBox = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 16px;
 `;
 
 export default AddMedicationConfirmationView;

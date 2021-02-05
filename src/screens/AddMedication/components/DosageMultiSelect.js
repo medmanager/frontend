@@ -1,7 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
-import React from 'react';
-import { Switch, View } from 'react-native';
+import React, { Fragment } from 'react';
+import { Platform, Switch, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import shallow from 'zustand/shallow';
@@ -32,12 +31,50 @@ const CheckMark = styled(Icon)`
   color: #fff;
 `;
 
-const Item = Picker.Item;
+const AnroidTimePicker = ({ value, sendTimePicker, id, setReminderTime }) => (
+  <Fragment>
+    <Opacity
+      onPress={() => {
+        sendTimePicker(id);
+      }}>
+      <Text>{formatTime(value.reminderTime)}</Text>
+    </Opacity>
+    {value.sendTimePicker && (
+      <DateTimePicker
+        value={value.reminderTime}
+        mode="time"
+        is24Hour={true}
+        display="default"
+        onChange={(_, selectedTime) => {
+          sendTimePicker(id);
+          setReminderTime(id, selectedTime || value.reminderTime);
+        }}
+      />
+    )}
+  </Fragment>
+);
+
+const iOSTimePicker = ({ value, id, setReminderTime }) => (
+  <DateTimePicker
+    value={value.reminderTime}
+    mode="time"
+    is24Hour={true}
+    display="default"
+    onChange={(_, selectedTime) => {
+      setReminderTime(id, selectedTime || value.reminderTime);
+    }}
+  />
+);
+
+const TimePicker = Platform.select({
+  android: AnroidTimePicker,
+  ios: iOSTimePicker,
+});
 
 const DosageMultiSelect = () => {
   const {
-    times,
-    selectedTimes,
+    dosages,
+    selectedDosages,
     toggleSelectTime,
     setDose,
     setReminderTime,
@@ -45,8 +82,8 @@ const DosageMultiSelect = () => {
     sendTimePicker,
   } = useAddMedication(
     (state) => ({
-      times: state.times,
-      selectedTimes: state.selectedTimes,
+      dosages: state.dosages,
+      selectedDosages: state.selectedDosages,
       toggleSelectTime: state.toggleSelectTime,
       setDose: state.setDose,
       setReminderTime: state.setReminderTime,
@@ -70,10 +107,8 @@ const DosageMultiSelect = () => {
 
   return (
     <Container>
-      {times.map(({ value, label, id }) => {
-        const selected = selectedTimes.includes(id);
-
-        console.log(value.dose);
+      {dosages.map(({ value, label, id }) => {
+        const selected = selectedDosages.includes(id);
 
         return (
           <View key={id}>
@@ -119,31 +154,17 @@ const DosageMultiSelect = () => {
                     }}
                     value={value.sendReminder}
                   />
-                  <Opacity
-                    onPress={() => {
-                      if (value.sendReminder === false) {
-                        toggleReminder(id);
-                        sendTimePicker(id);
-                      } else {
-                        sendTimePicker(id);
-                      }
-                    }}>
-                    <Text>{formatTime(value.reminderTime)}</Text>
-                  </Opacity>
-                  {value.sendTimePicker && value.sendReminder && (
+                </ReminderInputContainer>
+                <TimePickerContainer>
+                  {value.sendReminder && (
                     <TimePicker
-                      testID="dateTimePicker"
-                      value={value.reminderTime}
-                      mode="time"
-                      is24Hour={true}
-                      display="default"
-                      onChange={(_, selectedTime) => {
-                        sendTimePicker(id);
-                        setReminderTime(id, selectedTime || value.reminderTime);
-                      }}
+                      id={id}
+                      value={value}
+                      setReminderTime={setReminderTime}
+                      sendTimePicker={sendTimePicker}
                     />
                   )}
-                </ReminderInputContainer>
+                </TimePickerContainer>
               </DosageSettingsContainer>
             )}
           </View>
@@ -216,7 +237,7 @@ const Opacity = styled.TouchableOpacity`
   background-color: ${Colors.gray[100]};
 `;
 
-const TimePicker = styled(DateTimePicker)`
+const TimePickerContainer = styled.View`
   margin-top: 16px;
 `;
 

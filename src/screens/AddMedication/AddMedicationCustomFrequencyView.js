@@ -5,6 +5,7 @@ import shallow from 'zustand/shallow';
 import Label from '../../components/Label';
 import { useAddMedication } from '../../store/useAddMedication';
 import {
+  capitalize,
   Colors,
   dayChoices,
   getSelectedDays,
@@ -91,7 +92,9 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
             />
           </Fragment>
         )}
-        <StatusText>{getStatusText(customFrequency.value)}</StatusText>
+        <StatusText>
+          {capitalize(getStatusText(customFrequency.value))}
+        </StatusText>
       </Container>
     </SafeArea>
   );

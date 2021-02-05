@@ -3,7 +3,14 @@ import RNModal from 'react-native-modal';
 import styled from 'styled-components/native';
 import { Colors } from '../utils';
 
-const Modal = ({ toggleModal, showModal, title, children }) => {
+const Modal = ({
+  showModal,
+  title,
+  children,
+  toggleModal = () => {},
+  backdropDismiss = true,
+  showActionBar = true,
+}) => {
   const zoomIn = {
     0: {
       opacity: 0,
@@ -41,7 +48,7 @@ const Modal = ({ toggleModal, showModal, title, children }) => {
       animationInTiming={150}
       animationOutTiming={150}
       backdropOpacity={0.6}
-      onBackdropPress={toggleModal}
+      onBackdropPress={backdropDismiss ? toggleModal : undefined}
       isVisible={showModal}>
       <ModalContainer>
         <Centered>
@@ -49,11 +56,13 @@ const Modal = ({ toggleModal, showModal, title, children }) => {
         </Centered>
         <ModalContent>
           {children}
-          <ActionBar>
-            <ActionBarItem onPress={toggleModal}>
-              <ActionBarItemText>Done</ActionBarItemText>
-            </ActionBarItem>
-          </ActionBar>
+          {showActionBar && (
+            <ActionBar>
+              <ActionBarItem onPress={toggleModal}>
+                <ActionBarItemText>Done</ActionBarItemText>
+              </ActionBarItem>
+            </ActionBar>
+          )}
         </ModalContent>
       </ModalContainer>
     </RNModal>

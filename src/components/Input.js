@@ -15,7 +15,7 @@ const Input = ({ label, inputStyle, touched, error, ...props }) => {
 };
 
 const Container = styled.View`
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 `;
 
 const TextInput = styled.TextInput`

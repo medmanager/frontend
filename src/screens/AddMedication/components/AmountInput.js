@@ -51,7 +51,7 @@ const AmountInput = ({ touched, error, ...props }) => {
 };
 
 const Container = styled.View`
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 `;
 
 const AmountInputContainer = styled.View`

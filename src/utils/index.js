@@ -32,35 +32,40 @@ export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 export const formatTime = (time) => {
   let hours = time.getHours();
   let minutes = time.getMinutes();
-  return (hours > 12 ? hours - 12 : hours).toString() + ":" +
-    (minutes.toString().length < 2 ? "0" + minutes.toString() : minutes.toString())
-    + (hours > 12 ? " PM" : " AM");
-}
+  return (
+    (hours > 12 ? hours - 12 : hours).toString() +
+    ':' +
+    (minutes.toString().length < 2
+      ? '0' + minutes.toString()
+      : minutes.toString()) +
+    (hours > 12 ? ' PM' : ' AM')
+  );
+};
 
-export const getSelectedDays = (customFrequency) =>
-  Object.entries(customFrequency.weekdays || {})
+export const getSelectedDays = (frequency) =>
+  Object.entries(frequency.weekdays || {})
     .filter(([key, value]) => !!value) // only get days which are marked as true
     .map(([key, value]) => key);
 
-export const getStatusText = (customFrequency) => {
-  if (customFrequency.intervalUnits === 'days') {
-    if (customFrequency.interval === 1) {
-      return 'Every day';
+export const getStatusText = (frequency) => {
+  if (frequency.intervalUnits === 'days') {
+    if (frequency.interval === 1) {
+      return 'every day';
     } else {
-      return `Every ${customFrequency.interval} days`;
+      return `every ${frequency.interval} days`;
     }
   } else {
-    const selectedDays = getSelectedDays(customFrequency);
+    const selectedDays = getSelectedDays(frequency);
     const selectedDaysShort = selectedDays.map((day) =>
       capitalize(day).substring(0, 3),
     );
 
-    if (customFrequency.interval === 1) {
-      return `Weekly on ${selectedDaysShort.join(', ')}`;
+    if (frequency.interval === 1) {
+      return `weekly on ${selectedDaysShort.join(', ')}`;
     } else {
-      return `Every ${
-        customFrequency.interval
-      } weeks on ${selectedDaysShort.join(', ')}`;
+      return `every ${frequency.interval} weeks on ${selectedDaysShort.join(
+        ', ',
+      )}`;
     }
   }
 };
