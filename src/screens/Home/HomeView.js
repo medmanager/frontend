@@ -30,7 +30,7 @@ function HomeScreen() {
     );
   }
 
-  if (medications.length === 0) {
+  if (!medications || medications.length === 0) {
     return (
       <Container>
         <Text>No Medications Found.</Text>
