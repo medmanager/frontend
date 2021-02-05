@@ -224,8 +224,6 @@ const androidStyles = {
     flex: 1,
   },
   inputContainer: {
-    ...border,
-    ...inputStyles,
     marginBottom: 0,
   },
   list: {
@@ -241,10 +239,6 @@ const iosStyles = {
   container: {
     zIndex: 1,
     marginBottom: 24,
-  },
-  input: {
-    ...border,
-    ...inputStyles,
   },
   list: {
     ...border,
@@ -262,6 +256,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 40,
     paddingLeft: 3,
+    ...border,
+    ...inputStyles,
   },
   listContainer: {
     zIndex: 10,

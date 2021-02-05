@@ -1,6 +1,7 @@
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import { Colors } from '../../utils';
@@ -40,7 +41,8 @@ function HomeScreen() {
 
   return (
     <Container>
-      {medications.map((medication) => (
+      <FlatList>
+`      {medications.map((medication) => (
         <MedicationItem key={medication._id}>
           <View>
             <MedicationName>{medication.name}</MedicationName>
@@ -50,7 +52,8 @@ function HomeScreen() {
           </View>
           <Icon name="chevron-right" size={18} color={Colors.gray[500]} />
         </MedicationItem>
-      ))}
+      ))}`
+      </FlatList>
     </Container>
   );
 }
