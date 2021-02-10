@@ -5,6 +5,7 @@ const colors = {
     500: '#2F80ED',
     400: '#00A3E8',
     300: '#56CCF2',
+    100: '#A7DBFF'
   },
   orange: {
     500: '#FF7F26',
@@ -27,4 +28,16 @@ const colors = {
   },
 };
 
-export { colors };
+const medicationColors = [
+  '#FF0000',
+  '#E9FF00',
+  '#22FF00',
+  '#00FFE8',
+  '#0083FF',
+  '#0700FF',
+  '#8E00FF',
+  '#F400FF',
+  '#FF0071',
+];
+
+export { colors, medicationColors };
