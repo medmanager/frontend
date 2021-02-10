@@ -3,7 +3,7 @@ import { Button } from 'react-native';
 import styled from 'styled-components/native';
 import { useAuth } from '../../store/useAuth';
 
-function SettingsScreen() {
+function ProfileScreen() {
   const signOut = useAuth((state) => state.signOut);
   return (
     <Container>
@@ -22,4 +22,4 @@ const Text = styled.Text`
   font-weight: 700;
 `;
 
-export default SettingsScreen;
+export default ProfileScreen;

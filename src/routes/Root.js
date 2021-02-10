@@ -6,6 +6,7 @@ import shallow from 'zustand/shallow';
 import LoadingScreen from '../screens/Loading/LoadingView';
 import SignInScreen from '../screens/SignIn/SignInView';
 import SignUpScreen from '../screens/SignUp/SignUpView';
+import WelcomeScreen from '../screens/Welcome/WelcomeView';
 import { useAuth } from '../store/useAuth';
 import Main from './Main';
 
@@ -55,6 +56,7 @@ const Root = () => {
       screenOptions={{ headerShown: false }}>
       {userToken === null ? (
         <Fragment>
+          <RootStack.Screen name="Welcome" component={WelcomeScreen} />
           <RootStack.Screen
             name="SignIn"
             component={SignInScreen}
