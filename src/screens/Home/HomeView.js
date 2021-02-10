@@ -1,7 +1,6 @@
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import { Colors } from '../../utils';
@@ -15,8 +14,12 @@ function HomeScreen() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const medications = await apiCalls.getMedications();
-      setMedications(medications);
+      try {
+        const response = await apiCalls.getMedications();
+        setMedications(response);
+      } catch (e) {
+        setMedications([]);
+      }
       setLoading(false);
     })();
   }, [isFocused]);
