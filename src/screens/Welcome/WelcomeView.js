@@ -33,7 +33,7 @@ function WelcomeScreen({ navigation }) {
 const Container = styled.SafeAreaView`
   flex: 1;
   alignItems: center;
-  justifyContent: center;
+  margin-top: 200px;
 `;
 
 const WelcomeText = styled.Text`
