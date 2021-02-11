@@ -18,7 +18,10 @@ function SignInScreen({ navigation }) {
 
   return (
     <Container>
-      <Text>Sign in screen</Text>
+      <TopText>Welcome back!</TopText>
+      <SubText>{"\n"} Let's get you signed in. {"\n"}{"\n"}</SubText>
+      <TextInput placeholder="Email" />
+      <TextInput placeholder="Password" />
       <ButtonContainer>
       <AlternateButton onPress={handleSignUpPress}>
         <AlternateText>Don't have an account? 
@@ -35,10 +38,39 @@ function SignInScreen({ navigation }) {
 
 const Container = styled.SafeAreaView`
   flex: 1;
+  alignItems: center;
+  margin-top: 200px;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+font-size: 16px;
+`;
 
+const TopText = styled.Text`
+  textAlign: center;
+  color: ${Colors.blue[500]};
+  font-size: 30px;
+`;
+
+const SubText = styled.Text`
+  textAlign: center;
+  color: ${Colors.gray[600]};
+  font-size: 24px;
+`;
+
+//Text input for email and password
+const TextInput = styled.TextInput`
+  width: 328px;
+  height: 38px;
+  font-size: 18px;
+  color: #010101;
+  border: 1px solid #2F80ED;
+  border-radius: 8px;
+  padding-left: 10px;
+  margin-top: 20px;
+`;
+
+//Button at the bottom for either signing in or signing up
 const ContinueButton = styled.TouchableOpacity`
   background-color: ${Colors.blue[500]};
   margin-left: 16px;
@@ -56,6 +88,7 @@ const ContinueButtonText = styled.Text`
   font-size: 16px;
 `;
 
+//button for transitioning to the opposite screen (sign in vs sign up)
 const AlternateButton = styled.TouchableOpacity`
 margin-top: 12px;
 background-color: transparent;
@@ -73,6 +106,7 @@ const AlternateText = styled.Text`
   font-size: 16px;
 `;
 
+//for positioning the buttons at the bottom of the screen
 const ButtonContainer = styled.View`
   border-top-width: 1px;
   border-top-color: transparent;
