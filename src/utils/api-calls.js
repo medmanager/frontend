@@ -6,6 +6,48 @@ const PORT = '4000';
 const APIHOST = 'http://10.0.2.2:' + PORT;
 
 export default {
+  /**doesn't return a token yet, but will register user
+   * all three fields: username, email, and password are required
+   */
+  async registerUser(username, email, password) {
+    const url = APIHOST + '/auth/register';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(username, email, password),
+      });
+      const resp = response.json();
+      return resp;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**returns a token based off a user's email
+   * and password
+   */
+  async loginUser(email, password) {
+    const url = APIHOST + '/login';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(email, password),
+      });
+      const resp = response.json();
+      return resp;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   /* adds a medication to the database
    * medication should be a javascript object
    * that will be stringified into a JSON object before
