@@ -6,10 +6,10 @@ import { colors, medicationColors} from '../../../utils/colors';
 
 export const MedicationTile = ({ medication, index }) => {
   return (
-    <MedicationItem>
+    <MedicationItem index={index}>
       <HBox>
         <View style={[{backgroundColor: medicationColors[index % medicationColors.length]}, 
-          {width: 15 }, {height:50}, {borderRadius: 10}, {marginRight: 12}]}/>
+          {width: 15}, {height: 50}, {borderRadius: 10}, {marginRight: 12}]}/>
         <View>
           <MedicationName>{medication.name}</MedicationName>
           <Strength>
@@ -33,9 +33,10 @@ const MedicationItem = styled.View`
   background-color: #fff;
   border-width: 0.5px;
   border-color: ${colors.gray[300]};
-  margin-top: 10px;
+  margin-bottom: 10px;
   margin-horizontal: 10px;
   border-radius: 10px;
+  margin-top: ${({index})=> index == 0 ? '10px' : '0px'};
 `;
 
 const MedicationName = styled.Text`
