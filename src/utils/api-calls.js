@@ -7,9 +7,16 @@ const APIHOST = 'http://10.0.2.2:' + PORT;
 
 export default {
   /**doesn't return a token yet, but will register user
-   * all three fields: username, email, and password are required
+   * all three fields: email, password, firstName, lastName are required
+   * Example user:
+   * user {
+   *    email: "john@gmail.com",
+   *    password: "123456789",
+   *    firstName: "John"
+   *    lastName: "Doe"
+   * }
    */
-  async registerUser(username, email, password) {
+  async registerUser(user) {
     const url = APIHOST + '/auth/register';
     try {
       const response = await fetch(url, {
@@ -18,7 +25,7 @@ export default {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(username, email, password),
+        body: JSON.stringify(user),
       });
       const resp = response.json();
       return resp;
@@ -41,8 +48,27 @@ export default {
         },
         body: JSON.stringify(email, password),
       });
-      const resp = response.json();
-      return resp;
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**verify that the given token is still valid 
+   * If the token is valid, resp will contain user information in this form
+   * resp {
+   *    isValid: true,
+   *    verifiedJwt: {
+   *        email: "john@gmail.com"
+   *        _id: "asdlfjlsadjflaskdjfdsa"
+   *    }
+   * }
+   */
+  async verifyToken(token) {
+    const url = APIHOST + '/auth/verify/' + token;
+    try {
+      const response = await fetch(url);
+      return response.json();
     } catch (error) {
       throw error;
     }
@@ -68,9 +94,9 @@ export default {
    *        thursday: true
    *      }
    *    },
-   *    times: [
+   *    dosages: [
    *    {
-   *      medicationAmount: 1,
+   *      dose: 1,
    *      sendReminder: true,
    *      reminderTime: 9am (date object)
    *    },

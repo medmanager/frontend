@@ -12,8 +12,9 @@ const useAuth = create(
     // state actions
     restoreToken: async (token) => {
       // call backend to validate token
+      let resp = await api.verifyToken(token);
 
-      let tokenIsValid = true;
+      let tokenIsValid = resp.isValid;
 
       if (tokenIsValid) {
         set((state) => {
