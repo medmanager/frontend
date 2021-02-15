@@ -56,7 +56,7 @@ function HomeScreen() {
 
 const Container = styled.SafeAreaView`
   flex: 1;
-  background-color: ${Colors.blue[100]};
+  background-color: ${Colors.gray[200]};
 `;
 
 const Centered = styled.View`
