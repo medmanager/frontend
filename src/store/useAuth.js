@@ -38,7 +38,7 @@ const useAuth = create(
       console.log('log in reponse:');
       console.log(response);
 
-      if ('message' in response) {
+      if (response.error) {
         set((state) => {
           state.error = response.message;
         });
@@ -60,6 +60,9 @@ const useAuth = create(
       const user = { firstName, lastName, email, password };
       const registerResponse = await api.registerUser(user);
 
+      if (registerResponse.error) {
+        console.log('error registering user');
+      }
       console.log('register response:');
       console.log(registerResponse);
 
