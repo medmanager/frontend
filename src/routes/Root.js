@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Fragment, useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
@@ -8,6 +7,7 @@ import SignInScreen from '../screens/SignIn/SignInView';
 import SignUpScreen from '../screens/SignUp/SignUpView';
 import WelcomeScreen from '../screens/Welcome/WelcomeView';
 import { useAuth } from '../store/useAuth';
+import { getToken } from '../utils';
 import Main from './Main';
 
 const RootStack = createNativeStackNavigator();
@@ -15,12 +15,14 @@ const RootStack = createNativeStackNavigator();
 StatusBar.setBarStyle('dark-content');
 
 const Root = () => {
-  const { restoreToken, isLoading, userToken, isSignout } = useAuth(
+  const { restoreToken, isLoading, userToken, isSignout, setState } = useAuth(
     (state) => ({
       restoreToken: state.restoreToken,
+      error: state.error,
       isLoading: state.isLoading,
       userToken: state.userToken,
       isSignout: state.isSignout,
+      setState: state.setState,
     }),
     shallow,
   );
@@ -28,23 +30,14 @@ const Root = () => {
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let token;
+      const token = await getToken();
 
-      try {
-        token = await AsyncStorage.getItem('userToken');
-      } catch (e) {
-        // Restoring token failed
-      }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
+      // verify the token and set the auth state if the token is valid, otherwise show the sign in screen again
       restoreToken(token);
     };
 
     bootstrapAsync();
-  }, [restoreToken]);
+  }, [restoreToken, setState]);
 
   if (isLoading) {
     return <LoadingScreen />;

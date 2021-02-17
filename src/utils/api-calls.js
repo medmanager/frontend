@@ -3,7 +3,7 @@ const PORT = '4000';
 //10.0.2.2 maps to localhost on computer from android emulator
 //***only works for android emulators***
 //you must use the local ip address of your computer
-const APIHOST = 'http://10.0.2.2:' + PORT;
+const APIHOST = 'http://127.0.0.1:' + PORT;
 
 export default {
   /**doesn't return a token yet, but will register user
@@ -46,7 +46,7 @@ export default {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(email, password),
+        body: JSON.stringify({ email, password }),
       });
       return response.json();
     } catch (error) {
@@ -54,7 +54,7 @@ export default {
     }
   },
 
-  /**verify that the given token is still valid 
+  /**verify that the given token is still valid
    * If the token is valid, resp will contain user information in this form
    * resp {
    *    isValid: true,

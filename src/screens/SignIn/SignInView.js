@@ -1,73 +1,152 @@
-import React from 'react';
-import { Button } from 'react-native';
+import { useFormik } from 'formik';
+import React, { useEffect } from 'react';
+import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
+import * as yup from 'yup';
+import Input from '../../components/Input';
+import ModalActivityIndicator from '../../components/ModalActivityIndicator';
+import PasswordInput from '../../components/PasswordInput';
 import { useAuth } from '../../store/useAuth';
-import { Colors, formatTime, getStatusText } from '../../utils';
+import { Colors } from '../../utils';
 
 function SignInScreen({ navigation }) {
-  const signIn = useAuth((state) => state.signIn);
-
-  /**
-   * signIn() will call the backend with the data passed to it and then set the apps authenticated state
-   * if it was able to sign in properly
-   */
-
+  const { signIn, error } = useAuth((state) => ({
+    signIn: state.signIn,
+    error: state.error,
+  }));
   const handleSignUpPress = () => {
     navigation.navigate('SignUp');
   };
+  const initialValues = {
+    email: '',
+    password: '',
+  };
+  const {
+    values,
+    touched,
+    errors,
+    status,
+    isSubmitting,
+    handleSubmit,
+    setStatus,
+    handleChange,
+  } = useFormik({
+    initialValues,
+    validationSchema: yup.object().shape({
+      email: yup
+        .string()
+        .email('That is not a valid email')
+        .required('Email is a required field'),
+      password: yup
+        .string()
+        .min(3, 'Your password must be at least 3 characters')
+        .max(100, 'Your password must not exceed 100 characters')
+        .required('Password is a required field'),
+    }),
+    onSubmit: async (formValues, { setSubmitting }) => {
+      setSubmitting(true);
+      await signIn(...Object.values(formValues));
+      setSubmitting(false);
+    },
+  });
+
+  useEffect(() => {
+    setStatus(error);
+  }, [setStatus, error]);
 
   return (
-    <Container>
-      <TopText>Welcome back!</TopText>
-      <SubText>{"\n"} Let's get you signed in. {"\n"}{"\n"}</SubText>
-      <TextInput placeholder="Email" />
-      <TextInput placeholder="Password" />
+    <SafeArea>
+      <ModalActivityIndicator
+        loadingMessage="Logging you in..."
+        show={isSubmitting}
+      />
+      <Container>
+        <TopText>Welcome back!</TopText>
+        <SubText>Let's get you signed in.</SubText>
+        <Form>
+          {status && (
+            <Status>
+              <Icon name="alert-circle" size={24} color="#DC2626" />
+              <StatusText>{status}</StatusText>
+            </Status>
+          )}
+          <Input
+            touched={touched}
+            error={errors.email}
+            value={values.email}
+            onChangeText={handleChange('email')}
+            autoCapitalize="none"
+            label="Email"
+            placeholder="Email"
+          />
+          <PasswordInput
+            touched={touched}
+            error={errors.password}
+            value={values.password}
+            onChangeText={handleChange('password')}
+            label="Password"
+            placeholder="Password"
+          />
+        </Form>
+      </Container>
       <ButtonContainer>
-      <AlternateButton onPress={handleSignUpPress}>
-        <AlternateText>Don't have an account? 
-          <AlternateText style={{color: 'orange'}}> Sign up</AlternateText>
-        </AlternateText>
-      </AlternateButton>
-      <ContinueButton onPress={signIn}>
-        <ContinueButtonText>Sign In</ContinueButtonText>
-      </ContinueButton>
+        <AlternateButton onPress={handleSignUpPress}>
+          <AlternateText>
+            Don't have an account?
+            <AlternateText style={{ color: Colors.orange[500] }}>
+              {' '}
+              Sign up
+            </AlternateText>
+          </AlternateText>
+        </AlternateButton>
+        <ContinueButton onPress={handleSubmit}>
+          <ContinueButtonText>Sign In</ContinueButtonText>
+        </ContinueButton>
       </ButtonContainer>
-    </Container>
+    </SafeArea>
   );
 }
 
-const Container = styled.SafeAreaView`
+const SafeArea = styled.SafeAreaView`
   flex: 1;
-  alignItems: center;
-  margin-top: 200px;
 `;
 
-const Text = styled.Text`
-font-size: 16px;
+const Container = styled.View`
+  flex: 1;
+  padding: 24px;
+`;
+
+const Form = styled.View`
+  margin-top: 48px;
 `;
 
 const TopText = styled.Text`
-  textAlign: center;
+  text-align: center;
   color: ${Colors.blue[500]};
   font-size: 30px;
+  margin-top: 60px;
 `;
 
 const SubText = styled.Text`
-  textAlign: center;
+  text-align: center;
   color: ${Colors.gray[600]};
   font-size: 24px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 `;
 
-//Text input for email and password
-const TextInput = styled.TextInput`
-  width: 328px;
-  height: 38px;
-  font-size: 18px;
-  color: #010101;
-  border: 1px solid #2F80ED;
+const Status = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  background-color: #fee2e2;
   border-radius: 8px;
-  padding-left: 10px;
-  margin-top: 20px;
+  margin-bottom: 24px;
+`;
+
+const StatusText = styled.Text`
+  color: #dc2626;
+  margin-left: 8px;
 `;
 
 //Button at the bottom for either signing in or signing up
@@ -90,15 +169,15 @@ const ContinueButtonText = styled.Text`
 
 //button for transitioning to the opposite screen (sign in vs sign up)
 const AlternateButton = styled.TouchableOpacity`
-margin-top: 12px;
-background-color: transparent;
-margin-left: 16px;
-margin-right: 16px;
-padding-top: 10px;
-padding-bottom: 10px;
-padding-left: 16px;
-padding-right: 16px;
-align-items: center;
+  margin-top: 12px;
+  background-color: transparent;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  align-items: center;
 `;
 
 const AlternateText = styled.Text`

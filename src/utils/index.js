@@ -1,4 +1,5 @@
-import { days } from './constants';
+import SensitiveInfo from 'react-native-sensitive-info';
+import { days, KEYCHAIN_SERVICE, SHARED_PERFS, TOKEN_KEY } from './constants';
 
 export { colors as Colors } from './colors';
 export * from './constants';
@@ -69,3 +70,27 @@ export const getStatusText = (frequency) => {
     }
   }
 };
+
+const keyChainOptions = {
+  sharedPreferencesName: SHARED_PERFS,
+  keychainService: KEYCHAIN_SERVICE,
+};
+
+export async function getSensitiveItem(key) {
+  const value = await SensitiveInfo.getItem(key, keyChainOptions);
+  return value ? value : null;
+}
+
+export async function setSensitiveItem(key, value) {
+  return SensitiveInfo.setItem(key, value, keyChainOptions);
+}
+
+export async function removeSensitiveItem(key) {
+  return SensitiveInfo.deleteItem(key, keyChainOptions);
+}
+
+export const getToken = () => getSensitiveItem(TOKEN_KEY);
+
+export const removeToken = () => removeSensitiveItem(TOKEN_KEY);
+
+export const setToken = (value) => setSensitiveItem(TOKEN_KEY, value);

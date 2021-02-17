@@ -94,3 +94,7 @@ export const dayChoices = [
     label: 'Sunday',
   },
 ];
+
+export const TOKEN_KEY = 'token';
+export const SHARED_PERFS = 'MedManagerSharedPerfs';
+export const KEYCHAIN_SERVICE = 'MedManagerAppKeychain';
