@@ -8,7 +8,7 @@ import { useAddMedication } from '../../store/useAddMedication';
 import { Colors, formatTime, getStatusText } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 import {medicationColors} from '../../utils/colors';
-import {numMedications} from '../Home/HomeView'
+import {numMedications} from '../Home/HomeView';
 
 const AddMedicationConfirmationView = ({ navigation }) => {
   const {
@@ -106,6 +106,10 @@ const AddMedicationConfirmationView = ({ navigation }) => {
               Take {dosageTimesString} {getStatusText(medication.frequency)}
             </Text>
           </Field>
+          <ColorContainer>
+            {console.log(medicationColors.length)}
+            {medicationColors.map(color => <CircleColor key={color} color={color}/>)}
+          </ColorContainer>
         </InfoContainer>
         <ButtonContainer>
           <Button
@@ -231,6 +235,19 @@ const InfoContainer = styled.View`
 
 const Title = styled.Text`
   font-size: 24px;
+`;
+
+const ColorContainer = styled.View`
+  flex-direction: row;
+`;
+
+const CircleColor = styled.TouchableOpacity`
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  margin-top: 15px;
+  margin-right: 12px;
+  background-color: ${({color}) => color};
 `;
 
 export default AddMedicationConfirmationView;
