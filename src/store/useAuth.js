@@ -1,5 +1,6 @@
 import produce from 'immer';
 import { create, immer } from '.';
+import api from '../utils/api-calls';
 
 const useAuth = create(
   immer((set) => ({
@@ -9,10 +10,11 @@ const useAuth = create(
     userToken: null,
 
     // state actions
-    restoreToken: (token) => {
+    restoreToken: async (token) => {
       // call backend to validate token
+      let resp = await api.verifyToken(token);
 
-      let tokenIsValid = true;
+      let tokenIsValid = resp.isValid;
 
       if (tokenIsValid) {
         set((state) => {
@@ -24,10 +26,10 @@ const useAuth = create(
         // require the user to login again?
       }
     },
-    signIn: (data) => {
-      // call backend with sign in data
+    signIn: async (email, password) => {
+      let resp = await api.loginUser(email, password);
 
-      let token;
+      let token = resp.token;
 
       set((state) => {
         state.userToken = token;

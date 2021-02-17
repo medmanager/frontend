@@ -6,6 +6,74 @@ const PORT = '4000';
 const APIHOST = 'http://10.0.2.2:' + PORT;
 
 export default {
+  /**doesn't return a token yet, but will register user
+   * all three fields: email, password, firstName, lastName are required
+   * Example user:
+   * user {
+   *    email: "john@gmail.com",
+   *    password: "123456789",
+   *    firstName: "John"
+   *    lastName: "Doe"
+   * }
+   */
+  async registerUser(user) {
+    const url = APIHOST + '/auth/register';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+      const resp = response.json();
+      return resp;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**returns a token based off a user's email
+   * and password
+   */
+  async loginUser(email, password) {
+    const url = APIHOST + '/login';
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(email, password),
+      });
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**verify that the given token is still valid 
+   * If the token is valid, resp will contain user information in this form
+   * resp {
+   *    isValid: true,
+   *    verifiedJwt: {
+   *        email: "john@gmail.com"
+   *        _id: "asdlfjlsadjflaskdjfdsa"
+   *    }
+   * }
+   */
+  async verifyToken(token) {
+    const url = APIHOST + '/auth/verify/' + token;
+    try {
+      const response = await fetch(url);
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  },
+
   /* adds a medication to the database
    * medication should be a javascript object
    * that will be stringified into a JSON object before
@@ -26,9 +94,9 @@ export default {
    *        thursday: true
    *      }
    *    },
-   *    times: [
+   *    dosages: [
    *    {
-   *      medicationAmount: 1,
+   *      dose: 1,
    *      sendReminder: true,
    *      reminderTime: 9am (date object)
    *    },
