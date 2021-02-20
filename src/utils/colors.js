@@ -29,15 +29,25 @@ const colors = {
 };
 
 const medicationColors = [
-  '#FF0000',
-  '#E9FF00',
-  '#22FF00',
-  '#00FFE8',
-  '#0083FF',
-  '#0700FF',
-  '#8E00FF',
-  '#F400FF',
-  '#FF0071',
+  '#ff5c5c',
+  '#ffad66',
+  '#c2ff59',
+  '#69ff97',
+  '#69e6ff',
+  '#697aff',
+  '#d269ff',
+  '#ff69c8',
 ];
 
-export { colors, medicationColors };
+const medicationGreyedColors = [
+  '#ff9f9f',
+  '#ffcda6',
+  '#d2ffa9',
+  '#a9ffb7',
+  '#aff6ff',
+  '#bbcfff',
+  '#f5b9ff',
+  '#ffa9f8',
+];
+
+export { colors, medicationColors, medicationGreyedColors };

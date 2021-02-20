@@ -7,8 +7,6 @@ import { Colors } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 import {MedicationTile} from './components/MedicationTile'
 
-export let numMedications = 2;
-
 function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [medications, setMedications] = useState([]);
@@ -32,8 +30,6 @@ function HomeScreen() {
       </Container>
     );
   }
-
-  if (!medications && Array.isArray(medications)) numMedications = medications.length;
 
   if (!medications || medications.length === 0) {
     return (

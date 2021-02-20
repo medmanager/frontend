@@ -8,8 +8,8 @@ export const MedicationTile = ({ medication, index }) => {
   return (
     <MedicationItem index={index}>
       <HBox>
-        <View style={[{backgroundColor: medicationColors[index % medicationColors.length]}, 
-          {width: 15}, {height: 50}, {borderRadius: 10}, {marginRight: 12}]}/>
+        <View style={[{backgroundColor: medicationColors[medication.color]}, 
+          {width: 15}, {height: 50}, {borderRadius: 15}, {marginRight: 12}]}/>
         <View>
           <MedicationName>{medication.name}</MedicationName>
           <Strength>
