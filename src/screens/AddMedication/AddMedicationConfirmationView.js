@@ -8,6 +8,7 @@ import { useAddMedication } from '../../store/useAddMedication';
 import { Colors, formatTime, getStatusText } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 import {ColorSelect} from './components/ColorSelect';
+import {useAuth} from '../../store/useAuth';
 
 const AddMedicationConfirmationView = ({ navigation }) => {
   const {
@@ -38,9 +39,15 @@ const AddMedicationConfirmationView = ({ navigation }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
 
-  const postMedication = async (medication) => {
+  const {token, userId} = useAuth((state) => ({
+    token: state.userToken,
+    userId: state.userId,
+  }));
+
+  const postMedication = async (medication, token, userId) => {
     try {
-      const result = await apiCalls.addMedication(medication);
+      console.log(medication);
+      const result = await apiCalls.addMedication(medication, token, userId);
       if (result.error) {
         setShowErrorModal(true);
       } else {
@@ -110,7 +117,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
         <ButtonContainer>
           <Button
             onPress={() => {
-              postMedication(medication);
+              postMedication(medication, token, userId);
             }}
             text="Confirm"
           />

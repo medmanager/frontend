@@ -6,17 +6,23 @@ import styled from 'styled-components/native';
 import { Colors } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 import {MedicationTile} from './components/MedicationTile'
+import {useAuth} from '../../store/useAuth';
 
 function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [medications, setMedications] = useState([]);
   const isFocused = useIsFocused();
 
+  const {token, userId} = useAuth((state) => ({
+    token: state.userToken,
+    userId: state.userId,
+  }));
+
   useEffect(() => {
     (async () => {
       setLoading(true);
       try {
-        const response = await apiCalls.getMedications();
+        const response = await apiCalls.getMedications(token, userId);
         setMedications(response);
       } catch (e) {
         setMedications([]);

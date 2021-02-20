@@ -3,7 +3,7 @@ const PORT = '4000';
 //10.0.2.2 maps to localhost on computer from android emulator
 //***only works for android emulators***
 //you must use the local ip address of your computer
-const APIHOST = 'http://127.0.0.1:' + PORT;
+const APIHOST = 'http://10.0.2.2:' + PORT;
 
 export default {
   /**doesn't return a token yet, but will register user
@@ -112,52 +112,65 @@ export default {
    *
    *  Note: if setReminder is false, you do NOT need to store a reminderTime
    */
-  async addMedication(medication) {
-    const url = APIHOST + '/medication';
+  async addMedication(medication, token, userId) {
+    console.log(token);
+    const url = APIHOST + '/medication/'+ userId;
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: "JWT " + token,
         },
         body: JSON.stringify(medication),
       });
       const resp = response.json();
+      console.log(resp);
       return resp;
     } catch (error) {
       throw error;
     }
   },
 
-  async getMedications() {
-    const url = APIHOST + '/medication';
+  async getMedications(token, userId) {
+    console.log(token);
+    const url = APIHOST + '/medication/' + userId;
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "JWT " + token,
+        }
+      });
       return response.json();
     } catch (error) {
       throw error;
     }
   },
 
-  async getMedicationFromID(medicationID) {
-    const url = APIHOST + '/medication/' + medicationID;
+  async getMedicationFromID(medicationID, token, userId) {
+    const url = APIHOST + '/medication/' + userId + '/' + medicationID;
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "JWT " + token,
+        }
+      });
       return response.json();
     } catch (error) {
       throw error;
     }
   },
 
-  async updateMedicationFromID(medication, medicationID) {
-    const url = APIHOST + '/medication/' + medicationID;
+  async updateMedicationFromID(medication, medicationID, token, userId) {
+    const url = APIHOST + '/medication/' + userId + '/' + medicationID;
     try {
       const response = await fetch(url, {
         method: 'PUT',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: "JWT " + token,
         },
         body: JSON.stringify(medication),
       });
@@ -167,11 +180,14 @@ export default {
     }
   },
 
-  async deleteMedicationFromID(medicationID) {
-    const url = APIHOST + '/medication/' + medicationID;
+  async deleteMedicationFromID(medicationID, token, userId) {
+    const url = APIHOST + '/medication/' + userId + '/' + medicationID;
     try {
       const response = await fetch(url, {
         method: 'DELETE',
+        headers: {
+          Authorization: "JWT " + token,
+        }
       });
       return response.json();
     } catch (error) {

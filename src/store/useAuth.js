@@ -10,6 +10,7 @@ const useAuth = create(
     isSignout: false,
     userToken: null,
     error: null,
+    userId: null,
 
     // state actions
     restoreToken: async (token) => {
@@ -22,6 +23,7 @@ const useAuth = create(
           state.userToken = token;
           state.isLoading = false;
           state.error = null;
+          state.userId = verifyResponse.verifiedJwt._id;
         });
       } else {
         set((state) => {
@@ -52,6 +54,7 @@ const useAuth = create(
           state.userToken = token;
           state.isSignout = false;
           state.error = null;
+          state.userId = response._id;
         });
       }
     },
