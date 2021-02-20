@@ -7,6 +7,7 @@ import Modal from '../../components/Modal';
 import { useAddMedication } from '../../store/useAddMedication';
 import { Colors, formatTime, getStatusText } from '../../utils';
 import apiCalls from '../../utils/api-calls';
+import {ColorSelect} from './components/ColorSelect';
 
 const AddMedicationConfirmationView = ({ navigation }) => {
   const {
@@ -18,6 +19,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     strength,
     strengthUnit,
     notes,
+    color,
   } = useAddMedication((state) => ({
     dosages: state.selectedDosages.map(
       (id) => state.dosages.find((dosage) => dosage.id === id).value,
@@ -31,6 +33,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     strength: state.formValues.strength,
     strengthUnit: state.strengthUnit,
     notes: state.formValues.notes,
+    color: state.color,
   }));
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -57,6 +60,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     notes,
     frequency,
     dosages,
+    color,
   };
 
   const dosageTimesString = medication.dosages
@@ -101,6 +105,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
               Take {dosageTimesString} {getStatusText(medication.frequency)}
             </Text>
           </Field>
+          <ColorSelect/>
         </InfoContainer>
         <ButtonContainer>
           <Button

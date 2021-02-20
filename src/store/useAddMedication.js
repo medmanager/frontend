@@ -136,6 +136,7 @@ const useAddMedication = create(
       amount: null,
       notes: '',
     },
+    color: 0,
 
     // state actions
     setFormValues: (formValues) =>
@@ -205,6 +206,10 @@ const useAddMedication = create(
       set((state) => {
         const time = state.dosages.find((dosage) => dosage.id === id);
         time.value.sendTimePicker = !time.value.sendTimePicker;
+      }),
+    selectColor: (index) =>
+      set((state) => {
+        state.color = index;
       }),
     setState: (fn) => set(produce(fn)),
   })),
