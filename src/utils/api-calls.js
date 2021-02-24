@@ -1,9 +1,14 @@
+import { Platform } from 'react-native';
+
 // make sure the port is consistent with backend when testing
 const PORT = '4000';
 //10.0.2.2 maps to localhost on computer from android emulator
 //***only works for android emulators***
 //you must use the local ip address of your computer
-const APIHOST = 'http://10.0.2.2:' + PORT;
+const APIHOST =
+  Platform.OS === 'android'
+    ? 'http://10.0.2.2:' + PORT
+    : 'http://127.0.0.1:' + PORT;
 
 export default {
   /**doesn't return a token yet, but will register user
@@ -114,14 +119,14 @@ export default {
    */
   async addMedication(medication, token, userId) {
     console.log(token);
-    const url = APIHOST + '/medication/'+ userId;
+    const url = APIHOST + '/medication/' + userId;
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          Authorization: "JWT " + token,
+          Authorization: 'JWT ' + token,
         },
         body: JSON.stringify(medication),
       });
@@ -134,13 +139,12 @@ export default {
   },
 
   async getMedications(token, userId) {
-    console.log(token);
     const url = APIHOST + '/medication/' + userId;
     try {
       const response = await fetch(url, {
         headers: {
-          Authorization: "JWT " + token,
-        }
+          Authorization: 'JWT ' + token,
+        },
       });
       return response.json();
     } catch (error) {
@@ -153,8 +157,8 @@ export default {
     try {
       const response = await fetch(url, {
         headers: {
-          Authorization: "JWT " + token,
-        }
+          Authorization: 'JWT ' + token,
+        },
       });
       return response.json();
     } catch (error) {
@@ -170,7 +174,7 @@ export default {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          Authorization: "JWT " + token,
+          Authorization: 'JWT ' + token,
         },
         body: JSON.stringify(medication),
       });
@@ -186,8 +190,8 @@ export default {
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-          Authorization: "JWT " + token,
-        }
+          Authorization: 'JWT ' + token,
+        },
       });
       return response.json();
     } catch (error) {
