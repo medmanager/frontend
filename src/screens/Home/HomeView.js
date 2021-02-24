@@ -22,7 +22,7 @@ function HomeScreen() {
     (async () => {
       setLoading(true);
       try {
-        const response = await apiCalls.getMedications(token, userId);
+        const response = await apiCalls.getMedications(token);
         setMedications(response);
       } catch (e) {
         setMedications([]);

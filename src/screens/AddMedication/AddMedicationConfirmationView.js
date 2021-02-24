@@ -44,10 +44,11 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     userId: state.userId,
   }));
 
-  const postMedication = async (medication, token, userId) => {
+  const postMedication = async (medication, token) => {
     try {
-      console.log(medication);
-      const result = await apiCalls.addMedication(medication, token, userId);
+      console.log(token);
+      console.log(userId);
+      const result = await apiCalls.addMedication(medication, token);
       if (result.error) {
         setShowErrorModal(true);
       } else {
@@ -117,7 +118,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
         <ButtonContainer>
           <Button
             onPress={() => {
-              postMedication(medication, token, userId);
+              postMedication(medication, token);
             }}
             text="Confirm"
           />

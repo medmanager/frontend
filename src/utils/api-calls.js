@@ -117,9 +117,9 @@ export default {
    *
    *  Note: if setReminder is false, you do NOT need to store a reminderTime
    */
-  async addMedication(medication, token, userId) {
+  async addMedication(medication, token) {
     console.log(token);
-    const url = APIHOST + '/medication/' + userId;
+    const url = APIHOST + '/medication';
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -138,8 +138,8 @@ export default {
     }
   },
 
-  async getMedications(token, userId) {
-    const url = APIHOST + '/medication/' + userId;
+  async getMedications(token) {
+    const url = APIHOST + '/medication';
     try {
       const response = await fetch(url, {
         headers: {
@@ -152,8 +152,8 @@ export default {
     }
   },
 
-  async getMedicationFromID(medicationID, token, userId) {
-    const url = APIHOST + '/medication/' + userId + '/' + medicationID;
+  async getMedicationFromID(medicationID, token) {
+    const url = APIHOST + '/medication/' + medicationID;
     try {
       const response = await fetch(url, {
         headers: {
@@ -166,8 +166,8 @@ export default {
     }
   },
 
-  async updateMedicationFromID(medication, medicationID, token, userId) {
-    const url = APIHOST + '/medication/' + userId + '/' + medicationID;
+  async updateMedicationFromID(medication, medicationID, token) {
+    const url = APIHOST + '/medication/' + medicationID;
     try {
       const response = await fetch(url, {
         method: 'PUT',
@@ -184,8 +184,8 @@ export default {
     }
   },
 
-  async deleteMedicationFromID(medicationID, token, userId) {
-    const url = APIHOST + '/medication/' + userId + '/' + medicationID;
+  async deleteMedicationFromID(medicationID, token) {
+    const url = APIHOST + '/medication/' + medicationID;
     try {
       const response = await fetch(url, {
         method: 'DELETE',
@@ -196,6 +196,22 @@ export default {
       return response.json();
     } catch (error) {
       return error;
+    }
+  },
+
+  async getOccurrences(startDate, endDate, token) {
+    const url = APIHOST + '/schedule/occurrences';
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: 'JWT ' + token,
+        },
+        body: JSON.stringify({startDate, endDate}),
+      });
+      return {error: false, scheduledDays: response.json()};
+    } catch (error) {
+      return {error: true};
     }
   },
 
