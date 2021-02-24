@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AddMedicationButton from '../screens/AddMedication/AddMedicationButton';
 import HomeScreen from '../screens/Home/HomeView';
@@ -11,31 +11,30 @@ const Tab = createBottomTabNavigator();
 
 const RenderNull = () => null;
 
-const Tabs = ({ navigation, route }) => {
-  function getHeaderTitle() {
-    // TODO: find a way to improve getting the header title
-    // FIXME: there is a bug here where home does not return its title on the first render
-    const routeName = getFocusedRouteNameFromRoute(route) || 'My Medications';
+function getHeaderTitle(route) {
+  // If the focused route is not found, we need to assume it's the initial screen
+  // This can happen during if there hasn't been any navigation inside the screen
+  // In our case, it's "Calendar" as that's the first screen inside the navigator
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Calendar';
 
-    switch (routeName) {
-      case 'Home':
-        return 'My Medications';
-      case 'Profile':
-        return 'My profile';
-      default:
-        return '';
-    }
+  switch (routeName) {
+    case 'Calendar':
+      return 'Calendar';
+    case 'Profile':
+      return 'My profile';
   }
+}
 
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerTitle: getHeaderTitle() });
+const Tabs = ({ navigation, route }) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerTitle: getHeaderTitle(route) });
   }, [navigation, route]);
 
   return (
     <Tab.Navigator
       tabBarOptions={{ showLabel: false, activeTintColor: Colors.blue[500] }}>
       <Tab.Screen
-        name="Home"
+        name="Calendar"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color }) => (

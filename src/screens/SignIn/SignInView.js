@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
@@ -56,11 +57,11 @@ function SignInScreen({ navigation }) {
 
   return (
     <SafeArea>
-      <ModalActivityIndicator
-        loadingMessage="Logging you in..."
-        show={isSubmitting}
-      />
-      <Container>
+      <KeyboardAwareScrollView>
+        <ModalActivityIndicator
+          loadingMessage="Logging you in..."
+          show={isSubmitting}
+        />
         <TopText>Welcome back!</TopText>
         <SubText>Let's get you signed in.</SubText>
         <Form>
@@ -78,6 +79,8 @@ function SignInScreen({ navigation }) {
             autoCapitalize="none"
             label="Email"
             placeholder="Email"
+            autoCompleteType="email"
+            keyboardType="email-address"
           />
           <PasswordInput
             touched={touched}
@@ -88,21 +91,21 @@ function SignInScreen({ navigation }) {
             placeholder="Password"
           />
         </Form>
-      </Container>
-      <ButtonContainer>
-        <AlternateButton onPress={handleSignUpPress}>
-          <AlternateText>
-            Don't have an account?
-            <AlternateText style={{ color: Colors.orange[500] }}>
-              {' '}
-              Sign up
+        <ButtonContainer>
+          <AlternateButton onPress={handleSignUpPress}>
+            <AlternateText>
+              Don't have an account?
+              <AlternateText style={{ color: Colors.orange[500] }}>
+                {' '}
+                Sign up
+              </AlternateText>
             </AlternateText>
-          </AlternateText>
-        </AlternateButton>
-        <ContinueButton onPress={handleSubmit}>
-          <ContinueButtonText>Sign In</ContinueButtonText>
-        </ContinueButton>
-      </ButtonContainer>
+          </AlternateButton>
+          <ContinueButton onPress={handleSubmit}>
+            <ContinueButtonText>Sign In</ContinueButtonText>
+          </ContinueButton>
+        </ButtonContainer>
+      </KeyboardAwareScrollView>
     </SafeArea>
   );
 }
@@ -111,12 +114,9 @@ const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const Container = styled.View`
+const Form = styled.View`
   flex: 1;
   padding: 24px;
-`;
-
-const Form = styled.View`
   margin-top: 48px;
 `;
 
@@ -169,7 +169,6 @@ const ContinueButtonText = styled.Text`
 
 //button for transitioning to the opposite screen (sign in vs sign up)
 const AlternateButton = styled.TouchableOpacity`
-  margin-top: 12px;
   background-color: transparent;
   margin-left: 16px;
   margin-right: 16px;
@@ -189,13 +188,10 @@ const AlternateText = styled.Text`
 const ButtonContainer = styled.View`
   border-top-width: 1px;
   border-top-color: transparent;
-  width: 100%;
   padding-left: 24px;
   padding-right: 24px;
   padding-top: 8px;
   padding-bottom: 8px;
-  position: absolute;
-  bottom: 30px;
 `;
 
 export default SignInScreen;

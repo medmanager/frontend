@@ -56,12 +56,12 @@ const InputContainer = styled.View`
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 8px;
-  min-height: 40px;
 `;
 
 const HidePasswordContainer = styled.View`
   flex: 1;
   align-items: flex-end;
+  justify-content: center;
 `;
 
 const HidePasswordToggleButton = styled.TouchableOpacity`
@@ -76,6 +76,7 @@ const TextInputContainer = styled.View`
 const TextInput = styled.TextInput`
   font-size: 16px;
   background-color: transparent;
+  padding: 0;
 `;
 
 export default PasswordInput;
