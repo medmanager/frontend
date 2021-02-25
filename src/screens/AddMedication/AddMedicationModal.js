@@ -14,7 +14,8 @@ const AddMedicationModal = () => {
     <Stack.Navigator
       screenOptions={{
         statusBarAnimation: 'slide',
-        headerTintColor: Colors.blue[500],
+        headerTintColor: 'white',
+        headerStyle: { backgroundColor: Colors.blue[500] },
         headerBackTitle: '',
       }}>
       <Stack.Screen

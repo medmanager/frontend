@@ -17,9 +17,6 @@ const Container = styled.SafeAreaView`
   flex: 1;
 `;
 
-const Text = styled.Text`
-  font-size: 18px;
-  font-weight: 700;
-`;
+const Text = styled.Text``;
 
 export default ProfileScreen;

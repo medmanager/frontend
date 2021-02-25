@@ -1,15 +1,17 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import React from 'react';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import AddMedicationButton from '../screens/AddMedication/AddMedicationButton';
+import ActivityIcon from '../components/icons/activity';
+import HomeIcon from '../components/icons/home';
+import PillIcon from '../components/icons/pill';
+import UserIcon from '../components/icons/user';
 import HomeScreen from '../screens/Home/HomeView';
+import MedicationsScreen from '../screens/Medications/MedicationsView';
 import ProfileScreen from '../screens/Profile/ProfileView';
+import TrackScreen from '../screens/Track/TrackView';
 import { Colors } from '../utils';
 
 const Tab = createBottomTabNavigator();
-
-const RenderNull = () => null;
 
 function getHeaderTitle(route) {
   // If the focused route is not found, we need to assume it's the initial screen
@@ -20,6 +22,10 @@ function getHeaderTitle(route) {
   switch (routeName) {
     case 'Calendar':
       return 'Calendar';
+    case 'Track':
+      return 'Track';
+    case 'Medications':
+      return 'My Medications';
     case 'Profile':
       return 'My profile';
   }
@@ -27,34 +33,48 @@ function getHeaderTitle(route) {
 
 const Tabs = ({ navigation, route }) => {
   React.useLayoutEffect(() => {
-    navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+    navigation.setOptions({
+      headerTitle: getHeaderTitle(route),
+    });
   }, [navigation, route]);
 
   return (
-    <Tab.Navigator
-      tabBarOptions={{ showLabel: false, activeTintColor: Colors.blue[500] }}>
+    <Tab.Navigator tabBarOptions={{ activeTintColor: Colors.blue[500] }}>
       <Tab.Screen
         name="Calendar"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <FeatherIcon name="home" color={color} size={24} />
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, focused }) => (
+            <HomeIcon focused={focused} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="AddMedicationButton"
-        component={RenderNull}
+        name="Track"
+        component={TrackScreen}
         options={{
-          tabBarButton: AddMedicationButton,
+          tabBarIcon: ({ color, focused }) => (
+            <ActivityIcon focused={focused} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Medications"
+        component={MedicationsScreen}
+        options={{
+          tabBarLabel: 'Meds',
+          tabBarIcon: ({ color, focused }) => (
+            <PillIcon focused={focused} color={color} />
+          ),
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <FeatherIcon name="user" color={color} size={24} />
+          tabBarIcon: ({ color, focused }) => (
+            <UserIcon focused={focused} color={color} />
           ),
         }}
       />

@@ -1,19 +1,19 @@
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
-import { Colors } from '../../utils';
+import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
+import { useAuth } from '../../store/useAuth';
 import apiCalls from '../../utils/api-calls';
-import {MedicationTile} from './components/MedicationTile'
-import {useAuth} from '../../store/useAuth';
+import { MedicationTile } from './components/MedicationTile';
 
 function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [medications, setMedications] = useState([]);
   const isFocused = useIsFocused();
 
-  const {token, userId} = useAuth((state) => ({
+  const { token, userId } = useAuth((state) => ({
     token: state.userToken,
     userId: state.userId,
   }));
@@ -49,20 +49,24 @@ function HomeScreen() {
     );
   }
 
-  const renderMedication = ({item, index}) => (
-    <MedicationTile key={item._id} medication={item} index={index}></MedicationTile>
+  const renderMedication = ({ item, index }) => (
+    <MedicationTile key={item._id} medication={item} index={index} />
   );
 
   return (
     <Container>
-      <FlatList data={medications} keyExtractor={item => item._id} renderItem={renderMedication}/>
+      <FlatList
+        data={medications}
+        keyExtractor={(item) => item._id}
+        renderItem={renderMedication}
+      />
+      <FloatingAddMedicationButton />
     </Container>
   );
 }
 
 const Container = styled.SafeAreaView`
   flex: 1;
-  background-color: ${Colors.gray[200]};
 `;
 
 const Centered = styled.View`
