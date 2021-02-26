@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { QueryClient } from 'react-query';
 import create from 'zustand';
 
 const log = (config) => (set, get, api) =>
@@ -12,8 +13,11 @@ const log = (config) => (set, get, api) =>
     api,
   );
 
-// Turn the set method into an immer proxy
+// Turn the store set method into an immer proxy (immutable state)
 const immer = (config) => (set, get, api) =>
   config((fn) => set(produce(fn)), get, api);
 
-export { log, immer, create };
+// query client for keeping track of server state
+const queryClient = new QueryClient();
+
+export { log, immer, create, queryClient };

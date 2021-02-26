@@ -3,19 +3,23 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
+import { QueryClientProvider } from 'react-query';
 import ErrorHandler from './components/ErrorHandler';
 import Root from './routes/Root';
+import { queryClient } from './store';
 
 enableScreens();
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <ErrorHandler>
-          <Root />
-        </ErrorHandler>
-      </NavigationContainer>
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer>
+          <ErrorHandler>
+            <Root />
+          </ErrorHandler>
+        </NavigationContainer>
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 }

@@ -23,20 +23,15 @@ export default {
    */
   async registerUser(user) {
     const url = APIHOST + '/auth/register';
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      });
-      const resp = response.json();
-      return resp;
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+    return response.json();
   },
 
   /**returns a token based off a user's email
@@ -44,19 +39,15 @@ export default {
    */
   async loginUser(email, password) {
     const url = APIHOST + '/login';
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      return response.json();
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    return response.json();
   },
 
   /**verify that the given token is still valid
@@ -71,12 +62,8 @@ export default {
    */
   async verifyToken(token) {
     const url = APIHOST + '/auth/verify/' + token;
-    try {
-      const response = await fetch(url);
-      return response.json();
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url);
+    return response.json();
   },
 
   /* adds a medication to the database
@@ -118,101 +105,74 @@ export default {
    *  Note: if setReminder is false, you do NOT need to store a reminderTime
    */
   async addMedication(medication, token) {
-    console.log(token);
     const url = APIHOST + '/medication';
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'JWT ' + token,
-        },
-        body: JSON.stringify(medication),
-      });
-      const resp = response.json();
-      console.log(resp);
-      return resp;
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'JWT ' + token,
+      },
+      body: JSON.stringify(medication),
+    });
+    return response.json();
   },
 
   async getMedications(token) {
     const url = APIHOST + '/medication';
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: 'JWT ' + token,
-        },
-      });
-      return response.json();
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url, {
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+    });
+    return response.json();
   },
 
   async getMedicationFromID(medicationID, token) {
     const url = APIHOST + '/medication/' + medicationID;
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: 'JWT ' + token,
-        },
-      });
-      return response.json();
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url, {
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+    });
+    return response.json();
   },
 
   async updateMedicationFromID(medication, medicationID, token) {
     const url = APIHOST + '/medication/' + medicationID;
-    try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'JWT ' + token,
-        },
-        body: JSON.stringify(medication),
-      });
-      return response.json();
-    } catch (error) {
-      return error;
-    }
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'JWT ' + token,
+      },
+      body: JSON.stringify(medication),
+    });
+    return response.json();
   },
 
   async deleteMedicationFromID(medicationID, token) {
     const url = APIHOST + '/medication/' + medicationID;
-    try {
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          Authorization: 'JWT ' + token,
-        },
-      });
-      return response.json();
-    } catch (error) {
-      return error;
-    }
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+    });
+    return response.json();
   },
 
-  async getOccurrences(startDate, endDate, token) {
+  async getCalendarOccurrences(token) {
     const url = APIHOST + '/schedule/occurrences';
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          Authorization: 'JWT ' + token,
-        },
-        body: JSON.stringify({startDate, endDate}),
-      });
-      return {error: false, scheduledDays: response.json()};
-    } catch (error) {
-      return {error: true};
-    }
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+      // body: JSON.stringify({ startDate, endDate }),
+    });
+    return response.json();
   },
 
   /*  returns a JSON array of 5 drug names similar to searchStr
@@ -221,13 +181,9 @@ export default {
    */
   async searchAutoComplete(searchStr) {
     const url = APIHOST + '/medication/search/' + searchStr;
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-      });
-      return response.json();
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    return response.json();
   },
 };

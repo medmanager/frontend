@@ -1,82 +1,102 @@
-import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import dayjs from 'dayjs';
+import React, { Fragment, useRef, useState } from 'react';
+import { FlatList } from 'react-native';
 import styled from 'styled-components/native';
+import shallow from 'zustand/shallow';
 import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
 import { useAuth } from '../../store/useAuth';
-import apiCalls from '../../utils/api-calls';
-import { MedicationTile } from './components/MedicationTile';
+import useOccurrences from '../../store/useOccurrences';
+import DosageListItem, {
+  DosageListItemPlaceholder,
+} from './components/DosageListItem';
 
 function HomeScreen() {
-  const [loading, setLoading] = useState(true);
-  const [medications, setMedications] = useState([]);
-  const isFocused = useIsFocused();
+  const now = useRef(new Date());
+  const [today, setToday] = useState(now.current.getDay() + 1);
+  const token = useAuth((state) => state.userToken, shallow);
+  const {
+    data: occurrences,
+    isError,
+    error,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useOccurrences(token);
 
-  const { token, userId } = useAuth((state) => ({
-    token: state.userToken,
-    userId: state.userId,
-  }));
-
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const response = await apiCalls.getMedications(token);
-        setMedications(response);
-      } catch (e) {
-        setMedications([]);
-      }
-      setLoading(false);
-    })();
-  }, [isFocused]);
-
-  if (loading) {
+  if (occurrences && occurrences.length === 0)
     return (
-      <Container>
-        <Centered>
-          <ActivityIndicator />
-        </Centered>
-      </Container>
+      <SafeArea>
+        <Container>
+          <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
+          <Text>No dosages for today.</Text>
+        </Container>
+      </SafeArea>
+    );
+
+  // show placeholder dosage items when the list is loading
+  if (isLoading) {
+    return (
+      <SafeArea>
+        <Container>
+          <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
+          <DosageList
+            data={new Array(5)}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={() => <DosageListItemPlaceholder />}
+          />
+        </Container>
+      </SafeArea>
     );
   }
 
-  if (!medications || medications.length === 0) {
+  if (isError) {
     return (
-      <Container>
-        <Text>No Medications Found.</Text>
-      </Container>
+      <SafeArea>
+        <Text>Error: {error}</Text>
+        <FloatingAddMedicationButton />
+      </SafeArea>
     );
   }
-
-  const renderMedication = ({ item, index }) => (
-    <MedicationTile key={item._id} medication={item} index={index} />
-  );
 
   return (
-    <Container>
-      <FlatList
-        data={medications}
-        keyExtractor={(item) => item._id}
-        renderItem={renderMedication}
-      />
-      <FloatingAddMedicationButton />
-    </Container>
+    <SafeArea>
+      <Container>
+        <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
+        <DosageList
+          data={occurrences[today]}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <DosageListItem {...item} />}
+          onRefresh={() => refetch()}
+          refreshing={isFetching}
+        />
+      </Container>
+    </SafeArea>
   );
 }
 
-const Container = styled.SafeAreaView`
+const Header = styled.Text`
+  font-size: 24px;
+  font-weight: 700;
+`;
+
+const Container = styled.View`
+  flex: 1;
+  padding: 24px;
+`;
+
+const DosageList = styled(FlatList)`
+  margin-top: 16px;
+`;
+
+const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const Centered = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
+const Text = styled.Text``;
 
-const Text = styled.Text`
-  font-size: 16px;
-`;
-
-export default HomeScreen;
+export default () => (
+  <Fragment>
+    <HomeScreen />
+    <FloatingAddMedicationButton />
+  </Fragment>
+);
