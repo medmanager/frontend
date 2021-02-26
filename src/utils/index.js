@@ -131,3 +131,18 @@ export const getToken = () => getSensitiveItem(TOKEN_KEY);
 export const removeToken = () => removeSensitiveItem(TOKEN_KEY);
 
 export const setToken = (value) => setSensitiveItem(TOKEN_KEY, value);
+
+/**
+ * Constructs a version of what an mongo ObjectId will look like in the backend
+ */
+export const mongoObjectId = () => {
+  const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+  return (
+    timestamp +
+    'xxxxxxxxxxxxxxxx'
+      .replace(/[x]/g, function () {
+        return ((Math.random() * 16) | 0).toString(16);
+      })
+      .toLowerCase()
+  );
+};

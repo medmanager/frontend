@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
+import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
 import Label from '../../components/Label';
 import Modal from '../../components/Modal';
-import { queryClient } from '../../store';
 import { useAddMedication } from '../../store/useAddMedication';
 import { useAuth } from '../../store/useAuth';
-import { Colors, formatTime, getStatusText } from '../../utils';
+import { Colors, formatTime, getStatusText, mongoObjectId } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 import { ColorSelect } from './components/ColorSelect';
 
@@ -41,25 +41,76 @@ const AddMedicationConfirmationView = ({ navigation }) => {
   }));
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const queryClient = useQueryClient();
 
   const { token } = useAuth((state) => ({
     token: state.userToken,
   }));
 
-  const addMedication = async (medication, token) => {
-    try {
-      const response = await apiCalls.addMedication(medication, token);
-      if (response.error) {
-        setShowErrorModal(true);
-      } else {
-        setShowSuccessModal(true);
-        queryClient.invalidateQueries('medications');
+  const addMedication = useMutation(
+    (medication) => apiCalls.addMedication(medication, token),
+    {
+      retry: 3, // retry three times if the mutation fails
+      onMutate: async (variables) => {
+        // Cancel current queries for the medications list
+        await queryClient.cancelQueries('medications');
+
+        // Construct an 'optimistic' version of what the medication will look like when the backend gives the actual object
+        const optimisticMedication = {
+          _id: mongoObjectId(),
+          ...variables,
+          active: true,
+          frequency: {
+            ...variables.frequency,
+            _id: mongoObjectId(),
+            weekdays: {
+              ...variables.frequency.weekdays,
+              _id: mongoObjectId(),
+            },
+          },
+          dosages: variables.dosages.map((dosage) => ({
+            ...dosage,
+            _id: mongoObjectId(),
+          })),
+          dateAdded: new Date(),
+        };
+
+        queryClient.setQueryData('medications', (old) => [
+          ...old,
+          optimisticMedication,
+        ]);
+
+        return { optimisticMedication };
+      },
+      onSuccess: (result, variables, context) => {
+        // Replace optimistic medication in the medications list with the actual result from the backend
+        queryClient.setQueryData('medications', (old) =>
+          old.map((medication) =>
+            medication._id === context.optimisticMedication._id
+              ? result
+              : medication,
+          ),
+        );
+
+        // Invalidate all calendar occurrences due to new medication being added
         queryClient.invalidateQueries('calendarOccurrences');
-      }
-    } catch (e) {
-      setShowErrorModal(true);
-    }
-  };
+
+        // Show success modal
+        setShowSuccessModal(true);
+      },
+      onError: (error, variables, context) => {
+        // Remove optimistic todo from the todos list
+        queryClient.setQueryData('medications', (old) =>
+          old.filter(
+            (medication) => medication._id !== context.optimisticMedication._id,
+          ),
+        );
+
+        // Show error modal
+        setShowErrorModal(true);
+      },
+    },
+  );
 
   const medication = {
     name,
@@ -121,7 +172,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
         </InfoContainer>
         <ButtonContainer>
           <Button
-            onPress={() => addMedication(medication, token)}
+            onPress={() => addMedication.mutate(medication)}
             text="Confirm"
           />
         </ButtonContainer>
