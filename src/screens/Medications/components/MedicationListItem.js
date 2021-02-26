@@ -1,21 +1,28 @@
 import React from 'react';
 import { View } from 'react-native';
-import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Feather';
-import { colors, medicationColors} from '../../../utils/colors';
+import styled from 'styled-components';
+import { colors, medicationColors } from '../../../utils/colors';
 
-export const MedicationTile = ({ medication, index }) => {
+const MedicationListItem = ({ medication, index }) => {
   return (
     <MedicationItem index={index}>
       <HBox>
-        <View style={[{backgroundColor: medicationColors[medication.color]}, 
-          {width: 15}, {height: 50}, {borderRadius: 15}, {marginRight: 12}]}/>
-        <View>
+        <View
+          style={[
+            { backgroundColor: medicationColors[medication.color] },
+            { width: 15 },
+            { height: 50 },
+            { borderRadius: 15 },
+            { marginRight: 12 },
+          ]}
+        />
+        <MedicationInfo>
           <MedicationName>{medication.name}</MedicationName>
-          <Strength>
+          <MedicationStrength>
             {medication.strength} {medication.strengthUnit}
-          </Strength>
-        </View>
+          </MedicationStrength>
+        </MedicationInfo>
       </HBox>
       <Icon name="chevron-right" size={18} color={colors.gray[500]} />
     </MedicationItem>
@@ -34,16 +41,20 @@ const MedicationItem = styled.View`
   border-width: 0.5px;
   border-color: ${colors.gray[300]};
   margin-bottom: 10px;
-  margin-horizontal: 10px;
   border-radius: 10px;
-  margin-top: ${({index})=> index == 0 ? '10px' : '0px'};
+  margin-top: ${({ index }) => (index == 0 ? '10px' : '0px')};
 `;
 
 const MedicationName = styled.Text`
   font-size: 16px;
 `;
 
-const Strength = styled.Text`
+const MedicationInfo = styled.View`
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const MedicationStrength = styled.Text`
   font-size: 14px;
   margin-top: 4px;
   color: ${colors.gray[500]};
@@ -60,3 +71,5 @@ const Strength = styled.Text`
 const HBox = styled.View`
   flex-direction: row;
 `;
+
+export default MedicationListItem;
