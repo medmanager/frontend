@@ -4,11 +4,12 @@ import styled from 'styled-components/native';
 import Button from '../../components/Button';
 import Label from '../../components/Label';
 import Modal from '../../components/Modal';
+import { queryClient } from '../../store';
 import { useAddMedication } from '../../store/useAddMedication';
+import { useAuth } from '../../store/useAuth';
 import { Colors, formatTime, getStatusText } from '../../utils';
 import apiCalls from '../../utils/api-calls';
-import {ColorSelect} from './components/ColorSelect';
-import {useAuth} from '../../store/useAuth';
+import { ColorSelect } from './components/ColorSelect';
 
 const AddMedicationConfirmationView = ({ navigation }) => {
   const {
@@ -21,6 +22,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     strengthUnit,
     notes,
     color,
+    reset,
   } = useAddMedication((state) => ({
     dosages: state.selectedDosages.map(
       (id) => state.dosages.find((dosage) => dosage.id === id).value,
@@ -35,24 +37,25 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     strengthUnit: state.strengthUnit,
     notes: state.formValues.notes,
     color: state.color,
+    reset: state.reset,
   }));
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
 
-  const {token, userId} = useAuth((state) => ({
+  const { token } = useAuth((state) => ({
     token: state.userToken,
-    userId: state.userId,
   }));
 
-  const postMedication = async (medication, token) => {
+  const addMedication = async (medication, token) => {
     try {
-      console.log(token);
-      console.log(userId);
-      const result = await apiCalls.addMedication(medication, token);
-      if (result.error) {
+      const response = await apiCalls.addMedication(medication, token);
+      if (response.error) {
         setShowErrorModal(true);
       } else {
         setShowSuccessModal(true);
+        reset();
+        queryClient.invalidateQueries('medications');
+        queryClient.invalidateQueries('calendarOccurrences');
       }
     } catch (e) {
       setShowErrorModal(true);
@@ -113,13 +116,11 @@ const AddMedicationConfirmationView = ({ navigation }) => {
               Take {dosageTimesString} {getStatusText(medication.frequency)}
             </Text>
           </Field>
-          <ColorSelect/>
+          <ColorSelect />
         </InfoContainer>
         <ButtonContainer>
           <Button
-            onPress={() => {
-              postMedication(medication, token);
-            }}
+            onPress={() => addMedication(medication, token)}
             text="Confirm"
           />
         </ButtonContainer>
@@ -239,6 +240,7 @@ const InfoContainer = styled.View`
 
 const Title = styled.Text`
   font-size: 24px;
+  font-weight: 700;
 `;
 
 export default AddMedicationConfirmationView;

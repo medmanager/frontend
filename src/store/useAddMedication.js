@@ -22,6 +22,13 @@ const frequencyRadioInputChoices = [
       interval: 1,
       intervalUnits: 'weeks',
       weekdays: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
         [days[now.getDay()]]: true,
       },
     },
@@ -34,6 +41,13 @@ const frequencyRadioInputChoices = [
       interval: 2,
       intervalUnits: 'weeks',
       weekdays: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
         [days[now.getDay()]]: true,
       },
     },
@@ -46,6 +60,13 @@ const frequencyRadioInputChoices = [
       interval: 4,
       intervalUnits: 'weeks',
       weekdays: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
         [days[now.getDay()]]: true,
       },
     },
@@ -118,25 +139,28 @@ const dosageMultiSelectChoices = [
   },
 ];
 
+const defaultState = {
+  strengthUnit: 'mg',
+  amountUnit: 'tablets',
+  frequencies: frequencyRadioInputChoices,
+  selectedFrequency: frequencyRadioInputChoices[0].id,
+  dosages: dosageMultiSelectChoices,
+  selectedDosages: [
+    dosageMultiSelectChoices[0].id,
+    dosageMultiSelectChoices[3].id,
+  ],
+  formValues: {
+    name: '',
+    strength: null,
+    amount: null,
+    notes: '',
+  },
+  color: 0,
+};
+
 const useAddMedication = create(
   immer((set) => ({
-    // default state
-    strengthUnit: 'mg',
-    amountUnit: 'tablets',
-    frequencies: frequencyRadioInputChoices,
-    selectedFrequency: frequencyRadioInputChoices[0].id,
-    dosages: dosageMultiSelectChoices,
-    selectedDosages: [
-      dosageMultiSelectChoices[0].id,
-      dosageMultiSelectChoices[3].id,
-    ],
-    formValues: {
-      name: '',
-      strength: null,
-      amount: null,
-      notes: '',
-    },
-    color: 0,
+    ...defaultState,
 
     // state actions
     setFormValues: (formValues) =>
@@ -211,6 +235,7 @@ const useAddMedication = create(
       set((state) => {
         state.color = index;
       }),
+    reset: () => set((state) => ({ ...state, ...defaultState })),
     setState: (fn) => set(produce(fn)),
   })),
 );
