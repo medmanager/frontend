@@ -29,7 +29,7 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
   const {
     customFrequency,
     setCustomFrequencyInterval,
-    setCustomFrequencyIntervalUnits,
+    setCustomFrequencyIntervalUnit,
     toggleCustomFrequencyWeekday,
   } = useAddMedication(
     (state) => ({
@@ -37,7 +37,7 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
         (frequency) => frequency.id === id,
       ),
       setCustomFrequencyInterval: state.setCustomFrequencyInterval,
-      setCustomFrequencyIntervalUnits: state.setCustomFrequencyIntervalUnits,
+      setCustomFrequencyIntervalUnit: state.setCustomFrequencyintervalUnit,
       toggleCustomFrequencyWeekday: state.toggleCustomFrequencyWeekday,
     }),
     shallow,
@@ -56,7 +56,7 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
             selectedValue={customFrequency.value.interval}
             onValueChange={(value) => setCustomFrequencyInterval(id, value)}
             itemStyle={itemStyle}>
-            {customFrequency.value.intervalUnits === 'days'
+            {customFrequency.value.intervalUnit === 'days'
               ? dayIntervalItems.map((number) => (
                   <Item key={number} label={number.toString()} value={number} />
                 ))
@@ -64,11 +64,9 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
                   <Item key={number} label={number.toString()} value={number} />
                 ))}
           </IntervalPicker>
-          <IntervalUnitsPicker
-            selectedValue={customFrequency.value.intervalUnits}
-            onValueChange={(value) =>
-              setCustomFrequencyIntervalUnits(id, value)
-            }
+          <IntervalUnitPicker
+            selectedValue={customFrequency.value.intervalUnit}
+            onValueChange={(value) => setCustomFrequencyIntervalUnit(id, value)}
             itemStyle={itemStyle}>
             <Item
               label={customFrequency.value.interval === 1 ? 'day' : 'days'}
@@ -78,9 +76,9 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
               label={customFrequency.value.interval === 1 ? 'week' : 'weeks'}
               value="weeks"
             />
-          </IntervalUnitsPicker>
+          </IntervalUnitPicker>
         </PickerContainer>
-        {customFrequency.value.intervalUnits === 'weeks' && (
+        {customFrequency.value.intervalUnit === 'weeks' && (
           <Fragment>
             <Label>Days</Label>
             <DayMultiSelect
@@ -104,7 +102,7 @@ const IntervalPicker = styled(Picker)`
   flex-grow: 1;
 `;
 
-const IntervalUnitsPicker = styled(Picker)`
+const IntervalUnitPicker = styled(Picker)`
   flex-grow: 1;
 `;
 

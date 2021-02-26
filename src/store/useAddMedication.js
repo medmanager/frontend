@@ -10,7 +10,7 @@ const frequencyRadioInputChoices = [
     label: 'Daily',
     value: {
       interval: 1,
-      intervalUnits: 'days',
+      intervalUnit: 'days',
       weeksdays: null,
     },
   },
@@ -20,7 +20,7 @@ const frequencyRadioInputChoices = [
     label: `Weekly (${capitalize(days[now.getDay()])})`,
     value: {
       interval: 1,
-      intervalUnits: 'weeks',
+      intervalUnit: 'weeks',
       weekdays: {
         monday: false,
         tuesday: false,
@@ -39,7 +39,7 @@ const frequencyRadioInputChoices = [
     label: `Bi-Weekly (${capitalize(days[now.getDay()])})`,
     value: {
       interval: 2,
-      intervalUnits: 'weeks',
+      intervalUnit: 'weeks',
       weekdays: {
         monday: false,
         tuesday: false,
@@ -58,7 +58,7 @@ const frequencyRadioInputChoices = [
     label: `Monthly (the ${nthDay(now)})`,
     value: {
       interval: 4,
-      intervalUnits: 'weeks',
+      intervalUnit: 'weeks',
       weekdays: {
         monday: false,
         tuesday: false,
@@ -79,7 +79,7 @@ const frequencyRadioInputChoices = [
     route: 'AddMedicationCustomFrequency',
     value: {
       interval: 1,
-      intervalUnits: 'days',
+      intervalUnit: 'days',
       weekdays: {
         monday: false,
         tuesday: false,
@@ -186,12 +186,12 @@ const useAddMedication = create(
         );
         frequency.value.interval = interval;
       }),
-    setCustomFrequencyIntervalUnits: (id, intervalUnits) =>
+    setCustomFrequencyintervalUnit: (id, intervalUnit) =>
       set((state) => {
         const frequency = state.frequencies.find(
           (frequency) => frequency.id === id,
         );
-        frequency.value.intervalUnits = intervalUnits;
+        frequency.value.intervalUnit = intervalUnit;
       }),
     toggleCustomFrequencyWeekday: (id, weekday) =>
       set((state) => {

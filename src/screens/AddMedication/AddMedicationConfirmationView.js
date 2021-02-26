@@ -53,7 +53,6 @@ const AddMedicationConfirmationView = ({ navigation }) => {
         setShowErrorModal(true);
       } else {
         setShowSuccessModal(true);
-        reset();
         queryClient.invalidateQueries('medications');
         queryClient.invalidateQueries('calendarOccurrences');
       }
@@ -85,10 +84,12 @@ const AddMedicationConfirmationView = ({ navigation }) => {
   const handleAddAnotherMed = () => {
     navigation.navigate('Home');
     navigation.navigate('AddMedicationModal');
+    reset();
   };
 
   const handleContinueHome = () => {
     navigation.navigate('Home');
+    reset();
   };
 
   return (
