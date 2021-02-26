@@ -6,7 +6,6 @@ import api from '../utils/api-calls';
 const useAuth = create(
   immer((set, get) => ({
     // default state
-    isLoading: true,
     isSignout: false,
     userToken: null,
     error: null,
@@ -21,14 +20,12 @@ const useAuth = create(
       if (tokenIsValid) {
         set((state) => {
           state.userToken = token;
-          state.isLoading = false;
           state.error = null;
           state.userId = verifyResponse.verifiedJwt._id;
         });
       } else {
         set((state) => {
           state.userToken = null;
-          state.isLoading = false;
           state.isSignout = true;
           state.error = null;
         });
