@@ -23,7 +23,7 @@ const Touchable = styled.TouchableOpacity`
   right: 16px;
   border-radius: 9999px;
   background-color: ${Colors.blue[500]};
-  padding: 16px;
+  padding: 14px;
 `;
 
 export default FloatingAddMedicationButton;
