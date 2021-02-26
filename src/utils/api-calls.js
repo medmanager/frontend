@@ -9,6 +9,7 @@ const APIHOST =
   Platform.OS === 'android'
     ? 'http://10.0.2.2:' + PORT
     : 'http://127.0.0.1:' + PORT;
+    //proof that ternary expressions are absolutely beautiful
 
 export default {
   /**doesn't return a token yet, but will register user
@@ -180,7 +181,7 @@ export default {
       });
       return response.json();
     } catch (error) {
-      return error;
+      throw error;
     }
   },
 
@@ -195,7 +196,27 @@ export default {
       });
       return response.json();
     } catch (error) {
-      return error;
+      throw error;
+    }
+  },
+
+  /**
+   * returns obj with error boolean and all dosages independent of medication
+   * ex:
+   * {error: false, dosages: []}
+   */
+  async getDosages(token) {
+    const url = APIHOST + '/dosage';
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: 'JWT ' + token,
+        },
+      });
+      return response.json();
+    } catch (error) {
+      throw error;
     }
   },
 
@@ -211,7 +232,7 @@ export default {
       });
       return {error: false, scheduledDays: response.json()};
     } catch (error) {
-      return {error: true};
+      throw error;
     }
   },
 
