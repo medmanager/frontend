@@ -8,7 +8,11 @@ const MainStack = createNativeStackNavigator();
 
 const Main = () => {
   return (
-    <MainStack.Navigator screenOptions={{ stackPresentation: 'modal' }}>
+    <MainStack.Navigator
+      screenOptions={{
+        stackPresentation: 'modal',
+        headerTopInsetEnabled: false,
+      }}>
       <MainStack.Screen
         name="Home"
         component={Tabs}

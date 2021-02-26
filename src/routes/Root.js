@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { StatusBar } from 'react-native';
+import { LogBox } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import shallow from 'zustand/shallow';
 import LoadingScreen from '../screens/Loading/LoadingView';
@@ -12,7 +12,7 @@ import Main from './Main';
 
 const RootStack = createNativeStackNavigator();
 
-StatusBar.setBarStyle('light-content');
+LogBox.ignoreLogs(['Setting a timer']);
 
 const Root = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +46,7 @@ const Root = () => {
   return (
     <RootStack.Navigator
       initialRouteName="Main"
-      screenOptions={{ headerShown: false }}>
+      screenOptions={{ headerShown: false, headerTopInsetEnabled: false }}>
       {userToken === null ? (
         <Fragment>
           <RootStack.Screen name="Welcome" component={WelcomeScreen} />

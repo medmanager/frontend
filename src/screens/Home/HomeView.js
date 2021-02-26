@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React, { Fragment, useRef, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 import shallow from 'zustand/shallow';
 import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
@@ -9,6 +9,8 @@ import useOccurrences from '../../store/useOccurrences';
 import DosageListItem, {
   DosageListItemPlaceholder,
 } from './components/DosageListItem';
+
+StatusBar.setBarStyle('light-content');
 
 function HomeScreen() {
   const now = useRef(new Date());

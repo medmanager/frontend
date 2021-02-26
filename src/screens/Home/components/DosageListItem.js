@@ -16,7 +16,6 @@ export const DosageListItemPlaceholder = () => (
 );
 
 const DosageListItem = ({ date, dosageId, medicationId }) => {
-  console.log({ dosageId });
   const token = useAuth((state) => state.userToken);
   const { data: medication, isLoading } = useMedication(medicationId, token);
 
@@ -27,7 +26,6 @@ const DosageListItem = ({ date, dosageId, medicationId }) => {
   const dosage = medication.dosages.filter(
     (dosage) => dosage._id === dosageId,
   )[0];
-  console.log(dosage);
 
   return (
     <Container>

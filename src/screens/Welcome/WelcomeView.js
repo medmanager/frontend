@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button, View } from 'react-native';
+import { Button, View, StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 import { Colors, formatTime, getStatusText } from '../../utils';
+
+StatusBar.setBarStyle('dark-content');
 
 function WelcomeScreen({ navigation }) {
   const handleSignInPress = () => {
