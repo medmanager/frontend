@@ -12,7 +12,7 @@ import DosageListItem, {
 
 function HomeScreen() {
   const now = useRef(new Date());
-  const [today, setToday] = useState(now.current.getDay() + 1);
+  const [today, setToday] = useState(now.current.getDay());
   const token = useAuth((state) => state.userToken, shallow);
   const {
     data: occurrences,
@@ -22,16 +22,6 @@ function HomeScreen() {
     refetch,
     isFetching,
   } = useOccurrences(token);
-
-  if (occurrences && occurrences.length === 0)
-    return (
-      <SafeArea>
-        <Container>
-          <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
-          <Text>No dosages for today.</Text>
-        </Container>
-      </SafeArea>
-    );
 
   // show placeholder dosage items when the list is loading
   if (isLoading) {
@@ -44,6 +34,17 @@ function HomeScreen() {
             keyExtractor={(_, index) => index.toString()}
             renderItem={() => <DosageListItemPlaceholder />}
           />
+        </Container>
+      </SafeArea>
+    );
+  }
+
+  if (occurrences && occurrences[today] && occurrences[today].length === 0) {
+    return (
+      <SafeArea>
+        <Container>
+          <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
+          <Text>No dosages for today.</Text>
         </Container>
       </SafeArea>
     );
@@ -77,6 +78,7 @@ function HomeScreen() {
 const Header = styled.Text`
   font-size: 24px;
   font-weight: 700;
+  margin-bottom: 8px;
 `;
 
 const Container = styled.View`
@@ -84,15 +86,15 @@ const Container = styled.View`
   padding: 24px;
 `;
 
-const DosageList = styled(FlatList)`
-  margin-top: 16px;
-`;
+const DosageList = styled(FlatList)``;
 
 const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  font-size: 16px;
+`;
 
 export default () => (
   <Fragment>

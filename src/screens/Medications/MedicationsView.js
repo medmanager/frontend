@@ -22,10 +22,12 @@ function MedicationsScreen() {
     );
   }
 
-  if (medications.length === 0) {
+  if (medications && medications.length === 0) {
     return (
       <SafeArea>
-        <Text>No Medications Found.</Text>
+        <Container>
+          <Text>No Medications Found.</Text>
+        </Container>
       </SafeArea>
     );
   }
@@ -52,6 +54,10 @@ const SafeArea = styled.SafeAreaView`
 `;
 
 const MedicationList = styled(FlatList)`
+  padding: 16px;
+`;
+
+const Container = styled.View`
   padding: 16px;
 `;
 
