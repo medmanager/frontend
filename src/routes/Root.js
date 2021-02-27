@@ -12,7 +12,10 @@ import Main from './Main';
 
 const RootStack = createNativeStackNavigator();
 
-LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs([
+  'Warning: Setting a timer',
+  "Warning: Can't perform a React state update",
+]);
 
 const Root = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -157,7 +157,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
             <Text>{medication.amount + ' ' + medication.amountUnit}</Text>
           </Field>
           <Field>
-            <Label>Notes</Label>
+            <Label>Condition</Label>
             <Text>
               {medication.notes.length > 0 ? medication.notes : 'Empty'}
             </Text>
@@ -168,7 +168,10 @@ const AddMedicationConfirmationView = ({ navigation }) => {
               Take {dosageTimesString} {getStatusText(medication.frequency)}
             </Text>
           </Field>
-          <ColorSelect />
+          <Field>
+            <Label>Color</Label>
+            <ColorSelect />
+          </Field>
         </InfoContainer>
         <ButtonContainer>
           <Button

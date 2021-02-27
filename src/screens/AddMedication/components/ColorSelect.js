@@ -1,31 +1,33 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
-import {medicationColors, medicationGreyedColors} from '../../../utils/colors';
-import { useAddMedication } from '../../../store/useAddMedication';
 import shallow from 'zustand/shallow';
+import { useAddMedication } from '../../../store/useAddMedication';
+import {
+  medicationColors,
+  medicationGreyedColors,
+} from '../../../utils/colors';
 
 export const ColorSelect = () => {
-  const {
-    color,
-    selectColor,
-  } = useAddMedication(
+  const { color, selectColor } = useAddMedication(
     (state) => ({
       color: state.color,
       selectColor: state.selectColor,
     }),
     shallow,
   );
-  
+
   return (
     <ColorContainer>
-      {medicationColors.map((mappedColor, index) => 
-        <CircleColor 
-          onPress={() => selectColor(index)} 
-          key={index} 
-          backColor={index == color ? mappedColor : medicationGreyedColors[index]}
+      {medicationColors.map((mappedColor, index) => (
+        <CircleColor
+          onPress={() => selectColor(index)}
+          key={index}
+          backColor={
+            index == color ? mappedColor : medicationGreyedColors[index]
+          }
           border={index == color}
         />
-      )}
+      ))}
     </ColorContainer>
   );
 };
@@ -38,8 +40,7 @@ const CircleColor = styled.TouchableOpacity`
   width: 30px;
   height: 30px;
   border-radius: 30px;
-  margin-top: 15px;
   margin-right: 12px;
-  background-color: ${({backColor}) => backColor};
-  border: ${({border}) => border ? '2px' : '0'};
+  background-color: ${({ backColor }) => backColor};
+  border: ${({ border }) => (border ? '2px' : '0')};
 `;
