@@ -150,7 +150,7 @@ const AddMedicationView = ({ navigation }) => {
             inputStyle={textAreaInputStyle}
             multiline
             numberOfLines={10}
-            label="Notes"
+            label="Condition"
           />
         </Form>
       </KeyboardAwareScrollView>

@@ -17,6 +17,7 @@ const AddMedicationModal = () => {
         headerTintColor: 'white',
         headerStyle: { backgroundColor: Colors.blue[500] },
         headerBackTitle: '',
+        headerTopInsetEnabled: false,
       }}>
       <Stack.Screen
         name="AddMedication"

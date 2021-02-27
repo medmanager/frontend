@@ -1,14 +1,15 @@
 import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
+import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
 import Label from '../../components/Label';
 import Modal from '../../components/Modal';
 import { useAddMedication } from '../../store/useAddMedication';
-import { Colors, formatTime, getStatusText } from '../../utils';
+import { useAuth } from '../../store/useAuth';
+import { Colors, formatTime, getStatusText, mongoObjectId } from '../../utils';
 import apiCalls from '../../utils/api-calls';
-import {ColorSelect} from './components/ColorSelect';
-import {useAuth} from '../../store/useAuth';
+import { ColorSelect } from './components/ColorSelect';
 
 const AddMedicationConfirmationView = ({ navigation }) => {
   const {
@@ -21,6 +22,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     strengthUnit,
     notes,
     color,
+    reset,
   } = useAddMedication((state) => ({
     dosages: state.selectedDosages.map(
       (id) => state.dosages.find((dosage) => dosage.id === id).value,
@@ -35,29 +37,80 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     strengthUnit: state.strengthUnit,
     notes: state.formValues.notes,
     color: state.color,
+    reset: state.reset,
   }));
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const queryClient = useQueryClient();
 
-  const {token, userId} = useAuth((state) => ({
+  const { token } = useAuth((state) => ({
     token: state.userToken,
-    userId: state.userId,
   }));
 
-  const postMedication = async (medication, token) => {
-    try {
-      console.log(token);
-      console.log(userId);
-      const result = await apiCalls.addMedication(medication, token);
-      if (result.error) {
-        setShowErrorModal(true);
-      } else {
+  const addMedication = useMutation(
+    (medication) => apiCalls.addMedication(medication, token),
+    {
+      retry: 3, // retry three times if the mutation fails
+      onMutate: async (variables) => {
+        // Cancel current queries for the medications list
+        await queryClient.cancelQueries('medications');
+
+        // Construct an 'optimistic' version of what the medication will look like when the backend gives the actual object
+        const optimisticMedication = {
+          _id: mongoObjectId(),
+          ...variables,
+          active: true,
+          frequency: {
+            ...variables.frequency,
+            _id: mongoObjectId(),
+            weekdays: {
+              ...variables.frequency.weekdays,
+              _id: mongoObjectId(),
+            },
+          },
+          dosages: variables.dosages.map((dosage) => ({
+            ...dosage,
+            _id: mongoObjectId(),
+          })),
+          dateAdded: new Date(),
+        };
+
+        queryClient.setQueryData('medications', (old) => [
+          ...old,
+          optimisticMedication,
+        ]);
+
+        return { optimisticMedication };
+      },
+      onSuccess: (result, variables, context) => {
+        // Replace optimistic medication in the medications list with the actual result from the backend
+        queryClient.setQueryData('medications', (old) =>
+          old.map((medication) =>
+            medication._id === context.optimisticMedication._id
+              ? result
+              : medication,
+          ),
+        );
+
+        // Invalidate all calendar occurrences due to new medication being added
+        queryClient.invalidateQueries('calendarOccurrences');
+
+        // Show success modal
         setShowSuccessModal(true);
-      }
-    } catch (e) {
-      setShowErrorModal(true);
-    }
-  };
+      },
+      onError: (error, variables, context) => {
+        // Remove optimistic todo from the todos list
+        queryClient.setQueryData('medications', (old) =>
+          old.filter(
+            (medication) => medication._id !== context.optimisticMedication._id,
+          ),
+        );
+
+        // Show error modal
+        setShowErrorModal(true);
+      },
+    },
+  );
 
   const medication = {
     name,
@@ -82,10 +135,12 @@ const AddMedicationConfirmationView = ({ navigation }) => {
   const handleAddAnotherMed = () => {
     navigation.navigate('Home');
     navigation.navigate('AddMedicationModal');
+    reset();
   };
 
   const handleContinueHome = () => {
     navigation.navigate('Home');
+    reset();
   };
 
   return (
@@ -102,7 +157,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
             <Text>{medication.amount + ' ' + medication.amountUnit}</Text>
           </Field>
           <Field>
-            <Label>Notes</Label>
+            <Label>Condition</Label>
             <Text>
               {medication.notes.length > 0 ? medication.notes : 'Empty'}
             </Text>
@@ -113,13 +168,14 @@ const AddMedicationConfirmationView = ({ navigation }) => {
               Take {dosageTimesString} {getStatusText(medication.frequency)}
             </Text>
           </Field>
-          <ColorSelect/>
+          <Field>
+            <Label>Color</Label>
+            <ColorSelect />
+          </Field>
         </InfoContainer>
         <ButtonContainer>
           <Button
-            onPress={() => {
-              postMedication(medication, token);
-            }}
+            onPress={() => addMedication.mutate(medication)}
             text="Confirm"
           />
         </ButtonContainer>
@@ -239,6 +295,7 @@ const InfoContainer = styled.View`
 
 const Title = styled.Text`
   font-size: 24px;
+  font-weight: 700;
 `;
 
 export default AddMedicationConfirmationView;

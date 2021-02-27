@@ -73,6 +73,7 @@ const StrengthUnitsPicker = styled.TouchableOpacity`
   padding-right: 16px;
   padding-top: 10px;
   padding-bottom: 10px;
+  height: 40px;
   border-radius: 8px;
   background-color: #fff;
   border-width: 0.5px;

@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 
 const PillAddIcon = ({ color = 'black' }) => (
-  <Svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+  <Svg width="32" height="32" viewBox="0 0 36 36" fill="none">
     <G clipPath="url(#clip0)">
       <Path
         d="M9.5 2V6.5M9.5 6.5V11M9.5 6.5H14M9.5 6.5H5"

@@ -10,7 +10,7 @@ const frequencyRadioInputChoices = [
     label: 'Daily',
     value: {
       interval: 1,
-      intervalUnits: 'days',
+      intervalUnit: 'days',
       weeksdays: null,
     },
   },
@@ -20,8 +20,15 @@ const frequencyRadioInputChoices = [
     label: `Weekly (${capitalize(days[now.getDay()])})`,
     value: {
       interval: 1,
-      intervalUnits: 'weeks',
+      intervalUnit: 'weeks',
       weekdays: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
         [days[now.getDay()]]: true,
       },
     },
@@ -32,8 +39,15 @@ const frequencyRadioInputChoices = [
     label: `Bi-Weekly (${capitalize(days[now.getDay()])})`,
     value: {
       interval: 2,
-      intervalUnits: 'weeks',
+      intervalUnit: 'weeks',
       weekdays: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
         [days[now.getDay()]]: true,
       },
     },
@@ -44,8 +58,15 @@ const frequencyRadioInputChoices = [
     label: `Monthly (the ${nthDay(now)})`,
     value: {
       interval: 4,
-      intervalUnits: 'weeks',
+      intervalUnit: 'weeks',
       weekdays: {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
         [days[now.getDay()]]: true,
       },
     },
@@ -58,7 +79,7 @@ const frequencyRadioInputChoices = [
     route: 'AddMedicationCustomFrequency',
     value: {
       interval: 1,
-      intervalUnits: 'days',
+      intervalUnit: 'days',
       weekdays: {
         monday: false,
         tuesday: false,
@@ -118,25 +139,28 @@ const dosageMultiSelectChoices = [
   },
 ];
 
+const defaultState = {
+  strengthUnit: 'mg',
+  amountUnit: 'tablets',
+  frequencies: frequencyRadioInputChoices,
+  selectedFrequency: frequencyRadioInputChoices[0].id,
+  dosages: dosageMultiSelectChoices,
+  selectedDosages: [
+    dosageMultiSelectChoices[0].id,
+    dosageMultiSelectChoices[3].id,
+  ],
+  formValues: {
+    name: '',
+    strength: null,
+    amount: null,
+    notes: '',
+  },
+  color: 0,
+};
+
 const useAddMedication = create(
   immer((set) => ({
-    // default state
-    strengthUnit: 'mg',
-    amountUnit: 'tablets',
-    frequencies: frequencyRadioInputChoices,
-    selectedFrequency: frequencyRadioInputChoices[0].id,
-    dosages: dosageMultiSelectChoices,
-    selectedDosages: [
-      dosageMultiSelectChoices[0].id,
-      dosageMultiSelectChoices[3].id,
-    ],
-    formValues: {
-      name: '',
-      strength: null,
-      amount: null,
-      notes: '',
-    },
-    color: 0,
+    ...defaultState,
 
     // state actions
     setFormValues: (formValues) =>
@@ -162,12 +186,12 @@ const useAddMedication = create(
         );
         frequency.value.interval = interval;
       }),
-    setCustomFrequencyIntervalUnits: (id, intervalUnits) =>
+    setCustomFrequencyintervalUnit: (id, intervalUnit) =>
       set((state) => {
         const frequency = state.frequencies.find(
           (frequency) => frequency.id === id,
         );
-        frequency.value.intervalUnits = intervalUnits;
+        frequency.value.intervalUnit = intervalUnit;
       }),
     toggleCustomFrequencyWeekday: (id, weekday) =>
       set((state) => {
@@ -211,6 +235,7 @@ const useAddMedication = create(
       set((state) => {
         state.color = index;
       }),
+    reset: () => set((state) => ({ ...state, ...defaultState })),
     setState: (fn) => set(produce(fn)),
   })),
 );

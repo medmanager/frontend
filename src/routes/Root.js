@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect } from 'react';
-import { StatusBar } from 'react-native';
+import React, { Fragment, useEffect, useState } from 'react';
+import { LogBox } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import shallow from 'zustand/shallow';
 import LoadingScreen from '../screens/Loading/LoadingView';
@@ -12,32 +12,35 @@ import Main from './Main';
 
 const RootStack = createNativeStackNavigator();
 
-StatusBar.setBarStyle('dark-content');
+LogBox.ignoreLogs([
+  'Warning: Setting a timer',
+  "Warning: Can't perform a React state update",
+]);
 
 const Root = () => {
-  const { restoreToken, isLoading, userToken, isSignout, setState } = useAuth(
+  const [isLoading, setIsLoading] = useState(false);
+  const { restoreToken, userToken, isSignout } = useAuth(
     (state) => ({
       restoreToken: state.restoreToken,
       error: state.error,
-      isLoading: state.isLoading,
       userToken: state.userToken,
       isSignout: state.isSignout,
-      setState: state.setState,
     }),
     shallow,
   );
 
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
-    const bootstrapAsync = async () => {
+    (async () => {
+      setIsLoading(true);
+
       const token = await getToken();
-
       // verify the token and set the auth state if the token is valid, otherwise show the sign in screen again
-      restoreToken(token);
-    };
+      await restoreToken(token);
 
-    bootstrapAsync();
-  }, [restoreToken, setState]);
+      setIsLoading(false);
+    })();
+  }, [restoreToken]);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -46,7 +49,7 @@ const Root = () => {
   return (
     <RootStack.Navigator
       initialRouteName="Main"
-      screenOptions={{ headerShown: false }}>
+      screenOptions={{ headerShown: false, headerTopInsetEnabled: false }}>
       {userToken === null ? (
         <Fragment>
           <RootStack.Screen name="Welcome" component={WelcomeScreen} />

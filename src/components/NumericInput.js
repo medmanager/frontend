@@ -23,6 +23,7 @@ const Input = styled.TextInput`
   background-color: #fff;
   border-width: 0.5px;
   align-items: center;
+  height: 40px;
   border-color: ${Colors.gray[300]};
 `;
 
