@@ -11,7 +11,7 @@ const frequencyRadioInputChoices = [
     value: {
       interval: 1,
       intervalUnit: 'days',
-      weeksdays: null,
+      weekdays: null,
     },
   },
   {
