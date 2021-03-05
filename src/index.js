@@ -1,3 +1,4 @@
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import 'react-native-gesture-handler';
@@ -13,13 +14,15 @@ enableScreens();
 export default function App() {
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <NavigationContainer>
-          <ErrorHandler>
-            <Root />
-          </ErrorHandler>
-        </NavigationContainer>
-      </QueryClientProvider>
+      <ActionSheetProvider>
+        <QueryClientProvider client={queryClient}>
+          <NavigationContainer>
+            <ErrorHandler>
+              <Root />
+            </ErrorHandler>
+          </NavigationContainer>
+        </QueryClientProvider>
+      </ActionSheetProvider>
     </SafeAreaProvider>
   );
 }
