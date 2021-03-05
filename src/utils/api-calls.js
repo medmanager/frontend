@@ -175,6 +175,33 @@ export default {
     return response.json();
   },
 
+  
+  /**
+   * post that a user has marked an occurrence as not taken or taken
+   * Ex:
+   * occurrence: {
+   *    isTaken: true,
+   *    timeTaken: Date,
+   *    occurrenceId: 12345 (this is attached to each daily occurrence in getCalendarOccurrences)
+   * }
+   * response will be in this format ->
+   * {
+   *    error: false
+   *    occurrence: updatedOccurrence
+   * }
+   */
+   async postCalendarOccurrence(token, occurrence) {
+    const url = APIHOST + '/schedule/occurrences';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+      body: JSON.stringify(occurrence),
+    });
+    return response.json();
+  },
+
   /*  returns a JSON array of 5 drug names similar to searchStr
    *  Ex: lisinop ->
    *  ["lysine","lisinopril","Lispro","Listenon","Lysinum"]
