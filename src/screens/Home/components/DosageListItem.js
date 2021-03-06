@@ -22,10 +22,14 @@ const DosageListItem = ({ date, dosageId, medicationId }) => {
   if (isLoading) {
     return <DosageListItemPlaceholder />;
   }
-
-  const dosage = medication.dosages.filter(
-    (dosage) => dosage._id === dosageId,
-  )[0];
+  let dosage = null;
+  if (medication != null && medication.dosages != null) {
+    dosage = medication.dosages.find(
+      (dosage) => dosage._id == dosageId,
+    );
+  } else {
+    return (<Text>medication or dosage is null</Text>);
+  }
 
   return (
     <Container>

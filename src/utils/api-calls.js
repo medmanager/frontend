@@ -138,8 +138,11 @@ export default {
     return response.json();
   },
 
-  async updateMedicationFromID(medication, medicationID, token) {
-    const url = APIHOST + '/medication/' + medicationID;
+  /**
+   * do NOT change the id of the medication to be updated
+   */
+  async updateMedicationFromID(medication, token) {
+    const url = APIHOST + '/medication/' + medication._id;
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -189,15 +192,17 @@ export default {
    *    error: false
    *    occurrence: updatedOccurrence
    * }
+   * MUST pass in medicationId as well as a dosageId so that the occurrence
+   * can be located efficiently
    */
-   async postCalendarOccurrence(token, occurrence) {
+   async postCalendarOccurrence(token, medicationId, dosageId, occurrence) {
     const url = APIHOST + '/schedule/occurrences';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         Authorization: 'JWT ' + token,
       },
-      body: JSON.stringify(occurrence),
+      body: JSON.stringify({medicationId: medicationId, dosageId: dosageId, occurrence: occurrence}),
     });
     return response.json();
   },
