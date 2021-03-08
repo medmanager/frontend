@@ -9,6 +9,6 @@ export default function useOccurrences(token) {
   return useQuery(
     'calendarOccurrences',
     () => apiCalls.getCalendarOccurrences(token),
-    { enabled: !!token }, // only execute the query if the token exists
+    { retry: 3, enabled: !!token }, // only execute the query if the token exists
   );
 }

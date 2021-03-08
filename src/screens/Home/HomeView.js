@@ -3,13 +3,12 @@ import isBetween from 'dayjs/plugin/isBetween';
 import React, { Fragment, useRef, useState } from 'react';
 import { FlatList, SectionList } from 'react-native';
 import styled from 'styled-components/native';
-import shallow from 'zustand/shallow';
 import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
 import { useAuth } from '../../store/useAuth';
 import useOccurrences from '../../store/useOccurrences';
 import { Colors } from '../../utils';
-import DosageListItem, {
-  DosageListItemPlaceholder,
+import DosageOccurrenceListItem, {
+  DosageOccurrenceListItemPlaceholder,
 } from './components/DosageListItem';
 
 dayjs.extend(isBetween);
@@ -17,18 +16,17 @@ dayjs.extend(isBetween);
 function HomeScreen() {
   const now = useRef(new Date());
   const [today, setToday] = useState(now.current.getDay());
-  const token = useAuth((state) => state.userToken, shallow);
+  const token = useAuth((state) => state.userToken);
   const {
     data: occurrences,
-    isError,
+    status,
     error,
-    isLoading,
     refetch,
     isFetching,
   } = useOccurrences(token);
 
   // show placeholder dosage items when the list is loading
-  if (isLoading) {
+  if (status === 'loading') {
     return (
       <SafeArea>
         <Container>
@@ -36,9 +34,19 @@ function HomeScreen() {
           <FlatList
             data={new Array(5)}
             keyExtractor={(_, index) => index.toString()}
-            renderItem={() => <DosageListItemPlaceholder />}
+            renderItem={() => <DosageOccurrenceListItemPlaceholder />}
           />
         </Container>
+      </SafeArea>
+    );
+  }
+
+  // TODO: improve error UI
+  if (status === 'error') {
+    return (
+      <SafeArea>
+        <Text>Error: {error.message}</Text>
+        <FloatingAddMedicationButton />
       </SafeArea>
     );
   }
@@ -50,15 +58,6 @@ function HomeScreen() {
           <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
           <Text>No dosages for today.</Text>
         </Container>
-      </SafeArea>
-    );
-  }
-
-  if (isError) {
-    return (
-      <SafeArea>
-        <Text>Error: {error}</Text>
-        <FloatingAddMedicationButton />
       </SafeArea>
     );
   }
@@ -94,8 +93,6 @@ function HomeScreen() {
     }
   });
 
-  console.log(sectionsData);
-
   return (
     <SafeArea>
       <Container>
@@ -103,7 +100,7 @@ function HomeScreen() {
         <SectionList
           sections={sectionsData}
           keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <DosageListItem {...item} />}
+          renderItem={({ item }) => <DosageOccurrenceListItem {...item} />}
           renderSectionHeader={({ section: { title, data } }) => {
             if (data.length) {
               return <SectionHeader>{title}</SectionHeader>;

@@ -11,7 +11,7 @@ import useMedication from '../../../store/useMedication';
 import { Colors } from '../../../utils';
 
 dayjs.extend(calendar);
-export const DosageListItemPlaceholder = () => (
+export const DosageOccurrenceListItemPlaceholder = () => (
   <Container>
     <Placeholder Animation={Fade}>
       <PlaceholderLine width={50} />
@@ -20,21 +20,22 @@ export const DosageListItemPlaceholder = () => (
   </Container>
 );
 
-const DosageListItem = ({ date, dosageId, medicationId }) => {
+const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedTakeOptionIndex, setSelectedTakeOptionIndex] = useState(null);
   const token = useAuth((state) => state.userToken);
-  const { data: medication, isLoading, isError } = useMedication(
-    medicationId,
-    token,
-  );
+  const { data: medication, status } = useMedication(medicationId, token);
   const { showActionSheetWithOptions } = useActionSheet();
 
-  if (isLoading) {
-    return <DosageListItemPlaceholder />;
+  if (status === 'loading') {
+    return <DosageOccurrenceListItemPlaceholder />;
   }
 
-  if (isError) {
+  if (status === 'error') {
+    return null;
+  }
+
+  if (!medication || !medication.dosages) {
     return null;
   }
 
@@ -68,7 +69,9 @@ const DosageListItem = ({ date, dosageId, medicationId }) => {
           {dosage.dose} {medication.amountUnit} of {medication.name} (
           {medication.strength} {medication.strengthUnit})
         </Text>
-        <DosageTimeText>{dayjs(date).format('h:mm A')}</DosageTimeText>
+        <DosageTimeText>
+          {dayjs(occurrence.scheduledDate).format('h:mm A')}
+        </DosageTimeText>
       </Container>
       <Modal
         title={`${medication.name} `}
@@ -77,7 +80,9 @@ const DosageListItem = ({ date, dosageId, medicationId }) => {
         showActionBar={false}>
         <Row>
           <Icon name="calendar" size={16} color={Colors.gray[500]} />
-          <ScheduleText>Scheduled for {dayjs(date).calendar()}</ScheduleText>
+          <ScheduleText>
+            Scheduled for {dayjs(occurrence.scheduledDate).calendar()}
+          </ScheduleText>
         </Row>
         <Row>
           <Icon name="info" size={16} color={Colors.gray[500]} />
@@ -161,4 +166,4 @@ const CircularIcon = styled.View`
   padding: 8px;
 `;
 
-export default DosageListItem;
+export default DosageOccurrenceListItem;

@@ -31,6 +31,10 @@ export default {
       },
       body: JSON.stringify(user),
     });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
     return response.json();
   },
 
@@ -47,6 +51,10 @@ export default {
       },
       body: JSON.stringify({ email, password }),
     });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
     return response.json();
   },
 
@@ -63,6 +71,10 @@ export default {
   async verifyToken(token) {
     const url = APIHOST + '/auth/verify/' + token;
     const response = await fetch(url);
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
     return response.json();
   },
 
@@ -115,6 +127,9 @@ export default {
       },
       body: JSON.stringify(medication),
     });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     return response.json();
   },
 
@@ -125,6 +140,9 @@ export default {
         Authorization: 'JWT ' + token,
       },
     });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     return response.json();
   },
 
@@ -135,6 +153,9 @@ export default {
         Authorization: 'JWT ' + token,
       },
     });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     return response.json();
   },
 
@@ -149,6 +170,9 @@ export default {
       },
       body: JSON.stringify(medication),
     });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     return response.json();
   },
 
@@ -172,6 +196,9 @@ export default {
       },
       // body: JSON.stringify({ startDate, endDate }),
     });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     return response.json();
   },
 

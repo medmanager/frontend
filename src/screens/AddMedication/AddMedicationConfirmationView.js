@@ -54,6 +54,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
       onSuccess: () => {
         // Invalidate all calendar occurrences due to new medication being added
         queryClient.invalidateQueries('calendarOccurrences');
+        queryClient.invalidateQueries('medications');
 
         // Show success modal
         setShowSuccessModal(true);

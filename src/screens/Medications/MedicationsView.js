@@ -8,11 +8,11 @@ import MedicationListItem from './components/MedicationListItem';
 
 function MedicationsScreen() {
   const token = useAuth((state) => state.userToken);
-  const { data: medications, isFetching, isLoading, refetch } = useMedications(
+  const { data: medications, isFetching, status, refetch } = useMedications(
     token,
   );
 
-  if (isLoading) {
+  if (status === 'loading') {
     return (
       <SafeArea>
         <Centered>
@@ -35,6 +35,8 @@ function MedicationsScreen() {
   const renderMedication = ({ item, index }) => (
     <MedicationListItem medication={item} index={index} />
   );
+
+  console.log({ medications });
 
   return (
     <SafeArea>

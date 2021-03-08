@@ -9,6 +9,6 @@ export default function useMedications(token) {
   return useQuery(
     'medications',
     () => apiCalls.getMedications(token),
-    { enabled: !!token }, // only execute the query if the token exists
+    { enabled: !!token, initialData: [] }, // only execute the query if the token exists
   );
 }

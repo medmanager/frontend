@@ -3,45 +3,47 @@ import { create, immer } from '.';
 import { removeToken, setToken } from '../utils';
 import api from '../utils/api-calls';
 
+const defaultState = {
+  isSignout: false,
+  userToken: null,
+  error: null,
+  userId: null,
+};
+
 const useAuth = create(
   immer((set, get) => ({
     // default state
-    isSignout: false,
-    userToken: null,
-    error: null,
-    userId: null,
+    ...defaultState,
 
     // state actions
     restoreToken: async (token) => {
       // call backend to validate token
-      const verifyResponse = await api.verifyToken(token);
-      const tokenIsValid = verifyResponse.isValid;
+      try {
+        const verifyResponse = await api.verifyToken(token);
+        const tokenIsValid = verifyResponse.isValid;
 
-      if (tokenIsValid) {
+        if (tokenIsValid) {
+          set((state) => {
+            state.userToken = token;
+            state.error = null;
+            state.userId = verifyResponse.verifiedJwt._id;
+          });
+        } else {
+          set((state) => {
+            state.userToken = null;
+            state.isSignout = true;
+            state.error = null;
+          });
+        }
+      } catch (err) {
         set((state) => {
-          state.userToken = token;
-          state.error = null;
-          state.userId = verifyResponse.verifiedJwt._id;
-        });
-      } else {
-        set((state) => {
-          state.userToken = null;
-          state.isSignout = true;
-          state.error = null;
+          state.error = err.message;
         });
       }
     },
     signIn: async (email, password) => {
-      let response = await api.loginUser(email, password);
-
-      console.log('log in reponse:');
-      console.log(response);
-
-      if (response.error) {
-        set((state) => {
-          state.error = response.message;
-        });
-      } else {
+      try {
+        let response = await api.loginUser(email, password);
         let token = response.token;
         console.log('got token:');
         console.log(token);
@@ -53,21 +55,28 @@ const useAuth = create(
           state.error = null;
           state.userId = response._id;
         });
+      } catch (err) {
+        set((state) => {
+          state.error = err.message;
+        });
       }
     },
     signUp: async (firstName, lastName, email, password) => {
       const { signIn } = get();
       const user = { firstName, lastName, email, password };
-      const registerResponse = await api.registerUser(user);
 
-      if (registerResponse.error) {
-        console.log('error registering user');
+      try {
+        const registerResponse = await api.registerUser(user);
+        console.log('register response:');
+        console.log(registerResponse);
+
+        // call the sign in action defined above
+        signIn(email, password);
+      } catch (err) {
+        set((state) => {
+          state.error = err.message;
+        });
       }
-      console.log('register response:');
-      console.log(registerResponse);
-
-      // call the sign in action defined above
-      signIn(email, password);
     },
     signOut: async () => {
       await removeToken();
@@ -77,6 +86,7 @@ const useAuth = create(
         state.userToken = null;
       });
     },
+    resetState: () => set((state) => ({ ...state, ...defaultState })),
     setState: (fn) => set(produce(fn)),
   })),
 );
