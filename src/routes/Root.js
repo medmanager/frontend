@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { LogBox } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
+import { useQueryClient } from 'react-query';
 import shallow from 'zustand/shallow';
 import LoadingScreen from '../screens/Loading/LoadingView';
 import SignInScreen from '../screens/SignIn/SignInView';
@@ -28,6 +29,7 @@ const Root = () => {
     }),
     shallow,
   );
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -37,10 +39,18 @@ const Root = () => {
       const token = await getToken();
       // verify the token and set the auth state if the token is valid, otherwise show the sign in screen again
       await restoreToken(token);
+      // try {
+      //   await queryClient.prefetchQuery('calendarOccurrences', () =>
+      //     api.getCalendarOccurrences(token),
+      //   );
+      //   await queryClient.prefetchQuery('medications', () =>
+      //     api.getMedications(token),
+      //   );
+      // } catch (ignored) {}
 
       setIsLoading(false);
     })();
-  }, [restoreToken]);
+  }, [restoreToken, queryClient]);
 
   if (isLoading) {
     return <LoadingScreen />;
