@@ -194,7 +194,31 @@ export default {
       headers: {
         Authorization: 'JWT ' + token,
       },
-      // body: JSON.stringify({ startDate, endDate }),
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  },
+
+  /**
+   * function to post new calendar occurrence
+   * occurrence should look like this:
+   * occurrence: {
+   *    _id: asdf1234
+   *    isTaken: true,
+   *    timeTaken: Date(),
+   *    //any other fields won't hurt, but aren't necessary
+   * }
+   */
+  async postCalendarOccurrence(occurrence, token) {
+    const url = APIHOST + '/schedule/occurrences';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+      body: JSON.stringify(occurrence),
     });
     if (!response.ok) {
       throw new Error('Network response was not ok');
