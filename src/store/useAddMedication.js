@@ -1,153 +1,19 @@
 import produce from 'immer';
 import { create, immer } from '.';
-import { capitalize, days, getStatusText, nthDay } from '../utils';
-
-const now = new Date();
-const frequencyRadioInputChoices = [
-  {
-    id: 0,
-    type: 'RadioButton',
-    label: 'Daily',
-    value: {
-      interval: 1,
-      intervalUnit: 'days',
-      weekdays: null,
-    },
-  },
-  {
-    id: 1,
-    type: 'RadioButton',
-    label: `Weekly (${capitalize(days[now.getDay()])})`,
-    value: {
-      interval: 1,
-      intervalUnit: 'weeks',
-      weekdays: {
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false,
-        [days[now.getDay()]]: true,
-      },
-    },
-  },
-  {
-    id: 2,
-    type: 'RadioButton',
-    label: `Bi-Weekly (${capitalize(days[now.getDay()])})`,
-    value: {
-      interval: 2,
-      intervalUnit: 'weeks',
-      weekdays: {
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false,
-        [days[now.getDay()]]: true,
-      },
-    },
-  },
-  {
-    id: 3,
-    type: 'RadioButton',
-    label: `Monthly (the ${nthDay(now)})`,
-    value: {
-      interval: 4,
-      intervalUnit: 'weeks',
-      weekdays: {
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false,
-        [days[now.getDay()]]: true,
-      },
-    },
-  },
-  {
-    id: 4,
-    type: 'RadioButtonClickThrough',
-    label: (value, selected) =>
-      `Custom ${selected ? `(${capitalize(getStatusText(value))})` : ''}`,
-    route: 'AddMedicationCustomFrequency',
-    value: {
-      interval: 1,
-      intervalUnit: 'days',
-      weekdays: {
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false,
-        [days[now.getDay()]]: true, // enable current day by default
-      },
-    },
-  },
-];
-
-now.setMinutes(0);
-
-const dosageMultiSelectChoices = [
-  {
-    id: 0,
-    label: 'Morning',
-    value: {
-      dose: 1,
-      sendReminder: true,
-      reminderTime: new Date(now.setHours(8)),
-      sendTimePicker: false,
-    },
-  },
-  {
-    id: 1,
-    label: 'Afternoon',
-    value: {
-      dose: 1,
-      sendReminder: true,
-      reminderTime: new Date(now.setHours(12)),
-      sendTimePicker: false,
-    },
-  },
-  {
-    id: 2,
-    label: 'Evening',
-    value: {
-      dose: 1,
-      sendReminder: true,
-      reminderTime: new Date(now.setHours(16)),
-      sendTimePicker: false,
-    },
-  },
-  {
-    id: 3,
-    label: 'Night',
-    value: {
-      dose: 1,
-      sendReminder: true,
-      reminderTime: new Date(now.setHours(20)),
-      sendTimePicker: false,
-    },
-  },
-];
+import {
+  dosageMultiSelectChoices,
+  frequencyRadioInputChoices,
+} from '../utils/medication';
 
 const defaultState = {
   strengthUnit: 'mg',
   amountUnit: 'tablets',
-  frequencies: frequencyRadioInputChoices,
-  selectedFrequency: frequencyRadioInputChoices[0].id,
-  dosages: dosageMultiSelectChoices,
+  frequencies: frequencyRadioInputChoices(),
+  selectedFrequency: frequencyRadioInputChoices()[0].id,
+  dosages: dosageMultiSelectChoices(),
   selectedDosages: [
-    dosageMultiSelectChoices[0].id,
-    dosageMultiSelectChoices[3].id,
+    dosageMultiSelectChoices()[0].id,
+    dosageMultiSelectChoices()[3].id,
   ],
   formValues: {
     name: '',

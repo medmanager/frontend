@@ -1,7 +1,6 @@
 import React from 'react';
-import { Button, View, StatusBar } from 'react-native';
 import styled from 'styled-components/native';
-import { Colors, formatTime, getStatusText } from '../../utils';
+import { Colors } from '../../utils';
 
 function WelcomeScreen({ navigation }) {
   const handleSignInPress = () => {
@@ -16,15 +15,15 @@ function WelcomeScreen({ navigation }) {
     <Container>
       <WelcomeText>Welcome To</WelcomeText>
       <WelcomeText>Med Manager 3.0</WelcomeText>
-      <SubText>{"\n"} Managing your medications has</SubText>
+      <SubText>{'\n'} Managing your medications has</SubText>
       <SubText>never been easier</SubText>
       <ButtonContainer>
-      <SignInButton onPress={handleSignInPress}>
-        <SignInButtonText>Sign In</SignInButtonText>
-      </SignInButton>
-      <SignUpButton onPress={handleSignUpPress}>
-        <SignUpButtonText>Create An Account</SignUpButtonText>
-      </SignUpButton>
+        <SignInButton onPress={handleSignInPress}>
+          <SignInButtonText>Sign In</SignInButtonText>
+        </SignInButton>
+        <SignUpButton onPress={handleSignUpPress}>
+          <SignUpButtonText>Create An Account</SignUpButtonText>
+        </SignUpButton>
       </ButtonContainer>
     </Container>
   );
@@ -32,18 +31,18 @@ function WelcomeScreen({ navigation }) {
 
 const Container = styled.SafeAreaView`
   flex: 1;
-  alignItems: center;
+  align-items: center;
   margin-top: 200px;
 `;
 
 const WelcomeText = styled.Text`
-  textAlign: center;
+  text-align: center;
   color: ${Colors.blue[500]};
   font-size: 36px;
 `;
 
 const SubText = styled.Text`
-  textAlign: center;
+  text-align: center;
   color: ${Colors.gray[600]};
   font-size: 18px;
 `;
@@ -68,17 +67,17 @@ const SignInButtonText = styled.Text`
 `;
 
 const SignUpButton = styled.TouchableOpacity`
-margin-top: 12px;
-background-color: transparent;
-margin-left: 16px;
-margin-right: 16px;
-padding-top: 10px;
-padding-bottom: 10px;
-padding-left: 16px;
-padding-right: 16px;
-align-items: center;
-border: 1px solid #2F80ED;
-border-radius: 8px;
+  margin-top: 12px;
+  background-color: transparent;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  align-items: center;
+  border: 1px solid #2f80ed;
+  border-radius: 8px;
 `;
 
 const SignUpButtonText = styled.Text`

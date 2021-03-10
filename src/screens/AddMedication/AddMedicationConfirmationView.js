@@ -7,8 +7,12 @@ import Label from '../../components/Label';
 import Modal from '../../components/Modal';
 import { useAddMedication } from '../../store/useAddMedication';
 import { useAuth } from '../../store/useAuth';
-import { Colors, formatTime, getStatusText } from '../../utils';
+import { Colors } from '../../utils';
 import apiCalls from '../../utils/api-calls';
+import {
+  getDosageTimesString,
+  getFrequencyStatusText,
+} from '../../utils/medication';
 import { ColorSelect } from './components/ColorSelect';
 
 const AddMedicationConfirmationView = ({ navigation }) => {
@@ -78,13 +82,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     color,
   };
 
-  const dosageTimesString = medication.dosages
-    .sort((a, b) => a.reminderTime - b.reminderTime)
-    .map(
-      (dosage) =>
-        `${dosage.dose} ${amountUnit} at ${formatTime(dosage.reminderTime)}`,
-    )
-    .join(', ');
+  const dosageTimesString = getDosageTimesString(medication);
 
   const handleAddAnotherMed = () => {
     navigation.navigate('Home');
@@ -119,7 +117,8 @@ const AddMedicationConfirmationView = ({ navigation }) => {
           <Field>
             <Label>Schedule</Label>
             <Text>
-              Take {dosageTimesString} {getStatusText(medication.frequency)}
+              Take {dosageTimesString}{' '}
+              {getFrequencyStatusText(medication.frequency)}
             </Text>
           </Field>
           <Field>

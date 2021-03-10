@@ -4,14 +4,11 @@ import styled from 'styled-components/native';
 import shallow from 'zustand/shallow';
 import Label from '../../components/Label';
 import { useAddMedication } from '../../store/useAddMedication';
+import { capitalize, Colors, dayChoices, range } from '../../utils';
 import {
-  capitalize,
-  Colors,
-  dayChoices,
+  getFrequencyStatusText,
   getSelectedDays,
-  getStatusText,
-  range,
-} from '../../utils';
+} from '../../utils/medication';
 import DayMultiSelect from './components/DayMultiSelect';
 
 const Item = Picker.Item;
@@ -91,7 +88,7 @@ const AddMedicationCustomFrequencyView = ({ route }) => {
           </Fragment>
         )}
         <StatusText>
-          {capitalize(getStatusText(customFrequency.value))}
+          {capitalize(getFrequencyStatusText(customFrequency.value))}
         </StatusText>
       </Container>
     </SafeArea>

@@ -59,42 +59,6 @@ export const formatTime = (time) => {
   );
 };
 
-/**
- * Gets an array of the selected days (as strings) from a frequency object
- * @param {*} frequency Frequency object
- */
-export const getSelectedDays = (frequency) =>
-  Object.entries(frequency.weekdays || {})
-    .filter(([key, value]) => !!value) // only get days which are marked as true
-    .map(([key, value]) => key);
-
-/**
- * Gets a human-readable status string from a frequency object
- * @param {*} frequency Medication frequency
- */
-export const getStatusText = (frequency) => {
-  if (frequency.intervalUnit === 'days') {
-    if (frequency.interval === 1) {
-      return 'every day';
-    } else {
-      return `every ${frequency.interval} days`;
-    }
-  } else {
-    const selectedDays = getSelectedDays(frequency);
-    const selectedDaysShort = selectedDays.map((day) =>
-      capitalize(day).substring(0, 3),
-    );
-
-    if (frequency.interval === 1) {
-      return `weekly on ${selectedDaysShort.join(', ')}`;
-    } else {
-      return `every ${frequency.interval} weeks on ${selectedDaysShort.join(
-        ', ',
-      )}`;
-    }
-  }
-};
-
 const keyChainOptions = {
   sharedPreferencesName: SHARED_PERFS,
   keychainService: KEYCHAIN_SERVICE,
@@ -131,18 +95,3 @@ export const getToken = () => getSensitiveItem(TOKEN_KEY);
 export const removeToken = () => removeSensitiveItem(TOKEN_KEY);
 
 export const setToken = (value) => setSensitiveItem(TOKEN_KEY, value);
-
-/**
- * Constructs a version of what an mongo ObjectId will look like in the backend
- */
-export const mongoObjectId = () => {
-  const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
-  return (
-    timestamp +
-    'xxxxxxxxxxxxxxxx'
-      .replace(/[x]/g, function () {
-        return ((Math.random() * 16) | 0).toString(16);
-      })
-      .toLowerCase()
-  );
-};
