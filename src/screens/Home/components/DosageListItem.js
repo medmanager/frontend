@@ -1,10 +1,11 @@
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useNavigation } from '@react-navigation/core';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
 import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import styled from 'styled-components/native';
+import PillIcon from '../../../components/icons/pill';
 import Modal from '../../../components/Modal';
 import { useAuth } from '../../../store/useAuth';
 import useMedication from '../../../store/useMedication';
@@ -21,11 +22,10 @@ export const DosageOccurrenceListItemPlaceholder = () => (
 );
 
 const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
+  const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
-  const [selectedTakeOptionIndex, setSelectedTakeOptionIndex] = useState(null);
   const token = useAuth((state) => state.userToken);
   const { data: medication, status } = useMedication(medicationId, token);
-  const { showActionSheetWithOptions } = useActionSheet();
 
   if (status === 'loading') {
     return <DosageOccurrenceListItemPlaceholder />;
@@ -47,15 +47,11 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
     setShowModal(!showModal);
   };
 
-  const handleTakePressed = () => {
-    showActionSheetWithOptions(
-      {
-        title: `When did you take ${medication.name}?`,
-        options: ['Now', 'Earlier'],
-        useModal: true,
-      },
-      (index) => setSelectedTakeOptionIndex(index),
-    );
+  const handleTakePressed = () => {};
+
+  const handleInfoPressed = () => {
+    navigation.navigate('Medication', { medId: medication._id });
+    toggleModal();
   };
 
   const dosage = medication.dosages.filter(
@@ -93,9 +89,9 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
           </ScheduleText>
         </Row>
         <ActionArea>
-          <ActionItem activeOpacity={0.7}>
+          <ActionItem onPress={handleInfoPressed} activeOpacity={0.7}>
             <CircularIcon>
-              <Icon name="info" size={24} color={Colors.blue[500]} />
+              <PillIcon color={Colors.blue[500]} />
             </CircularIcon>
             <ActionItemText>Info</ActionItemText>
           </ActionItem>
@@ -163,7 +159,7 @@ const ActionItemText = styled.Text`
 const CircularIcon = styled.View`
   border-radius: 99999px;
   background-color: ${Colors.gray[100]};
-  padding: 8px;
+  padding: 10px;
 `;
 
 export default DosageOccurrenceListItem;

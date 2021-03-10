@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
+import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
 import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
+import MedicationView from '../../screens/Medication/MedicationView';
 import { useAuth } from '../../store/useAuth';
 import useMedications from '../../store/useMedications';
 import MedicationListItem from './components/MedicationListItem';
@@ -36,8 +38,6 @@ function MedicationsScreen() {
     <MedicationListItem medication={item} index={index} />
   );
 
-  console.log({ medications });
-
   return (
     <SafeArea>
       <MedicationList
@@ -47,6 +47,7 @@ function MedicationsScreen() {
         onRefresh={() => refetch()}
         refreshing={isFetching}
       />
+      <FloatingAddMedicationButton />
     </SafeArea>
   );
 }
@@ -73,9 +74,16 @@ const Text = styled.Text`
   font-size: 16px;
 `;
 
+const MedicationStack = createNativeStackNavigator();
+
 export default () => (
   <Fragment>
-    <MedicationsScreen />
-    <FloatingAddMedicationButton />
+    <MedicationStack.Navigator screenOptions={{ headerShown: false }}>
+      <MedicationStack.Screen
+        name="Medications"
+        component={MedicationsScreen}
+      />
+      <MedicationStack.Screen name="Medication" component={MedicationView} />
+    </MedicationStack.Navigator>
   </Fragment>
 );

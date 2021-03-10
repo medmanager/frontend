@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -5,8 +6,14 @@ import styled from 'styled-components';
 import { colors, medicationColors } from '../../../utils/colors';
 
 const MedicationListItem = ({ medication, index }) => {
+  const navigation = useNavigation();
+
+  const handleMedicationItemPress = () => {
+    navigation.navigate('Medication', { medId: medication._id });
+  };
+
   return (
-    <MedicationItem index={index}>
+    <MedicationItem activeOpacity={0.7} onPress={handleMedicationItemPress}>
       <HBox>
         <View
           style={[
@@ -29,7 +36,7 @@ const MedicationListItem = ({ medication, index }) => {
   );
 };
 
-const MedicationItem = styled.View`
+const MedicationItem = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
