@@ -80,16 +80,35 @@ function HomeScreen() {
       data: [],
     },
   ];
-  occurrences[today].forEach((occurrence) => {
-    const scheduledTime = dayjs(occurrence.date);
-    if (scheduledTime.isBetween('5:00 AM', '9:59 AM')) {
-      sectionsData[0].data.push(occurrence);
-    } else if (scheduledTime.isBetween('10:00 AM', '2:59 PM')) {
-      sectionsData[1].data.push(occurrence);
-    } else if (scheduledTime.isBetween('3:00 PM', '7:59 PM')) {
-      sectionsData[2].data.push(occurrence);
+  occurrences[today].forEach((dosageOccurrence) => {
+    const scheduledTime = dayjs(dosageOccurrence.occurrence.scheduledDate);
+    console.log(scheduledTime.format('h:mm A'));
+
+    const morningInterval = {
+      lower: dayjs().minute(0).hour(5).valueOf(),
+      upper: dayjs().minute(0).hour(9).minute(59).valueOf(),
+    };
+    const afternoonInterval = {
+      lower: dayjs().minute(0).hour(10).valueOf(),
+      upper: dayjs().minute(0).hour(14).minute(59).valueOf(),
+    };
+    const eveningInterval = {
+      lower: dayjs().minute(0).hour(15).valueOf(),
+      upper: dayjs().minute(0).hour(19).minute(59).valueOf(),
+    };
+
+    if (scheduledTime.isBetween(morningInterval.lower, morningInterval.upper)) {
+      sectionsData[0].data.push(dosageOccurrence);
+    } else if (
+      scheduledTime.isBetween(afternoonInterval.lower, afternoonInterval.upper)
+    ) {
+      sectionsData[1].data.push(dosageOccurrence);
+    } else if (
+      scheduledTime.isBetween(eveningInterval.lower, eveningInterval.upper)
+    ) {
+      sectionsData[2].data.push(dosageOccurrence);
     } else {
-      sectionsData[3].data.push(occurrence);
+      sectionsData[3].data.push(dosageOccurrence);
     }
   });
 
@@ -101,9 +120,9 @@ function HomeScreen() {
           sections={sectionsData}
           keyExtractor={(item, index) => item + index}
           renderItem={({ item }) => <DosageOccurrenceListItem {...item} />}
-          renderSectionHeader={({ section: { title, data } }) => {
+          renderSectionHeader={({ section: { title, data } }, idx) => {
             if (data.length) {
-              return <SectionHeader>{title}</SectionHeader>;
+              return <SectionHeader idx={idx}>{title}</SectionHeader>;
             }
           }}
           onRefresh={() => refetch()}
@@ -133,6 +152,7 @@ const SafeArea = styled.SafeAreaView`
 const SectionHeader = styled.Text`
   font-size: 16px;
   color: ${Colors.gray[600]};
+  margin-top: ${(props) => (props.idx === 0 ? 0 : 16)}px;
 `;
 
 const Text = styled.Text`
