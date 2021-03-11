@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
 import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
+import { useMutation, useQueryClient } from 'react-query';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import styled from 'styled-components/native';
 import PillIcon from '../../../components/icons/pill';
@@ -10,22 +11,37 @@ import Modal from '../../../components/Modal';
 import { useAuth } from '../../../store/useAuth';
 import useMedication from '../../../store/useMedication';
 import { Colors } from '../../../utils';
+import apiCalls from '../../../utils/api-calls';
 
 dayjs.extend(calendar);
 export const DosageOccurrenceListItemPlaceholder = () => (
-  <Container>
+  <OccurrenceContainer>
     <Placeholder Animation={Fade}>
       <PlaceholderLine width={50} />
       <PlaceholderLine width={30} noMargin />
     </Placeholder>
-  </Container>
+  </OccurrenceContainer>
 );
 
 const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
+  const [isTaken, setIsTaken] = useState(occurrence.isTaken);
+  const [timeTaken, setTimeTaken] = useState(occurrence.timeTaken);
   const token = useAuth((state) => state.userToken);
   const { data: medication, status } = useMedication(medicationId, token);
+  const queryClient = useQueryClient();
+  const takeDose = useMutation(
+    (dosageOccurrence) =>
+      apiCalls.postCalendarOccurrence(dosageOccurrence, token),
+    {
+      retry: 3, // retry three times if the mutation fails
+      onSuccess: () => {
+        // Invalidate all calendar occurrences due to update
+        queryClient.invalidateQueries('calendarOccurrences');
+      },
+    },
+  );
 
   if (status === 'loading') {
     return <DosageOccurrenceListItemPlaceholder />;
@@ -47,7 +63,17 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
     setShowModal(!showModal);
   };
 
-  const handleTakePressed = () => {};
+  const handleTakePressed = () => {
+    const now = new Date();
+    setIsTaken(true);
+    setTimeTaken(now);
+    const newOccurrence = {
+      ...occurrence,
+      isTaken: true,
+      timeTaken: now,
+    };
+    takeDose.mutate(newOccurrence);
+  };
 
   const handleInfoPressed = () => {
     navigation.navigate('Medication', { medId: medication._id });
@@ -60,7 +86,10 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
 
   return (
     <Fragment>
-      <Container onPress={handleDosageItemPressed} activeOpacity={0.7}>
+      <OccurrenceContainer
+        isTaken={isTaken}
+        onPress={handleDosageItemPressed}
+        activeOpacity={0.7}>
         <Text>
           {dosage.dose} {medication.amountUnit} of {medication.name} (
           {medication.strength} {medication.strengthUnit})
@@ -68,12 +97,15 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
         <DosageTimeText>
           {dayjs(occurrence.scheduledDate).format('h:mm A')}
         </DosageTimeText>
-      </Container>
+      </OccurrenceContainer>
       <Modal
         title={`${medication.name} `}
         showModal={showModal}
         toggleModal={toggleModal}
         showActionBar={false}>
+        {isTaken && (
+          <TakenStatusText>Taken {dayjs(timeTaken).calendar()}</TakenStatusText>
+        )}
         <Row>
           <Icon name="calendar" size={16} color={Colors.gray[500]} />
           <ScheduleText>
@@ -95,11 +127,16 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
             </CircularIcon>
             <ActionItemText>Info</ActionItemText>
           </ActionItem>
-          <ActionItem onPress={handleTakePressed} activeOpacity={0.7}>
-            <CircularIcon>
+          <ActionItem
+            disabled={takeDose.isLoading || isTaken}
+            onPress={handleTakePressed}
+            activeOpacity={0.7}>
+            <CircularIcon disabled={takeDose.isLoading || isTaken}>
               <Icon name="check" size={24} color={Colors.blue[500]} />
             </CircularIcon>
-            <ActionItemText>Take</ActionItemText>
+            <ActionItemText disabled={takeDose.isLoading || isTaken}>
+              Take
+            </ActionItemText>
           </ActionItem>
         </ActionArea>
       </Modal>
@@ -107,16 +144,17 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   );
 };
 
-const Container = styled.TouchableOpacity`
+const OccurrenceContainer = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   margin-top: 8px;
   padding-vertical: 24px;
   padding-horizontal: 16px;
-  border-color: ${Colors.gray[200]};
+  border-color: ${(props) =>
+    props.isTaken ? Colors.gray[400] : Colors.gray[200]};
   border-width: 1px;
   border-radius: 8px;
-  background-color: white;
+  background-color: ${(props) => (props.isTaken ? Colors.gray[300] : 'white')};
 `;
 
 const Text = styled.Text`
@@ -128,6 +166,13 @@ const ScheduleText = styled.Text`
   font-size: 14px;
   color: ${Colors.gray[500]};
   margin-left: 8px;
+`;
+
+const TakenStatusText = styled.Text`
+  font-size: 16px;
+  color: #10b981;
+  text-align: center;
+  margin-bottom: 8px;
 `;
 
 const Row = styled.View`
@@ -154,12 +199,14 @@ const ActionItemText = styled.Text`
   text-align: center;
   margin-top: 8px;
   color: ${Colors.blue[500]};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
 const CircularIcon = styled.View`
   border-radius: 99999px;
   background-color: ${Colors.gray[100]};
   padding: 10px;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
 export default DosageOccurrenceListItem;

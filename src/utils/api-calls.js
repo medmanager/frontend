@@ -217,13 +217,16 @@ export default {
       method: 'POST',
       headers: {
         Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(occurrence),
     });
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    const data = await response.json();
+    console.log(data);
+    return data;
   },
 
   /*  returns a JSON array of 5 drug names similar to searchStr

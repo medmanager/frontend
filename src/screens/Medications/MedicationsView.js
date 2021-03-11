@@ -20,6 +20,7 @@ function MedicationsScreen() {
         <Centered>
           <ActivityIndicator />
         </Centered>
+        <FloatingAddMedicationButton />
       </SafeArea>
     );
   }
@@ -30,6 +31,7 @@ function MedicationsScreen() {
         <Container>
           <Text>No Medications Found.</Text>
         </Container>
+        <FloatingAddMedicationButton />
       </SafeArea>
     );
   }

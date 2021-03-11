@@ -14,6 +14,8 @@ import DosageOccurrenceListItem, {
 dayjs.extend(isBetween);
 
 function HomeScreen() {
+  // const tomorrow = new Date();
+  // tomorrow.setDate(tomorrow.getDate() + 1);
   const now = useRef(new Date());
   const [today, setToday] = useState(now.current.getDay());
   const token = useAuth((state) => state.userToken);
@@ -80,21 +82,21 @@ function HomeScreen() {
       data: [],
     },
   ];
-  occurrences[today].forEach((dosageOccurrence) => {
+  for (const dosageOccurrence of occurrences[today]) {
     const scheduledTime = dayjs(dosageOccurrence.occurrence.scheduledDate);
     console.log(scheduledTime.format('h:mm A'));
 
     const morningInterval = {
-      lower: dayjs().minute(0).hour(5).valueOf(),
-      upper: dayjs().minute(0).hour(9).minute(59).valueOf(),
+      lower: dayjs(now.current).minute(0).hour(5).valueOf(),
+      upper: dayjs(now.current).minute(0).hour(9).minute(59).valueOf(),
     };
     const afternoonInterval = {
-      lower: dayjs().minute(0).hour(10).valueOf(),
-      upper: dayjs().minute(0).hour(14).minute(59).valueOf(),
+      lower: dayjs(now.current).minute(0).hour(10).valueOf(),
+      upper: dayjs(now.current).minute(0).hour(14).minute(59).valueOf(),
     };
     const eveningInterval = {
-      lower: dayjs().minute(0).hour(15).valueOf(),
-      upper: dayjs().minute(0).hour(19).minute(59).valueOf(),
+      lower: dayjs(now.current).minute(0).hour(15).valueOf(),
+      upper: dayjs(now.current).minute(0).hour(19).minute(59).valueOf(),
     };
 
     if (scheduledTime.isBetween(morningInterval.lower, morningInterval.upper)) {
@@ -110,7 +112,7 @@ function HomeScreen() {
     } else {
       sectionsData[3].data.push(dosageOccurrence);
     }
-  });
+  }
 
   return (
     <SafeArea>
