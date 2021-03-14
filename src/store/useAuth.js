@@ -1,6 +1,7 @@
 import produce from 'immer';
+import { Platform } from 'react-native';
 import { create, immer } from '.';
-import { removeToken, setToken } from '../utils';
+import { getDeviceToken, removeToken, setToken } from '../utils';
 import api from '../utils/api-calls';
 
 const defaultState = {
@@ -45,10 +46,14 @@ const useAuth = create(
       try {
         let response = await api.loginUser(email, password);
         let token = response.token;
-        console.log('got token:');
-        console.log(token);
-        await setToken(token); // perists the token
-
+        await setToken(token); // persists the token
+        const deviceToken = await getDeviceToken();
+        const deviceOS = Platform.OS;
+        const deviceInfo = {
+          token: deviceToken,
+          os: deviceOS,
+        };
+        await api.registerDevice(token, deviceInfo);
         set((state) => {
           state.userToken = token;
           state.isSignout = false;
@@ -71,7 +76,7 @@ const useAuth = create(
         console.log(registerResponse);
 
         // call the sign in action defined above
-        signIn(email, password);
+        await signIn(email, password);
       } catch (err) {
         set((state) => {
           state.error = err.message;

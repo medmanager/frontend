@@ -96,5 +96,6 @@ export const dayChoices = [
 ];
 
 export const TOKEN_KEY = 'token';
+export const DEVICE_TOKEN_KEY = 'deviceToken';
 export const SHARED_PERFS = 'MedManagerSharedPerfs';
 export const KEYCHAIN_SERVICE = 'MedManagerAppKeychain';

@@ -192,6 +192,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-analytics:17.3.0' // for push notifications
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

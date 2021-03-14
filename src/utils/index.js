@@ -1,5 +1,11 @@
 import SensitiveInfo from 'react-native-sensitive-info';
-import { days, KEYCHAIN_SERVICE, SHARED_PERFS, TOKEN_KEY } from './constants';
+import {
+  days,
+  DEVICE_TOKEN_KEY,
+  KEYCHAIN_SERVICE,
+  SHARED_PERFS,
+  TOKEN_KEY,
+} from './constants';
 
 export { colors as Colors } from './colors';
 export * from './constants';
@@ -89,6 +95,11 @@ export async function setSensitiveItem(key, value) {
 export async function removeSensitiveItem(key) {
   return SensitiveInfo.deleteItem(key, keyChainOptions);
 }
+
+export const getDeviceToken = () => getSensitiveItem(DEVICE_TOKEN_KEY);
+
+export const setDeviceToken = (value) =>
+  setSensitiveItem(DEVICE_TOKEN_KEY, value);
 
 export const getToken = () => getSensitiveItem(TOKEN_KEY);
 

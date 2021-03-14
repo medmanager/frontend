@@ -8,7 +8,7 @@ const PORT = '4000';
 const APIHOST =
   Platform.OS === 'android'
     ? 'http://10.0.2.2:' + PORT
-    : 'http://127.0.0.1:' + PORT;
+    : 'http://192.168.1.141:' + PORT;
 
 export default {
   /**doesn't return a token yet, but will register user
@@ -71,6 +71,30 @@ export default {
   async verifyToken(token) {
     const url = APIHOST + '/auth/verify/' + token;
     const response = await fetch(url);
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    return response.json();
+  },
+
+  /**register a device based off deviceInfo
+   * ex: deviceInfo {
+   *    token: "asdfasdfasdf"
+   *    os: "ios" or "android"
+   * }
+   */
+  async registerDevice(token, deviceInfo) {
+    const url = APIHOST + '/register/notifications';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'JWT ' + token,
+      },
+      body: JSON.stringify(deviceInfo),
+    });
     if (!response.ok) {
       const error = await response.json();
       throw error;
@@ -141,7 +165,8 @@ export default {
       },
     });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const error = await response.json();
+      throw error;
     }
     return response.json();
   },
@@ -154,7 +179,8 @@ export default {
       },
     });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const error = await response.json();
+      throw error;
     }
     return response.json();
   },
@@ -171,7 +197,8 @@ export default {
       body: JSON.stringify(medication),
     });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const error = await response.json();
+      throw error;
     }
     return response.json();
   },
@@ -196,7 +223,8 @@ export default {
       },
     });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const error = await response.json();
+      throw error;
     }
     return response.json();
   },
@@ -222,7 +250,8 @@ export default {
       body: JSON.stringify(occurrence),
     });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const error = await response.json();
+      throw error;
     }
     const data = await response.json();
     return data;
