@@ -50,7 +50,9 @@ function MedicationScreen({ route, navigation }) {
         </Field>
         <Field>
           <Label>Amount</Label>
-          <Text>{medication.amount + ' ' + medication.amountUnit}</Text>
+          <Text>
+            {medication.amount + ' ' + medication.amountUnit} remaining
+          </Text>
         </Field>
         <Field>
           <Label>Condition</Label>

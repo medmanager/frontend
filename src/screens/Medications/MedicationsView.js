@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
@@ -79,13 +79,8 @@ const Text = styled.Text`
 const MedicationStack = createNativeStackNavigator();
 
 export default () => (
-  <Fragment>
-    <MedicationStack.Navigator screenOptions={{ headerShown: false }}>
-      <MedicationStack.Screen
-        name="Medications"
-        component={MedicationsScreen}
-      />
-      <MedicationStack.Screen name="Medication" component={MedicationView} />
-    </MedicationStack.Navigator>
-  </Fragment>
+  <MedicationStack.Navigator screenOptions={{ headerShown: false }}>
+    <MedicationStack.Screen name="Medications" component={MedicationsScreen} />
+    <MedicationStack.Screen name="Medication" component={MedicationView} />
+  </MedicationStack.Navigator>
 );
