@@ -84,19 +84,18 @@ function HomeScreen() {
   ];
   for (const dosageOccurrence of occurrences[today]) {
     const scheduledTime = dayjs(dosageOccurrence.occurrence.scheduledDate);
-    console.log(scheduledTime.format('h:mm A'));
 
     const morningInterval = {
-      lower: dayjs(now.current).minute(0).hour(5).valueOf(),
-      upper: dayjs(now.current).minute(0).hour(9).minute(59).valueOf(),
+      lower: dayjs(now.current).hour(5).minute(0).valueOf(),
+      upper: dayjs(now.current).hour(10).minute(0).valueOf(),
     };
     const afternoonInterval = {
-      lower: dayjs(now.current).minute(0).hour(10).valueOf(),
-      upper: dayjs(now.current).minute(0).hour(14).minute(59).valueOf(),
+      lower: dayjs(now.current).hour(10).minute(0).valueOf(),
+      upper: dayjs(now.current).hour(15).minute(0).valueOf(),
     };
     const eveningInterval = {
-      lower: dayjs(now.current).minute(0).hour(15).valueOf(),
-      upper: dayjs(now.current).minute(0).hour(19).minute(59).valueOf(),
+      lower: dayjs(now.current).hour(15).minute(0).valueOf(),
+      upper: dayjs(now.current).hour(20).minute(0).valueOf(),
     };
 
     if (scheduledTime.isBetween(morningInterval.lower, morningInterval.upper)) {
