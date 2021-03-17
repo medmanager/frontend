@@ -73,9 +73,9 @@ static void InitializeFlipper(UIApplication *application) {
                                 fetchCompletionHandler:^void (UIBackgroundFetchResult result){}];
 
   // allow showing foreground notifications
-  completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
+  // completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
   // or if you wish to hide all notification while in foreground replace it with 
-  // completionHandler(UNNotificationPresentationOptionNone);
+  completionHandler(UNNotificationPresentationOptionNone);
 }
 
 
