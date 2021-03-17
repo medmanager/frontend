@@ -185,6 +185,20 @@ export default {
     return response.json();
   },
 
+  async getOccurrenceFromID(occurrenceId, token) {
+    const url = APIHOST + '/occurrence/' + occurrenceId;
+    const response = await fetch(url, {
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    return response.json();
+  },
+
   async updateMedicationFromID(medication, medicationID, token) {
     const url = APIHOST + '/medication/' + medicationID;
     const response = await fetch(url, {
