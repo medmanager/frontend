@@ -8,7 +8,7 @@ const PORT = '4000';
 const APIHOST =
   Platform.OS === 'android'
     ? 'http://10.0.2.2:' + PORT
-    : 'http://192.168.1.141:' + PORT;
+    : 'http://127.0.0.1:' + PORT;
 
 export default {
   /**doesn't return a token yet, but will register user
