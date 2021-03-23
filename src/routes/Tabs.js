@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import React from 'react';
 import ActivityIcon from '../components/icons/activity';
 import HomeIcon from '../components/icons/home';
@@ -13,31 +12,7 @@ import { Colors } from '../utils';
 
 const Tab = createBottomTabNavigator();
 
-function getHeaderTitle(route) {
-  // If the focused route is not found, we need to assume it's the initial screen
-  // This can happen during if there hasn't been any navigation inside the screen
-  // In our case, it's "Calendar" as that's the first screen inside the navigator
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Calendar';
-
-  switch (routeName) {
-    case 'Calendar':
-      return 'Calendar';
-    case 'Track':
-      return 'Track';
-    case 'Medications':
-      return 'My Medications';
-    case 'Profile':
-      return 'My profile';
-  }
-}
-
-const Tabs = ({ navigation, route }) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: getHeaderTitle(route),
-    });
-  }, [navigation, route]);
-
+const Tabs = () => {
   return (
     <Tab.Navigator tabBarOptions={{ activeTintColor: Colors.blue[500] }}>
       <Tab.Screen

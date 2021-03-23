@@ -6,6 +6,7 @@ import FloatingAddMedicationButton from '../../components/FloatingAddMedicationB
 import MedicationView from '../../screens/Medication/MedicationView';
 import { useAuth } from '../../store/useAuth';
 import useMedications from '../../store/useMedications';
+import { defaultNavigatorScreenOptions } from '../../utils';
 import MedicationListItem from './components/MedicationListItem';
 
 function MedicationsScreen() {
@@ -20,7 +21,6 @@ function MedicationsScreen() {
         <Centered>
           <ActivityIndicator />
         </Centered>
-        <FloatingAddMedicationButton />
       </SafeArea>
     );
   }
@@ -79,7 +79,7 @@ const Text = styled.Text`
 const MedicationStack = createNativeStackNavigator();
 
 export default () => (
-  <MedicationStack.Navigator screenOptions={{ headerShown: false }}>
+  <MedicationStack.Navigator screenOptions={defaultNavigatorScreenOptions}>
     <MedicationStack.Screen name="Medications" component={MedicationsScreen} />
     <MedicationStack.Screen name="Medication" component={MedicationView} />
   </MedicationStack.Navigator>

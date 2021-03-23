@@ -1,5 +1,5 @@
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
@@ -12,18 +12,19 @@ import Tabs from './Tabs';
 const MainStack = createNativeStackNavigator();
 
 const Main = ({ navigation }) => {
-  const handleNotificationOpen = (notification) => {
-    console.log('recieved notification');
-    console.log(notification);
-    navigation.navigate('OccurrenceNotificationModal', {
-      screen: 'OccurrenceNotification',
-      params: {
-        dosageId: notification.data.dosageId,
-        medicationId: notification.data.medicationId,
-        occurrenceId: notification.data.occurrenceId,
-      },
-    });
-  };
+  const handleNotificationOpen = useCallback(
+    (notification) => {
+      navigation.navigate('OccurrenceNotificationModal', {
+        screen: 'OccurrenceNotification',
+        params: {
+          dosageId: notification.data.dosageId,
+          medicationId: notification.data.medicationId,
+          occurrenceId: notification.data.occurrenceId,
+        },
+      });
+    },
+    [navigation],
+  );
 
   useEffect(() => {
     if (Platform.OS === 'ios') {
@@ -33,13 +34,14 @@ const Main = ({ navigation }) => {
     }
 
     setupPushNotification(handleNotificationOpen);
-  }, []);
+  }, [handleNotificationOpen]);
 
   return (
     <MainStack.Navigator
       screenOptions={{
         stackPresentation: 'modal',
         headerTopInsetEnabled: false,
+        headerShown: false,
       }}>
       <MainStack.Screen
         name="Home"

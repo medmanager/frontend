@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import React, { Fragment, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FlatList, SectionList } from 'react-native';
+import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
 import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
 import { useAuth } from '../../store/useAuth';
 import useOccurrences from '../../store/useOccurrences';
-import { Colors } from '../../utils';
+import { Colors, defaultNavigatorScreenOptions } from '../../utils';
 import DosageOccurrenceListItem, {
   DosageOccurrenceListItemPlaceholder,
 } from './components/DosageListItem';
@@ -14,8 +15,6 @@ import DosageOccurrenceListItem, {
 dayjs.extend(isBetween);
 
 function HomeScreen() {
-  // const tomorrow = new Date();
-  // tomorrow.setDate(tomorrow.getDate() + 1);
   const now = useRef(new Date());
   const [today, setToday] = useState(now.current.getDay());
   const token = useAuth((state) => state.userToken);
@@ -60,6 +59,7 @@ function HomeScreen() {
           <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
           <Text>No dosages for today.</Text>
         </Container>
+        <FloatingAddMedicationButton />
       </SafeArea>
     );
   }
@@ -130,6 +130,7 @@ function HomeScreen() {
           refreshing={isFetching}
         />
       </Container>
+      <FloatingAddMedicationButton />
     </SafeArea>
   );
 }
@@ -160,9 +161,10 @@ const Text = styled.Text`
   font-size: 16px;
 `;
 
+const HomeStack = createNativeStackNavigator();
+
 export default () => (
-  <Fragment>
-    <HomeScreen />
-    <FloatingAddMedicationButton />
-  </Fragment>
+  <HomeStack.Navigator screenOptions={defaultNavigatorScreenOptions}>
+    <HomeStack.Screen name="Home" component={HomeScreen} />
+  </HomeStack.Navigator>
 );

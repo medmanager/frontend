@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
@@ -16,6 +16,12 @@ function MedicationScreen({ route, navigation }) {
   const { medId } = route.params;
   const token = useAuth((state) => state.userToken);
   const { data: medication, status } = useMedication(medId, token);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: medication.name,
+    });
+  }, [navigation, medication]);
 
   if (status === 'loading') {
     return (

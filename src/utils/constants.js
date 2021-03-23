@@ -1,3 +1,5 @@
+import { Colors } from '.';
+
 export const days = [
   'sunday',
   'monday',
@@ -95,7 +97,28 @@ export const dayChoices = [
   },
 ];
 
+/**
+ * Used when configuring React Navigation
+ */
+export const defaultNavigatorScreenOptions = {
+  headerTintColor: 'white',
+  headerStyle: { backgroundColor: Colors.blue[500] },
+  headerBackTitle: '',
+  statusBarAnimation: 'slide',
+};
+
+/**
+ * Used for storing the auth token
+ */
 export const TOKEN_KEY = 'token';
+
+/**
+ * Used for storing the device token for notifications
+ */
 export const DEVICE_TOKEN_KEY = 'deviceToken';
+
+/**
+ * Both these are used for storing sensitive info on the device
+ */
 export const SHARED_PERFS = 'MedManagerSharedPerfs';
 export const KEYCHAIN_SERVICE = 'MedManagerAppKeychain';

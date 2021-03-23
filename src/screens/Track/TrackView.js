@@ -1,6 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
-import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
+import { defaultNavigatorScreenOptions } from '../../utils';
 
 function TrackScreen() {
   return (
@@ -16,9 +17,10 @@ const Container = styled.SafeAreaView`
 
 const Text = styled.Text``;
 
+const TrackStack = createNativeStackNavigator();
+
 export default () => (
-  <Fragment>
-    <TrackScreen />
-    <FloatingAddMedicationButton />
-  </Fragment>
+  <TrackStack.Navigator screenOptions={defaultNavigatorScreenOptions}>
+    <TrackStack.Screen name="Track" component={TrackScreen} />
+  </TrackStack.Navigator>
 );
