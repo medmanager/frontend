@@ -271,6 +271,36 @@ export default {
     return data;
   },
 
+  /**
+   * function to get compliance information for a user
+   *
+   * @returns array of objects where each object contains a medication id,
+   * medication name, and a compliance value.
+   * example: [
+   * {
+   *    medicationId: ObjectId
+   *    name: String (name of medication)
+   *    compliance: Number (float between 0 and 1 representing percentage of occurrences
+   *                        taken over total number of occurrences within the last 30 days)
+   * },
+   * ]
+   */
+  async getTrackingInfo(token) {
+    const url = APIHOST + '/tracking';
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: 'JWT ' + token,
+      },
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    const data = await response.json();
+    return data;
+  },
+
   /*  returns a JSON array of 5 drug names similar to searchStr
    *  Ex: lisinop ->
    *  ["lysine","lisinopril","Lispro","Listenon","Lysinum"]
