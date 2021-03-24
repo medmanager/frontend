@@ -1,4 +1,4 @@
-import { Colors } from '.';
+export const MIN_SEARCH_QUERY_LENGTH = 2;
 
 export const days = [
   'sunday',
@@ -96,16 +96,6 @@ export const dayChoices = [
     label: 'Sunday',
   },
 ];
-
-/**
- * Used when configuring React Navigation
- */
-export const defaultNavigatorScreenOptions = {
-  headerTintColor: 'white',
-  headerStyle: { backgroundColor: Colors.blue[500] },
-  headerBackTitle: '',
-  statusBarAnimation: 'slide',
-};
 
 /**
  * Used for storing the auth token

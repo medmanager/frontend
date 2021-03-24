@@ -10,7 +10,7 @@ import useOccurrences from '../../store/useOccurrences';
 import { Colors, defaultNavigatorScreenOptions } from '../../utils';
 import DosageOccurrenceListItem, {
   DosageOccurrenceListItemPlaceholder,
-} from './components/DosageListItem';
+} from './components/DosageOccurrenceListItem';
 
 dayjs.extend(isBetween);
 

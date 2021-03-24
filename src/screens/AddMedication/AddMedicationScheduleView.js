@@ -3,10 +3,10 @@ import React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
+import DosageMultiSelect from '../../components/DosageMultiSelect';
+import FrequencyRadioGroup from '../../components/FrequencyRadioGroup';
 import Label from '../../components/Label';
 import { Colors } from '../../utils';
-import DosageMultiSelect from './components/DosageMultiSelect';
-import FrequencyRadioGroup from './components/FrequencyRadioGroup';
 
 const AddMedicationScheduleView = () => {
   const navigator = useNavigation();

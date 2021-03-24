@@ -2,6 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import React, { Fragment, useMemo } from 'react';
 import styled from 'styled-components/native';
 import shallow from 'zustand/shallow';
+import DayMultiSelect from '../../components/DayMultiSelect';
 import Label from '../../components/Label';
 import { useAddMedication } from '../../store/useAddMedication';
 import { capitalize, Colors, dayChoices, range } from '../../utils';
@@ -9,7 +10,6 @@ import {
   getFrequencyStatusText,
   getSelectedDays,
 } from '../../utils/medication';
-import DayMultiSelect from './components/DayMultiSelect';
 
 const Item = Picker.Item;
 

@@ -3,7 +3,6 @@ import { ActivityIndicator, FlatList } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
 import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
-import MedicationView from '../../screens/Medication/MedicationView';
 import { useAuth } from '../../store/useAuth';
 import useMedications from '../../store/useMedications';
 import { defaultNavigatorScreenOptions } from '../../utils';
@@ -76,11 +75,12 @@ const Text = styled.Text`
   font-size: 16px;
 `;
 
-const MedicationStack = createNativeStackNavigator();
+const MedicationsStack = createNativeStackNavigator();
 
 export default () => (
-  <MedicationStack.Navigator screenOptions={defaultNavigatorScreenOptions}>
-    <MedicationStack.Screen name="Medications" component={MedicationsScreen} />
-    <MedicationStack.Screen name="Medication" component={MedicationView} />
-  </MedicationStack.Navigator>
+  <MedicationsStack.Navigator
+    screenOptions={defaultNavigatorScreenOptions}
+    initialRouteName="Medications">
+    <MedicationsStack.Screen name="Medications" component={MedicationsScreen} />
+  </MedicationsStack.Navigator>
 );

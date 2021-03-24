@@ -1,11 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import shallow from 'zustand/shallow';
-import { useAddMedication } from '../../../store/useAddMedication';
-import {
-  medicationColors,
-  medicationGreyedColors,
-} from '../../../utils/colors';
+import { useAddMedication } from '../store/useAddMedication';
+import { medicationColors, medicationGreyedColors } from '../utils/colors';
 
 export const ColorSelect = () => {
   const { color, selectColor } = useAddMedication(

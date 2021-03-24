@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
-import Error from '../../../components/Error';
-import Label from '../../../components/Label';
-import Modal from '../../../components/Modal';
-import NumericInput from '../../../components/NumericInput';
-import { RadioGroupValueSelector } from '../../../components/RadioButtonGroup';
-import { useAddMedication } from '../../../store/useAddMedication';
-import { amountUnitChoices, capitalize, Colors } from '../../../utils';
+import { useAddMedication } from '../store/useAddMedication';
+import { amountUnitChoices, capitalize, Colors } from '../utils';
+import Error from './Error';
+import Label from './Label';
+import Modal from './Modal';
+import NumericInput from './NumericInput';
+import { RadioGroupValueSelector } from './RadioButtonGroup';
 
 const AmountInput = ({ touched, error, ...props }) => {
   const [showModal, setShowModal] = useState(false);

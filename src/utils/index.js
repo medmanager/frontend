@@ -1,4 +1,5 @@
 import SensitiveInfo from 'react-native-sensitive-info';
+import { colors as Colors } from './colors';
 import {
   days,
   DEVICE_TOKEN_KEY,
@@ -65,6 +66,19 @@ export const formatTime = (time) => {
   );
 };
 
+/**
+ * Used when configuring React Navigation
+ */
+export const defaultNavigatorScreenOptions = {
+  headerTintColor: 'white',
+  headerStyle: { backgroundColor: Colors.blue[500] },
+  headerBackTitle: '',
+  statusBarAnimation: 'slide',
+};
+
+/**
+ * Used for storing sensitive info to the device
+ */
 const keyChainOptions = {
   sharedPreferencesName: SHARED_PERFS,
   keychainService: KEYCHAIN_SERVICE,

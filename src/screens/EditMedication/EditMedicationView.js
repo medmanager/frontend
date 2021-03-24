@@ -1,26 +1,25 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
-import AmountInput from '../../components/AmountInput';
 import Autocomplete from '../../components/Autocomplete';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import StrengthInput from '../../components/StrengthInput';
 import { useAddMedication } from '../../store/useAddMedication';
-import { Colors } from '../../utils';
+import { useAuth } from '../../store/useAuth';
+import useMedication from '../../store/useMedication';
+import { MIN_SEARCH_QUERY_LENGTH } from '../../utils';
 import api from '../../utils/api-calls';
 
-const MIN_SEARCH_QUERY_LENGTH = 2;
-
-const AddMedicationView = ({ navigation }) => {
+const EditMedicationView = ({ navigation, route }) => {
+  const { medId } = route.params;
+  const token = useAuth((state) => state.userToken);
+  const { data: medication } = useMedication(medId, token);
   const initialValues = {
-    name: '',
-    strength: null,
-    amount: null,
-    notes: '',
+    name: medication ? medication.name : '',
+    strength: medication ? medication.strength : null,
+    amount: medication ? medication.amount : null,
+    condition: medication ? medication.condition : null,
   };
   const {
     values,
@@ -48,7 +47,6 @@ const AddMedicationView = ({ navigation }) => {
     onSubmit: (formValues) => {
       setFormValues(formValues);
       clearAutocompleteSuggestions();
-      navigation.navigate('AddMedicationSchedule');
     },
   });
   const setFormValues = useAddMedication((state) => state.setFormValues);
@@ -76,6 +74,14 @@ const AddMedicationView = ({ navigation }) => {
     setMedicationNameSuggestions([]);
   };
 
+  useLayoutEffect(() => {
+    if (medication) {
+      navigation.setOptions({
+        title: `Edit ${medication.name}`,
+      });
+    }
+  }, [medication, navigation]);
+
   useEffect(() => {
     if (clearAutocomplete.current) {
       clearAutocompleteSuggestions();
@@ -93,11 +99,6 @@ const AddMedicationView = ({ navigation }) => {
   const handleMedNameBlur = () => {
     clearAutocompleteSuggestions();
     handleBlur('name');
-  };
-
-  const textAreaInputStyle = {
-    height: 150,
-    justifyContent: 'flex-start',
   };
 
   return (
@@ -127,36 +128,8 @@ const AddMedicationView = ({ navigation }) => {
               </AutoCompleteSuggestion>
             )}
           />
-          <StrengthInput
-            onChangeText={handleChange('strength')}
-            onBlur={handleBlur('strength')}
-            value={values.strength}
-            touched={touched}
-            error={errors.strength}
-          />
-          <AmountInput
-            onChangeText={handleChange('amount')}
-            onBlur={handleBlur('amount')}
-            value={values.amount}
-            touched={touched}
-            error={errors.amount}
-          />
-          <Input
-            onChangeText={handleChange('notes')}
-            onBlur={handleBlur('notes')}
-            value={values.notes}
-            touched={touched}
-            error={errors.notes}
-            inputStyle={textAreaInputStyle}
-            multiline
-            numberOfLines={10}
-            label="Condition"
-          />
         </Form>
       </KeyboardAwareScrollView>
-      <ButtonContainer>
-        <Button disabled={!isValid} onPress={handleSubmit} text="Next" />
-      </ButtonContainer>
     </SafeArea>
   );
 };
@@ -177,14 +150,4 @@ const Form = styled.View`
   padding: 24px;
 `;
 
-const ButtonContainer = styled.View`
-  border-top-width: 1px;
-  border-top-color: ${Colors.gray[300]};
-  width: 100%;
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-`;
-
-export default AddMedicationView;
+export default EditMedicationView;

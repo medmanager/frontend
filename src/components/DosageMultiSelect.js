@@ -4,8 +4,8 @@ import { Platform, Switch, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import shallow from 'zustand/shallow';
-import { useAddMedication } from '../../../store/useAddMedication';
-import { Colors, formatTime } from '../../../utils';
+import { useAddMedication } from '../store/useAddMedication';
+import { Colors, formatTime } from '../utils';
 
 const Checkbox = ({ selected }) => {
   return (
@@ -21,7 +21,8 @@ const OuterCircle = styled.View`
   border-radius: 12px;
   border-width: 2px;
   border-color: ${Colors.blue[500]};
-  background-color: ${(props) => (props.selected ? Colors.blue[500] : '#fff')}
+  background-color: ${(props) =>
+    props.selected ? Colors.blue[500] : 'transparent'}
   align-items: center;
   justify-content: center;
   margin-right: 16px;

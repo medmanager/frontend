@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components/native';
 import Button from '../../components/Button';
+import { ColorSelect } from '../../components/ColorSelect';
 import Label from '../../components/Label';
 import Modal from '../../components/Modal';
 import { useAddMedication } from '../../store/useAddMedication';
@@ -13,7 +14,6 @@ import {
   getDosageTimesString,
   getFrequencyStatusText,
 } from '../../utils/medication';
-import { ColorSelect } from './components/ColorSelect';
 
 const AddMedicationConfirmationView = ({ navigation }) => {
   const {
@@ -57,7 +57,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
       retry: 3, // retry three times if the mutation fails
       onSuccess: () => {
         // Invalidate all calendar occurrences due to new medication being added
-        queryClient.invalidateQueries('calendarOccurrences');
+        queryClient.invalidateQueries('occurrences');
         queryClient.invalidateQueries('medications');
 
         // Show success modal

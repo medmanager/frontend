@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
-import { Colors } from '../../../utils';
+import { Colors } from '../utils';
 
 const Checkbox = ({ selected }) => {
   return (

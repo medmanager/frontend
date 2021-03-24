@@ -1,7 +1,7 @@
 import React from 'react';
 import shallow from 'zustand/shallow';
-import RadioButtonGroup from '../../../components/RadioButtonGroup';
-import { useAddMedication } from '../../../store/useAddMedication';
+import { useAddMedication } from '../store/useAddMedication';
+import RadioButtonGroup from './RadioButtonGroup';
 
 const FrequencyRadioGroup = () => {
   const {

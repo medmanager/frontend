@@ -1,11 +1,10 @@
 import React, { useLayoutEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import { ActivityIndicator, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
+import EditIcon from '../../components/icons/edit';
 import Label from '../../components/Label';
 import { useAuth } from '../../store/useAuth';
 import useMedication from '../../store/useMedication';
-import { Colors } from '../../utils';
 import { medicationColors } from '../../utils/colors';
 import {
   getDosageTimesString,
@@ -20,8 +19,14 @@ function MedicationScreen({ route, navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: medication.name,
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('EditMedication', { medId })}>
+          <EditIcon />
+        </TouchableOpacity>
+      ),
     });
-  }, [navigation, medication]);
+  }, [navigation, medication, medId]);
 
   if (status === 'loading') {
     return (
@@ -74,20 +79,6 @@ function MedicationScreen({ route, navigation }) {
           </Text>
         </Field>
       </InfoContainer>
-      <ActionArea>
-        <ActionItem activeOpacity={0.7}>
-          <CircularIconBorder>
-            <Icon name="trash" size={24} color={Colors.blue[500]} />
-          </CircularIconBorder>
-          <ActionItemText>Delete</ActionItemText>
-        </ActionItem>
-        <ActionItem activeOpacity={0.7}>
-          <CircularIcon>
-            <Icon name="edit" size={24} color="white" />
-          </CircularIcon>
-          <ActionItemText>Edit</ActionItemText>
-        </ActionItem>
-      </ActionArea>
     </SafeArea>
   );
 }
@@ -131,33 +122,6 @@ const Centered = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-`;
-
-const ActionArea = styled.View`
-  flex-direction: row;
-  justify-content: space-around;
-  padding-vertical: 24px;
-`;
-
-const ActionItem = styled.TouchableOpacity``;
-
-const ActionItemText = styled.Text`
-  text-align: center;
-  margin-top: 8px;
-  color: ${Colors.blue[500]};
-`;
-
-const CircularIcon = styled.View`
-  border-radius: 99999px;
-  background-color: ${Colors.blue[500]};
-  padding: 16px;
-`;
-
-const CircularIconBorder = styled.View`
-  border-radius: 99999px;
-  border-width: 1px;
-  border-color: ${Colors.blue[500]};
-  padding: 16px;
 `;
 
 export default MedicationScreen;
