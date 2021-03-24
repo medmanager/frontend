@@ -4,9 +4,12 @@ import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import AddMedicationModal from '../screens/AddMedication/AddMedicationModal';
-import OccurrenceNotificationModal from '../screens/OccurrenceNotification/OccurrenceNotificationModal';
+import EditMedicationInfoView from '../screens/EditMedication/EditMedicationInfoView';
+import EditMedicationView from '../screens/EditMedication/EditMedicationView';
+import MedicationView from '../screens/Medication/MedicationView';
+import OccurrenceGroupNotificationModal from '../screens/OccurrenceGroupNotification/OccurrenceGroupNotificationModal';
 import { Colors } from '../utils';
-import { setupPushNotification } from '../utils/notifications';
+import { setupPushNotifications } from '../utils/notifications';
 import Tabs from './Tabs';
 
 const MainStack = createNativeStackNavigator();
@@ -14,12 +17,11 @@ const MainStack = createNativeStackNavigator();
 const Main = ({ navigation }) => {
   const handleNotificationOpen = useCallback(
     (notification) => {
-      navigation.navigate('OccurrenceNotificationModal', {
-        screen: 'OccurrenceNotification',
+      const { occurrenceGroupId } = notification.data;
+      navigation.navigate('OccurrenceGroupNotificationModal', {
+        screen: 'OccurrenceGroupNotification',
         params: {
-          dosageId: notification.data.dosageId,
-          medicationId: notification.data.medicationId,
-          occurrenceId: notification.data.occurrenceId,
+          occurrenceGroupId,
         },
       });
     },
@@ -33,15 +35,13 @@ const Main = ({ navigation }) => {
       PushNotification.setApplicationIconBadgeNumber(0);
     }
 
-    setupPushNotification(handleNotificationOpen);
+    setupPushNotifications(handleNotificationOpen);
   }, [handleNotificationOpen]);
 
   return (
     <MainStack.Navigator
       screenOptions={{
-        stackPresentation: 'modal',
         headerTopInsetEnabled: false,
-        headerShown: false,
       }}>
       <MainStack.Screen
         name="Home"
@@ -49,6 +49,37 @@ const Main = ({ navigation }) => {
         options={{
           headerTintColor: 'white',
           headerStyle: { backgroundColor: Colors.blue[500] },
+          headerShown: false,
+        }}
+      />
+      <MainStack.Screen
+        name="Medication"
+        component={MedicationView}
+        options={{
+          stackPresentation: 'push',
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: Colors.blue[500] },
+          headerBackTitle: '',
+        }}
+      />
+      <MainStack.Screen
+        name="EditMedication"
+        component={EditMedicationView}
+        options={{
+          stackPresentation: 'push',
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: Colors.blue[500] },
+          headerBackTitle: '',
+        }}
+      />
+      <MainStack.Screen
+        name="EditMedicationInfo"
+        component={EditMedicationInfoView}
+        options={{
+          stackPresentation: 'push',
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: Colors.blue[500] },
+          headerTitle: 'Medication Info',
         }}
       />
       <MainStack.Screen
@@ -56,13 +87,15 @@ const Main = ({ navigation }) => {
         component={AddMedicationModal}
         options={{
           headerShown: false,
+          stackPresentation: 'modal',
         }}
       />
       <MainStack.Screen
-        name="OccurrenceNotificationModal"
-        component={OccurrenceNotificationModal}
+        name="OccurrenceGroupNotificationModal"
+        component={OccurrenceGroupNotificationModal}
         options={{
           headerShown: false,
+          stackPresentation: 'modal',
         }}
       />
     </MainStack.Navigator>

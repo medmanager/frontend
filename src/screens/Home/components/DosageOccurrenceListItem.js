@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useMutation, useQueryClient } from 'react-query';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -25,6 +25,7 @@ export const DosageOccurrenceListItemPlaceholder = () => (
 
 const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   const navigation = useNavigation();
+  const occurrenceId = occurrence._id;
   const [showModal, setShowModal] = useState(false);
   const [isTaken, setIsTaken] = useState(occurrence.isTaken);
   const [timeTaken, setTimeTaken] = useState(occurrence.timeTaken);
@@ -32,16 +33,35 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   const { data: medication, status } = useMedication(medicationId, token);
   const queryClient = useQueryClient();
   const takeDose = useMutation(
-    (dosageOccurrence) =>
-      apiCalls.postCalendarOccurrence(dosageOccurrence, token),
+    () => apiCalls.postCalendarOccurrence(occurrenceId, token),
     {
       retry: 3, // retry three times if the mutation fails
       onSuccess: () => {
         // Invalidate all calendar occurrences due to update
-        queryClient.invalidateQueries('calendarOccurrences');
+        queryClient.invalidateQueries('occurrences');
       },
     },
   );
+
+  const handleDosageItemPressed = useCallback(() => {
+    setShowModal(true);
+  }, [setShowModal]);
+
+  const toggleModal = useCallback(() => {
+    setShowModal(!showModal);
+  }, [showModal, setShowModal]);
+
+  const handleTakePressed = useCallback(async () => {
+    const now = new Date();
+    setIsTaken(true);
+    setTimeTaken(now);
+    await takeDose.mutateAsync();
+  }, [takeDose]);
+
+  const handleInfoPressed = useCallback(() => {
+    navigation.navigate('Medication', { medId: medication._id });
+    toggleModal();
+  }, [medication, navigation, toggleModal]);
 
   if (status === 'loading') {
     return <DosageOccurrenceListItemPlaceholder />;
@@ -54,31 +74,6 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   if (!medication || !medication.dosages) {
     return null;
   }
-
-  const handleDosageItemPressed = () => {
-    setShowModal(true);
-  };
-
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
-
-  const handleTakePressed = () => {
-    const now = new Date();
-    setIsTaken(true);
-    setTimeTaken(now);
-    const newOccurrence = {
-      ...occurrence,
-      isTaken: true,
-      timeTaken: now,
-    };
-    takeDose.mutate(newOccurrence);
-  };
-
-  const handleInfoPressed = () => {
-    navigation.navigate('Medication', { medId: medication._id });
-    toggleModal();
-  };
 
   const dosage = medication.dosages.filter(
     (dosage) => dosage._id === dosageId,

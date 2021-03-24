@@ -42,7 +42,7 @@ export default {
    * and password
    */
   async loginUser(email, password) {
-    const url = APIHOST + '/login';
+    const url = APIHOST + '/auth/login';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -162,6 +162,7 @@ export default {
     const response = await fetch(url, {
       headers: {
         Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
       },
     });
     if (!response.ok) {
@@ -176,6 +177,7 @@ export default {
     const response = await fetch(url, {
       headers: {
         Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
       },
     });
     if (!response.ok) {
@@ -186,10 +188,11 @@ export default {
   },
 
   async getOccurrenceFromID(occurrenceId, token) {
-    const url = APIHOST + '/occurrence/' + occurrenceId;
+    const url = APIHOST + '/schedule/occurrence/' + occurrenceId;
     const response = await fetch(url, {
       headers: {
         Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
       },
     });
     if (!response.ok) {
@@ -223,8 +226,13 @@ export default {
       method: 'DELETE',
       headers: {
         Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
       },
     });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
     return response.json();
   },
 
@@ -234,6 +242,23 @@ export default {
       method: 'GET',
       headers: {
         Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    return response.json();
+  },
+
+  async getOccurrenceGroupFromID(occurrenceGroupId, token) {
+    const url = APIHOST + '/schedule/occurrenceGroup/' + occurrenceGroupId;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
       },
     });
     if (!response.ok) {
@@ -253,15 +278,14 @@ export default {
    *    //any other fields won't hurt, but aren't necessary
    * }
    */
-  async postCalendarOccurrence(occurrence, token) {
-    const url = APIHOST + '/schedule/occurrences';
+  async postCalendarOccurrence(occurrenceId, token) {
+    const url = APIHOST + '/schedule/occurrence/' + occurrenceId;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         Authorization: 'JWT ' + token,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(occurrence),
     });
     if (!response.ok) {
       const error = await response.json();
@@ -291,6 +315,7 @@ export default {
       method: 'GET',
       headers: {
         Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
       },
     });
     if (!response.ok) {
@@ -309,6 +334,9 @@ export default {
     const url = APIHOST + '/medication/search/' + searchStr;
     const response = await fetch(url, {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     return response.json();
   },

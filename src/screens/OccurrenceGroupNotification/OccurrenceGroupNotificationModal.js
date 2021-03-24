@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import { Colors } from '../../utils';
-import OccurrenceNotificationView from './OccurrenceNotificationView';
+import OccurrenceGroupNotificationView from './OccurrenceGroupNotificationView';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,8 +16,8 @@ const OccurrenceNotificationModal = () => {
         headerTopInsetEnabled: false,
       }}>
       <Stack.Screen
-        name="OccurrenceNotification"
-        component={OccurrenceNotificationView}
+        name="OccurrenceGroupNotification"
+        component={OccurrenceGroupNotificationView}
         options={{ title: 'Dose' }}
       />
     </Stack.Navigator>

@@ -2,10 +2,12 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
 import { setDeviceToken } from '../utils';
 
-export const setupPushNotification = (handleNotification) => {
+export const setupPushNotifications = (handleNotification) => {
   PushNotification.configure({
-    onRegister: ({ token }) => {
-      setDeviceToken(token);
+    onRegister: async ({ token }) => {
+      console.log('setting device token');
+      console.log({ token });
+      await setDeviceToken(token);
     },
 
     // (required) Called when a remote is received or opened, or local notification is opened
