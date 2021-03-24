@@ -9,6 +9,7 @@ import SignUpScreen from '../screens/SignUp/SignUpView';
 import WelcomeScreen from '../screens/Welcome/WelcomeView';
 import { useAuth } from '../store/useAuth';
 import { getToken } from '../utils';
+import apiCalls from '../utils/api-calls';
 import Main from './Main';
 
 const RootStack = createNativeStackNavigator();
@@ -40,14 +41,14 @@ const Root = () => {
       const token = await getToken();
       // verify the token and set the auth state if the token is valid, otherwise show the sign in screen again
       await restoreToken(token);
-      // try {
-      //   await queryClient.prefetchQuery('calendarOccurrences', () =>
-      //     api.getCalendarOccurrences(token),
-      //   );
-      //   await queryClient.prefetchQuery('medications', () =>
-      //     api.getMedications(token),
-      //   );
-      // } catch (ignored) {}
+      try {
+        await queryClient.prefetchQuery('occurrences', () =>
+          apiCalls.getCalendarOccurrences(token),
+        );
+        await queryClient.prefetchQuery('medications', () =>
+          apiCalls.getMedications(token),
+        );
+      } catch (ignored) {}
 
       setIsLoading(false);
     })();
