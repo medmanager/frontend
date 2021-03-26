@@ -278,10 +278,10 @@ export default {
    *    //any other fields won't hurt, but aren't necessary
    * }
    */
-  async postCalendarOccurrence(occurrenceId, token) {
+  async takeCalendarOccurrence(occurrenceId, token) {
     const url = APIHOST + '/schedule/occurrence/' + occurrenceId;
     const response = await fetch(url, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         Authorization: 'JWT ' + token,
         'Content-Type': 'application/json',
