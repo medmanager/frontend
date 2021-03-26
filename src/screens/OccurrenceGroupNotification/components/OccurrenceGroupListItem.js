@@ -19,8 +19,7 @@ const OccurrenceListItem = ({ occurrence, onTakeDose }) => {
   const token = useAuth((state) => state.userToken);
   const queryClient = useQueryClient();
   const takeDose = useMutation(
-    (dosageOccurrence) =>
-      apiCalls.postCalendarOccurrence(dosageOccurrence, token),
+    () => apiCalls.takeCalendarOccurrence(occurrence._id, token),
     {
       onSuccess: () => {
         // take dose callback from the view
@@ -33,8 +32,8 @@ const OccurrenceListItem = ({ occurrence, onTakeDose }) => {
   );
 
   const handleTakePressed = useCallback(() => {
-    takeDose.mutate(occurrence);
-  }, [occurrence, takeDose]);
+    takeDose.mutate();
+  }, [takeDose]);
 
   const handleInfoPressed = () => {
     navigation.navigate('Medication', { medId: medication._id });
