@@ -63,7 +63,7 @@ const AddMedicationView = ({ navigation }) => {
     }
     if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
       try {
-        const results = api.searchAutoComplete(query);
+        const results = await api.searchAutoComplete(query);
         return results;
       } catch (e) {
         return [];

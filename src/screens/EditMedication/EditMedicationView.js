@@ -1,14 +1,19 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Text } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
 import Autocomplete from '../../components/Autocomplete';
 import { useAddMedication } from '../../store/useAddMedication';
 import { useAuth } from '../../store/useAuth';
 import useMedication from '../../store/useMedication';
-import { MIN_SEARCH_QUERY_LENGTH } from '../../utils';
+import { Colors, MIN_SEARCH_QUERY_LENGTH } from '../../utils';
 import api from '../../utils/api-calls';
 
 const EditMedicationView = ({ navigation, route }) => {
@@ -61,7 +66,8 @@ const EditMedicationView = ({ navigation, route }) => {
     }
     if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
       try {
-        const results = api.searchAutoComplete(query);
+        const results = await api.searchAutoComplete(query);
+        console.log(results);
         return results;
       } catch (e) {
         return [];
@@ -74,13 +80,22 @@ const EditMedicationView = ({ navigation, route }) => {
     setMedicationNameSuggestions([]);
   };
 
+  const handleUpdateMedication = useCallback(() => {
+    console.log('update');
+  }, []);
+
   useLayoutEffect(() => {
     if (medication) {
       navigation.setOptions({
         title: `Edit ${medication.name}`,
+        headerRight: () => (
+          <TouchableOpacity onPress={handleUpdateMedication}>
+            <HeaderText>Update</HeaderText>
+          </TouchableOpacity>
+        ),
       });
     }
-  }, [medication, navigation]);
+  }, [medication, navigation, handleUpdateMedication]);
 
   useEffect(() => {
     if (clearAutocomplete.current) {
@@ -103,33 +118,36 @@ const EditMedicationView = ({ navigation, route }) => {
 
   return (
     <SafeArea>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <Form>
-          <Autocomplete
-            data={medicationNameSuggestions}
-            onChangeText={handleChange('name')}
-            onBlur={handleMedNameBlur}
-            value={values.name}
-            touched={touched}
-            error={errors.name}
-            label="Name"
-            keyExtractor={(item) => item.toString()}
-            renderItem={(item) => (
-              <AutoCompleteSuggestion
-                onPress={() => {
-                  if (values.name === item) {
-                    clearAutocompleteSuggestions();
-                  } else {
-                    setFieldValue('name', item);
-                    clearAutocomplete.current = true;
-                  }
-                }}>
-                <Text>{item}</Text>
-              </AutoCompleteSuggestion>
-            )}
-          />
-        </Form>
-      </KeyboardAwareScrollView>
+      <Form>
+        <Autocomplete
+          data={medicationNameSuggestions}
+          onChangeText={handleChange('name')}
+          onBlur={handleMedNameBlur}
+          value={values.name}
+          touched={touched}
+          error={errors.name}
+          label="Name"
+          keyExtractor={(item) => item.toString()}
+          renderItem={(item) => (
+            <AutoCompleteSuggestion
+              onPress={() => {
+                if (values.name === item) {
+                  clearAutocompleteSuggestions();
+                } else {
+                  setFieldValue('name', item);
+                  clearAutocomplete.current = true;
+                }
+              }}>
+              <Text>{item}</Text>
+            </AutoCompleteSuggestion>
+          )}
+        />
+      </Form>
+      <ActionArea>
+        <ActionItem activeOpacity={0.7} style={{ borderBottomWidth: 1 }}>
+          <DeleteActionItemText>Delete</DeleteActionItemText>
+        </ActionItem>
+      </ActionArea>
     </SafeArea>
   );
 };
@@ -146,8 +164,34 @@ const SafeArea = styled.SafeAreaView`
 `;
 
 const Form = styled.View`
-  flex: 1;
   padding: 24px;
+`;
+
+const Text = styled.Text`
+  font-size: 16px;
+`;
+
+const HeaderText = styled.Text`
+  color: white;
+  font-size: 16px;
+`;
+
+const ActionArea = styled.View`
+  margin-top: 16px;
+  z-index: -1;
+`;
+
+const ActionItem = styled.TouchableOpacity`
+  background-color: white;
+  padding-vertical: 12px;
+  border-color: ${Colors.gray[300]};
+  border-top-width: 1px;
+`;
+
+const DeleteActionItemText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+  color: red;
 `;
 
 export default EditMedicationView;

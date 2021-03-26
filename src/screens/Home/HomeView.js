@@ -125,7 +125,9 @@ function HomeScreen() {
       <SafeArea>
         <Container>
           <Header>{dayjs(now.current).format('dddd, MMMM D, YYYY')}</Header>
-          <Text>No dosages for today.</Text>
+          <Text style={{ marginHorizontal: 16, fontSize: 16 }}>
+            No dosages for today.
+          </Text>
         </Container>
         <FloatingAddMedicationButton />
       </SafeArea>

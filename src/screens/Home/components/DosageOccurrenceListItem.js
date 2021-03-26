@@ -99,14 +99,15 @@ const DosageOccurrenceListItem = ({
         onPress={handleDosageItemPressed}
         activeOpacity={0.7}>
         <OccurrenceTextContainer>
-          <Text>
+          <Label numberOfLines={1}>
             {dosage.dose} {medication.amountUnit} of {medication.name} (
             {medication.strength} {medication.strengthUnit})
-          </Text>
+          </Label>
           {isTaken && (
             <TakenText>Taken {dayjs(timeTaken).calendar()}</TakenText>
           )}
         </OccurrenceTextContainer>
+        <Spacer />
         <DosageTimeText>
           {dayjs(occurrence.scheduledDate).format('h:mm A')}
         </DosageTimeText>
@@ -162,9 +163,12 @@ const Container = styled.View`
   margin-bottom: ${(props) => (props.isLast ? 16 : 0)}px;
 `;
 
+const Spacer = styled.View`
+  flex-grow: 1;
+`;
+
 const OccurrenceContainer = styled.TouchableOpacity`
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   margin-top: 8px;
   padding-vertical: 24px;
@@ -177,11 +181,13 @@ const OccurrenceContainer = styled.TouchableOpacity`
 
 const OccurrenceTextContainer = styled.View`
   flex-direction: column;
+  flex-shrink: 1;
 `;
 
-const Text = styled.Text`
+const Label = styled.Text`
   font-size: 16px;
   color: ${Colors.gray[900]};
+  flex-shrink: 1;
 `;
 
 const TakenText = styled.Text`
@@ -213,6 +219,7 @@ const DosageTimeText = styled.Text`
   font-size: 16px;
   font-weight: 600;
   color: ${Colors.gray[900]};
+  align-self: flex-end;
 `;
 
 const ActionArea = styled.View`

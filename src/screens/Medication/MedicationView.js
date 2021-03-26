@@ -1,10 +1,10 @@
-import React, { useLayoutEffect } from 'react';
-import { ActivityIndicator, TouchableOpacity } from 'react-native';
+import React, { useCallback, useLayoutEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
-import EditIcon from '../../components/icons/edit';
 import Label from '../../components/Label';
 import { useAuth } from '../../store/useAuth';
 import useMedication from '../../store/useMedication';
+import { Colors } from '../../utils';
 import { medicationColors } from '../../utils/colors';
 import {
   getDosageTimesString,
@@ -19,14 +19,12 @@ function MedicationScreen({ route, navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: medication.name,
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => navigation.navigate('EditMedication', { medId })}>
-          <EditIcon />
-        </TouchableOpacity>
-      ),
     });
   }, [navigation, medication, medId]);
+
+  const handleEditPress = useCallback(() => {
+    navigation.navigate('EditMedication', { medId });
+  }, [navigation, medId]);
 
   if (status === 'loading') {
     return (
@@ -79,6 +77,14 @@ function MedicationScreen({ route, navigation }) {
           </Text>
         </Field>
       </InfoContainer>
+      <ActionArea>
+        <ActionItem onPress={handleEditPress} activeOpacity={0.7}>
+          <ActionItemText>Edit</ActionItemText>
+        </ActionItem>
+        <ActionItem activeOpacity={0.7} style={{ borderBottomWidth: 1 }}>
+          <SuspendActionItemText>Suspend</SuspendActionItemText>
+        </ActionItem>
+      </ActionArea>
     </SafeArea>
   );
 }
@@ -105,7 +111,6 @@ const ColorBar = styled.View`
 `;
 
 const InfoContainer = styled.View`
-  flex: 1;
   padding: 24px;
 `;
 
@@ -122,6 +127,28 @@ const Centered = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
+`;
+
+const ActionArea = styled.View`
+  margin-top: 16px;
+`;
+
+const ActionItem = styled.TouchableOpacity`
+  background-color: white;
+  padding-vertical: 12px;
+  border-color: ${Colors.gray[300]};
+  border-top-width: 1px;
+`;
+
+const ActionItemText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+  color: ${Colors.blue[500]};
+`;
+const SuspendActionItemText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+  color: red;
 `;
 
 export default MedicationScreen;
