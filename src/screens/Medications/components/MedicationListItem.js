@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import { colors, medicationColors } from '../../../utils/colors';
 
-const MedicationListItem = ({ medication, index }) => {
+const MedicationListItem = ({ medication, isLast, isFirst }) => {
   const navigation = useNavigation();
 
   const handleMedicationItemPress = () => {
@@ -13,7 +13,11 @@ const MedicationListItem = ({ medication, index }) => {
   };
 
   return (
-    <MedicationItem activeOpacity={0.7} onPress={handleMedicationItemPress}>
+    <MedicationItem
+      isLast={isLast}
+      isFirst={isFirst}
+      activeOpacity={0.7}
+      onPress={handleMedicationItemPress}>
       <HBox>
         <View
           style={[
@@ -49,7 +53,9 @@ const MedicationItem = styled.TouchableOpacity`
   border-color: ${colors.gray[300]};
   margin-bottom: 10px;
   border-radius: 10px;
-  margin-top: ${({ index }) => (index == 0 ? '10px' : '0px')};
+  margin-horizontal: 16px;
+  margin-bottom: ${(props) => (props.isLast ? 16 : 4)}px;
+  margin-top: ${(props) => (props.isFirst ? 16 : 4)}px;
 `;
 
 const MedicationName = styled.Text`

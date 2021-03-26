@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useMutation, useQueryClient } from 'react-query';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -23,7 +23,12 @@ export const DosageOccurrenceListItemPlaceholder = () => (
   </OccurrenceContainer>
 );
 
-const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
+const DosageOccurrenceListItem = ({
+  occurrence,
+  dosageId,
+  medicationId,
+  isLast,
+}) => {
   const navigation = useNavigation();
   const occurrenceId = occurrence._id;
   const [showModal, setShowModal] = useState(false);
@@ -33,7 +38,7 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   const { data: medication, status } = useMedication(medicationId, token);
   const queryClient = useQueryClient();
   const takeDose = useMutation(
-    () => apiCalls.postCalendarOccurrence(occurrenceId, token),
+    () => apiCalls.takeCalendarOccurrence(occurrenceId, token),
     {
       retry: 3, // retry three times if the mutation fails
       onSuccess: () => {
@@ -63,6 +68,14 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
     toggleModal();
   }, [medication, navigation, toggleModal]);
 
+  useEffect(() => {
+    setIsTaken(occurrence.isTaken);
+  }, [occurrence.isTaken]);
+
+  useEffect(() => {
+    setTimeTaken(occurrence.timeTaken);
+  }, [occurrence.timeTaken]);
+
   if (status === 'loading') {
     return <DosageOccurrenceListItemPlaceholder />;
   }
@@ -80,15 +93,20 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
   )[0];
 
   return (
-    <Fragment>
+    <Container isLast={isLast}>
       <OccurrenceContainer
         isTaken={isTaken}
         onPress={handleDosageItemPressed}
         activeOpacity={0.7}>
-        <Text>
-          {dosage.dose} {medication.amountUnit} of {medication.name} (
-          {medication.strength} {medication.strengthUnit})
-        </Text>
+        <OccurrenceTextContainer>
+          <Text>
+            {dosage.dose} {medication.amountUnit} of {medication.name} (
+            {medication.strength} {medication.strengthUnit})
+          </Text>
+          {isTaken && (
+            <TakenText>Taken {dayjs(timeTaken).calendar()}</TakenText>
+          )}
+        </OccurrenceTextContainer>
         <DosageTimeText>
           {dayjs(occurrence.scheduledDate).format('h:mm A')}
         </DosageTimeText>
@@ -135,26 +153,41 @@ const DosageOccurrenceListItem = ({ occurrence, dosageId, medicationId }) => {
           </ActionItem>
         </ActionArea>
       </Modal>
-    </Fragment>
+    </Container>
   );
 };
+
+const Container = styled.View`
+  padding-horizontal: 16px;
+  margin-bottom: ${(props) => (props.isLast ? 16 : 0)}px;
+`;
 
 const OccurrenceContainer = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin-top: 8px;
   padding-vertical: 24px;
   padding-horizontal: 16px;
-  border-color: ${(props) =>
-    props.isTaken ? Colors.gray[400] : Colors.gray[200]};
+  border-color: ${Colors.gray[200]};
   border-width: 1px;
   border-radius: 8px;
-  background-color: ${(props) => (props.isTaken ? Colors.gray[300] : 'white')};
+  background-color: white;
+`;
+
+const OccurrenceTextContainer = styled.View`
+  flex-direction: column;
 `;
 
 const Text = styled.Text`
   font-size: 16px;
   color: ${Colors.gray[900]};
+`;
+
+const TakenText = styled.Text`
+  color: #10b981;
+  font-size: 16px;
+  margin-top: 4px;
 `;
 
 const ScheduleText = styled.Text`

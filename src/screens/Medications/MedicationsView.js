@@ -36,7 +36,12 @@ function MedicationsScreen() {
   }
 
   const renderMedication = ({ item, index }) => (
-    <MedicationListItem medication={item} index={index} />
+    <MedicationListItem
+      medication={item}
+      index={index}
+      isLast={index === medications.length - 1}
+      isFirst={index === 0}
+    />
   );
 
   return (
@@ -57,9 +62,7 @@ const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const MedicationList = styled(FlatList)`
-  padding: 16px;
-`;
+const MedicationList = styled(FlatList)``;
 
 const Container = styled.View`
   padding: 16px;
