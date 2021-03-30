@@ -1,14 +1,11 @@
-import { Platform } from 'react-native';
+import Config from 'react-native-config';
 
-// make sure the port is consistent with backend when testing
-const PORT = '4000';
-//10.0.2.2 maps to localhost on computer from android emulator
-//***only works for android emulators***
-//you must use the local ip address of your computer
-const APIHOST =
-  Platform.OS === 'android'
-    ? 'http://10.0.2.2:' + PORT
-    : 'http://127.0.0.1:' + PORT;
+// 10.0.2.2 maps to localhost on computer for android emulator
+// 127.0.0.1 maps to localhost on computer for iOS emulator
+// If using a physical device, you must use the ip address of your computer to access the backend
+const API_URL = Config.API_URL;
+
+console.log({ APIHOST: API_URL });
 
 export default {
   /**doesn't return a token yet, but will register user
@@ -22,7 +19,7 @@ export default {
    * }
    */
   async registerUser(user) {
-    const url = APIHOST + '/auth/register';
+    const url = API_URL + '/auth/register';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -42,7 +39,7 @@ export default {
    * and password
    */
   async loginUser(email, password) {
-    const url = APIHOST + '/auth/login';
+    const url = API_URL + '/auth/login';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -69,7 +66,7 @@ export default {
    * }
    */
   async verifyToken(token) {
-    const url = APIHOST + '/auth/verify/' + token;
+    const url = API_URL + '/auth/verify/' + token;
     const response = await fetch(url);
     if (!response.ok) {
       const error = await response.json();
@@ -85,7 +82,7 @@ export default {
    * }
    */
   async registerDevice(token, deviceInfo) {
-    const url = APIHOST + '/register/notifications';
+    const url = API_URL + '/register/notifications';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -141,7 +138,7 @@ export default {
    *  Note: if setReminder is false, you do NOT need to store a reminderTime
    */
   async addMedication(medication, token) {
-    const url = APIHOST + '/medication';
+    const url = API_URL + '/medication';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -158,7 +155,7 @@ export default {
   },
 
   async getMedications(token) {
-    const url = APIHOST + '/medication';
+    const url = API_URL + '/medication';
     const response = await fetch(url, {
       headers: {
         Authorization: 'JWT ' + token,
@@ -173,7 +170,7 @@ export default {
   },
 
   async getMedicationFromID(medicationID, token) {
-    const url = APIHOST + '/medication/' + medicationID;
+    const url = API_URL + '/medication/' + medicationID;
     const response = await fetch(url, {
       headers: {
         Authorization: 'JWT ' + token,
@@ -188,7 +185,7 @@ export default {
   },
 
   async getOccurrenceFromID(occurrenceId, token) {
-    const url = APIHOST + '/schedule/occurrence/' + occurrenceId;
+    const url = API_URL + '/schedule/occurrence/' + occurrenceId;
     const response = await fetch(url, {
       headers: {
         Authorization: 'JWT ' + token,
@@ -203,7 +200,7 @@ export default {
   },
 
   async updateMedicationFromID(medication, medicationID, token) {
-    const url = APIHOST + '/medication/' + medicationID;
+    const url = API_URL + '/medication/' + medicationID;
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -221,7 +218,7 @@ export default {
   },
 
   async deleteMedicationFromID(medicationID, token) {
-    const url = APIHOST + '/medication/' + medicationID;
+    const url = API_URL + '/medication/' + medicationID;
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -237,7 +234,7 @@ export default {
   },
 
   async getCalendarOccurrences(token) {
-    const url = APIHOST + '/schedule/occurrences';
+    const url = API_URL + '/schedule/occurrences';
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -253,7 +250,7 @@ export default {
   },
 
   async getOccurrenceGroupFromID(occurrenceGroupId, token) {
-    const url = APIHOST + '/schedule/occurrenceGroup/' + occurrenceGroupId;
+    const url = API_URL + '/schedule/occurrenceGroup/' + occurrenceGroupId;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -279,7 +276,7 @@ export default {
    * }
    */
   async takeCalendarOccurrence(occurrenceId, token) {
-    const url = APIHOST + '/schedule/occurrence/' + occurrenceId;
+    const url = API_URL + '/schedule/occurrence/' + occurrenceId;
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -310,7 +307,7 @@ export default {
    * ]
    */
   async getTrackingInfo(token) {
-    const url = APIHOST + '/tracking';
+    const url = API_URL + '/tracking';
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -332,7 +329,7 @@ export default {
    * @returns User with fields firstName, lastName, and email
    */
   async getCurrentUser(token) {
-    const url = APIHOST + '/getCurrentUser';
+    const url = API_URL + '/getCurrentUser';
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -354,7 +351,7 @@ export default {
    * @param {string} token JWT token
    */
   async updateUserSettings(settings, token) {
-    const url = APIHOST + '/user/updateSettings';
+    const url = API_URL + '/user/updateSettings';
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -377,7 +374,7 @@ export default {
    * @param {string} token JWT token
    */
   async updateUserAccountSettings(settings, token) {
-    const url = APIHOST + '/user/update';
+    const url = API_URL + '/user/update';
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -399,7 +396,7 @@ export default {
    *  ["lysine","lisinopril","Lispro","Listenon","Lysinum"]
    */
   async searchAutoComplete(searchStr) {
-    const url = APIHOST + '/medication/search/' + searchStr;
+    const url = API_URL + '/medication/search/' + searchStr;
     const response = await fetch(url, {
       method: 'GET',
       headers: {
