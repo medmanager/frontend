@@ -39,23 +39,13 @@ const Main = ({ navigation }) => {
   }, [handleNotificationOpen]);
 
   return (
-    <MainStack.Navigator
-      screenOptions={{
-        headerTopInsetEnabled: false,
-      }}>
-      <MainStack.Screen
-        name="Home"
-        component={Tabs}
-        options={{
-          headerTintColor: 'white',
-          headerStyle: { backgroundColor: Colors.blue[500] },
-          headerShown: false,
-        }}
-      />
+    <MainStack.Navigator screenOptions={{ headerShown: false }}>
+      <MainStack.Screen name="Home" component={Tabs} />
       <MainStack.Screen
         name="Medication"
         component={MedicationView}
         options={{
+          headerShown: true,
           stackPresentation: 'push',
           headerTintColor: 'white',
           headerStyle: { backgroundColor: Colors.blue[500] },
@@ -66,6 +56,7 @@ const Main = ({ navigation }) => {
         name="EditMedication"
         component={EditMedicationView}
         options={{
+          headerShown: true,
           stackPresentation: 'push',
           headerTintColor: 'white',
           headerStyle: { backgroundColor: Colors.blue[500] },
@@ -76,6 +67,7 @@ const Main = ({ navigation }) => {
         name="EditMedicationInfo"
         component={EditMedicationInfoView}
         options={{
+          headerShown: true,
           stackPresentation: 'push',
           headerTintColor: 'white',
           headerStyle: { backgroundColor: Colors.blue[500] },

@@ -3,10 +3,10 @@ import React from 'react';
 import ActivityIcon from '../components/icons/activity';
 import HomeIcon from '../components/icons/home';
 import PillIcon from '../components/icons/pill';
-import UserIcon from '../components/icons/user';
+import SettingsIcon from '../components/icons/settings';
 import HomeScreen from '../screens/Home/HomeView';
 import MedicationsScreen from '../screens/Medications/MedicationsView';
-import ProfileScreen from '../screens/Profile/ProfileView';
+import SettingsScreen from '../screens/Settings/SettingsView';
 import TrackScreen from '../screens/Track/TrackView';
 import { Colors } from '../utils';
 
@@ -45,11 +45,11 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="Settings"
+        component={SettingsScreen}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <UserIcon focused={focused} color={color} />
+            <SettingsIcon focused={focused} color={color} />
           ),
         }}
       />

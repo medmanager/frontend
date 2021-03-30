@@ -8,7 +8,7 @@ const PORT = '4000';
 const APIHOST =
   Platform.OS === 'android'
     ? 'http://10.0.2.2:' + PORT
-    : 'http://127.0.0.1:' + PORT;
+    : 'http://192.168.1.141:' + PORT;
 
 export default {
   /**doesn't return a token yet, but will register user
@@ -317,6 +317,74 @@ export default {
         Authorization: 'JWT ' + token,
         'Content-Type': 'application/json',
       },
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    const data = await response.json();
+    return data;
+  },
+
+  /**
+   * Gets the current logged in user object
+   * @param {string} token JWT token
+   * @returns User with fields firstName, lastName, and email
+   */
+  async getCurrentUser(token) {
+    const url = APIHOST + '/getCurrentUser';
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    const data = await response.json();
+    return data;
+  },
+
+  /**
+   * Update user settings
+   * @param settings Updated settings
+   * @param {string} token JWT token
+   */
+  async updateUserSettings(settings, token) {
+    const url = APIHOST + '/user/updateSettings';
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(settings),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    const data = await response.json();
+    return data;
+  },
+
+  /**
+   * Update user account settings
+   * @param settings Updated settings
+   * @param {string} token JWT token
+   */
+  async updateUserAccountSettings(settings, token) {
+    const url = APIHOST + '/user/update';
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(settings),
     });
     if (!response.ok) {
       const error = await response.json();

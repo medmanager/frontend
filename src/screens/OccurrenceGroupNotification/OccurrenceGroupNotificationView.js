@@ -10,7 +10,7 @@ import OccurrenceGroupListItem from './components/OccurrenceGroupListItem';
 
 dayjs.extend(calendar);
 
-const OccurrenceGroupNotificationView = ({ route, params }) => {
+const OccurrenceGroupNotificationView = ({ route }) => {
   const { occurrenceGroupId } = route.params;
   const token = useAuth((state) => state.userToken);
   const { data: occurrenceGroup, status } = useOccurrenceGroup(
@@ -25,7 +25,6 @@ const OccurrenceGroupNotificationView = ({ route, params }) => {
   });
 
   const handleTakeDose = (occurrenceId) => {
-    console.log('updating occurrences...');
     updateOccurrences(
       occurrences.filter((occurrence) => occurrence._id !== occurrenceId),
     );

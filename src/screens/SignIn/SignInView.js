@@ -92,7 +92,7 @@ function SignInScreen({ navigation }) {
           />
         </Form>
         <ButtonContainer>
-          <AlternateButton onPress={handleSignUpPress}>
+          <AlternateButton activeOpacity={0.7} onPress={handleSignUpPress}>
             <AlternateText>
               Don't have an account?
               <AlternateText style={{ color: Colors.orange[500] }}>

@@ -4,11 +4,15 @@ import { Colors } from '../utils';
 import Error from './Error';
 import Label from './Label';
 
-const Input = ({ label, inputStyle, touched, error, ...props }) => {
+const Input = ({ label, inputStyle = {}, touched, error, ...props }) => {
   return (
     <Container>
       <Label>{label}</Label>
-      <TextInput clearButtonMode="always" style={inputStyle} {...props} />
+      <TextInput
+        style={inputStyle}
+        placeholderTextColor={Colors.gray[400]}
+        {...props}
+      />
       {touched && error && <Error>{error}</Error>}
     </Container>
   );

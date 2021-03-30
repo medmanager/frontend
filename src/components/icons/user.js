@@ -1,10 +1,10 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const UserIcon = ({ color = 'black', focused }) => (
+const UserIcon = ({ color = 'black', focused, size = 24 }) => (
   <Svg
-    width="24"
-    height="24"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     fill={focused ? 'rgba(47, 128, 237, 0.25)' : null}>
     <Path

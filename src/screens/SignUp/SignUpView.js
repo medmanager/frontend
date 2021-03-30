@@ -104,7 +104,7 @@ function SignUpScreen({ navigation }) {
           />
         </Form>
         <ButtonContainer>
-          <AlternateButton onPress={handleSignInPress}>
+          <AlternateButton activeOpacity={0.7} onPress={handleSignInPress}>
             <AlternateText>
               Already have an account?
               <AlternateText style={{ color: Colors.orange[500] }}>
@@ -124,11 +124,6 @@ function SignUpScreen({ navigation }) {
 
 const SafeArea = styled.SafeAreaView`
   flex: 1;
-`;
-
-const Container = styled.View`
-  flex: 1;
-  padding: 24px;
 `;
 
 const Form = styled.View`

@@ -36,11 +36,7 @@ const useAuth = create(
             state.error = null;
           });
         }
-      } catch (err) {
-        set((state) => {
-          state.error = err.message;
-        });
-      }
+      } catch (ignore) {}
     },
     signIn: async (email, password) => {
       try {

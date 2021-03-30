@@ -61,7 +61,11 @@ const Root = () => {
   return (
     <RootStack.Navigator
       initialRouteName="Main"
-      screenOptions={{ headerShown: false, headerTopInsetEnabled: false }}>
+      screenOptions={{
+        headerShown: false,
+        headerTopInsetEnabled: false,
+        statusBarStyle: 'dark',
+      }}>
       {userToken === null ? (
         <Fragment>
           <RootStack.Screen name="Welcome" component={WelcomeScreen} />

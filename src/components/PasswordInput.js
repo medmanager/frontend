@@ -21,6 +21,7 @@ const PasswordInput = ({ label, inputStyle, touched, error, ...props }) => {
             textContentType="password"
             returnKeyType="go"
             autoCorrect={false}
+            placeholderTextColor={Colors.gray[400]}
             style={inputStyle}
             {...props}
           />
