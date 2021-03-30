@@ -29,8 +29,8 @@ const useSettings = create(
       }),
     toggleHideMedName: () =>
       set((state) => {
-        state.notificationSettings.toggleHideMedName = !state
-          .notificationSettings.toggleHideMedName;
+        state.notificationSettings.hideMedName = !state.notificationSettings
+          .hideMedName;
       }),
     setEmergencyContactName: (name) =>
       set((state) => {
