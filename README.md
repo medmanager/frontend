@@ -13,9 +13,17 @@ To setup your enviroment for React Native development you must first follow [thi
 
 ### Installation Steps
 
-#### Step 0: Change Directories to the Project Folder
+#### Step 0: Define the backend API URL
 
-If you are not already inside the projects directory, you can execute this command to cd into it.
+If you haven't already, in the root of the project create a `.env` file. Inside of the file define an `API_URL` like so:
+
+```
+API_URL=http://127.0.0.1:4000
+```
+
+If running the backend on your local machine AND in an emulator, use the appropriate localhost IP addresses for the platform you are running on. If you are running on `android` then the host should be `10.0.2.2`, otherwise it should be `127.0.0.1`.
+
+If running the backend on your local machine AND on a physical device, use your networks IP address as the host.
 
 ```
 cd frontend
