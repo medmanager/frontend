@@ -6006,6 +6006,11 @@ react-native-camera@^3.42.0:
   dependencies:
     prop-types "^15.6.2"
 
+react-native-config@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.4.2.tgz#cc39f22ed72c5cb06af1adf0ba70ef01593900b4"
+  integrity sha512-iTvCvThvFTH7SdiBcsxYtpLy86zglsh51ZBqFPPZ75tdrQMdlRnDNnb86kNjQf03KT0qs1nCMLRejfPMIim8iA==
+
 react-native-exception-handler@^2.10.9:
   version "2.10.9"
   resolved "https://registry.yarnpkg.com/react-native-exception-handler/-/react-native-exception-handler-2.10.9.tgz#4935a9e106b02ebecc729bfaac8ac8e6b0340781"

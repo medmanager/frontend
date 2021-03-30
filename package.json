@@ -25,6 +25,7 @@
     "react-error-boundary": "^3.1.0",
     "react-native": "0.63.4",
     "react-native-camera": "^3.42.0",
+    "react-native-config": "^1.4.2",
     "react-native-exception-handler": "^2.10.9",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
