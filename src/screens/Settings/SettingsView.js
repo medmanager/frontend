@@ -3,7 +3,6 @@ import { ActivityIndicator } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
-import shallow from 'zustand/shallow';
 import BellIcon from '../../components/icons/bell';
 import PhoneIcon from '../../components/icons/phone';
 import UserIcon from '../../components/icons/user';
@@ -12,17 +11,14 @@ import useCurrentUser from '../../store/useCurrentUser';
 import useSettings from '../../store/useSettings';
 import { Colors, defaultNavigatorScreenOptions } from '../../utils';
 import AccountSettingsScreen from './AccountSettingsView';
-import EmergencyContactSettingsScreen from './EmergencyContactSettingsView';
+import CaregiverContactSettingsScreen from './CaregiverContactSettingsView';
 import NotificationSettingsScreen from './NotificationSettingsView';
 
 const SettingsScreen = ({ navigation }) => {
   const token = useAuth((state) => state.userToken);
   const signOut = useAuth((state) => state.signOut);
   const { data: user, status } = useCurrentUser(token);
-  const { setState } = useSettings(
-    (state) => ({ setState: state.setState }),
-    shallow,
-  );
+  const setSettingsState = useSettings((state) => state.setState);
 
   const handleAccountSettingsPress = useCallback(() => {
     navigation.navigate('AccountSettings');
@@ -32,8 +28,8 @@ const SettingsScreen = ({ navigation }) => {
     navigation.navigate('NotificationSettings');
   }, [navigation]);
 
-  const handleEmergencyContactSettingsPress = useCallback(() => {
-    navigation.navigate('EmergencyContactSettings');
+  const handleCaregiverContactSettingsPress = useCallback(() => {
+    navigation.navigate('CaregiverContactSettings');
   }, [navigation]);
 
   const handleSignOutPress = useCallback(() => {
@@ -43,12 +39,12 @@ const SettingsScreen = ({ navigation }) => {
   useEffect(() => {
     // update the store with the settings recieved from the current user object
     if (user && 'settings' in user) {
-      setState((state) => ({
+      setSettingsState((state) => ({
         ...state,
         ...user.settings,
       }));
     }
-  }, [user, setState]);
+  }, [user, setSettingsState]);
 
   if (status === 'loading') {
     return (
@@ -95,12 +91,12 @@ const SettingsScreen = ({ navigation }) => {
           <NavigationMenuItem
             activeOpacity={0.7}
             style={{ borderBottomWidth: 1 }}
-            onPress={handleEmergencyContactSettingsPress}>
+            onPress={handleCaregiverContactSettingsPress}>
             <IconGroup>
               <IconContainer>
                 <PhoneIcon color={Colors.gray[600]} />
               </IconContainer>
-              <NavigationMenuItemText>Emergency Contact</NavigationMenuItemText>
+              <NavigationMenuItemText>Caregiver Contact</NavigationMenuItemText>
             </IconGroup>
             <Icon name="chevron-right" size={24} color={Colors.gray[400]} />
           </NavigationMenuItem>
@@ -213,10 +209,10 @@ export default () => (
       }}
     />
     <SettingsStack.Screen
-      name="EmergencyContactSettings"
-      component={EmergencyContactSettingsScreen}
+      name="CaregiverContactSettings"
+      component={CaregiverContactSettingsScreen}
       options={{
-        headerTitle: 'Emergency Contact Settings',
+        headerTitle: 'Caregiver Contact Settings',
       }}
     />
   </SettingsStack.Navigator>

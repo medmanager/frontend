@@ -7,8 +7,8 @@ const defaultState = {
     silenceAll: false,
     hideMedName: true,
   },
-  hasEmergencyContact: false,
-  emergencyContact: {
+  hasCaregiverContact: false,
+  caregiverContact: {
     name: '',
     phoneNumber: '',
   },
@@ -18,9 +18,9 @@ const useSettings = create(
   immer((set, get) => ({
     ...defaultState,
 
-    toggleEmergencyContact: () =>
+    toggleCaregiverContact: () =>
       set((state) => {
-        state.hasEmergencyContact = !state.hasEmergencyContact;
+        state.hasCaregiverContact = !state.hasCaregiverContact;
       }),
     toggleSilenceAllNotifications: () =>
       set((state) => {
@@ -32,24 +32,24 @@ const useSettings = create(
         state.notificationSettings.hideMedName = !state.notificationSettings
           .hideMedName;
       }),
-    setEmergencyContactName: (name) =>
+    setCaregiverContactName: (name) =>
       set((state) => {
-        state.emergencyContact.name = name;
+        state.caregiverContact.name = name;
       }),
-    setEmergencyContactPhoneNumber: (phoneNumber) =>
+    setCaregiverContactPhoneNumber: (phoneNumber) =>
       set((state) => {
-        state.emergencyContact.phoneNumber = phoneNumber;
+        state.caregiverContact.phoneNumber = phoneNumber;
       }),
     commit: async (token) => {
       const {
         notificationSettings,
-        hasEmergencyContact,
-        emergencyContact,
+        hasCaregiverContact,
+        caregiverContact,
       } = get();
       const settings = {
         notificationSettings,
-        hasEmergencyContact,
-        emergencyContact,
+        hasCaregiverContact,
+        caregiverContact,
       };
 
       console.log('updating settings...');

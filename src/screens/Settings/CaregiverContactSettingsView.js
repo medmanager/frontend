@@ -12,24 +12,24 @@ import { Colors } from '../../utils';
 
 const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
-const EmergencyContactSettingsScreen = ({ navigation }) => {
+const CaregiverContactSettingsScreen = ({ navigation }) => {
   const token = useAuth((state) => state.userToken);
   const {
-    emergencyContactName,
-    emergencyContactPhoneNumber,
-    enableEmergencyContact,
-    toggleEmergencyContact,
-    setEmergencyContactName,
-    setEmergencyContactPhoneNumber,
+    caregiverContactName,
+    caregiverContactPhoneNumber,
+    enableCaregiverContact,
+    toggleCaregiverContact,
+    setCaregiverContactName,
+    setCaregiverContactPhoneNumber,
     commit,
   } = useSettings(
     (state) => ({
-      emergencyContactName: state.emergencyContact.name,
-      emergencyContactPhoneNumber: state.emergencyContact.phoneNumber,
-      enableEmergencyContact: state.hasEmergencyContact,
-      toggleEmergencyContact: state.toggleEmergencyContact,
-      setEmergencyContactName: state.setEmergencyContactName,
-      setEmergencyContactPhoneNumber: state.setEmergencyContactPhoneNumber,
+      caregiverContactName: state.caregiverContact.name,
+      caregiverContactPhoneNumber: state.caregiverContact.phoneNumber,
+      enableCaregiverContact: state.hasCaregiverContact,
+      toggleCaregiverContact: state.toggleCaregiverContact,
+      setCaregiverContactName: state.setCaregiverContactName,
+      setCaregiverContactPhoneNumber: state.setCaregiverContactPhoneNumber,
       commit: state.commit,
     }),
     shallow,
@@ -37,8 +37,8 @@ const EmergencyContactSettingsScreen = ({ navigation }) => {
   const queryClient = useQueryClient();
   const { values, touched, errors, handleChange, handleBlur } = useFormik({
     initialValues: {
-      name: emergencyContactName,
-      phoneNumber: emergencyContactPhoneNumber,
+      name: caregiverContactName,
+      phoneNumber: caregiverContactPhoneNumber,
     },
     validationSchema: yup.object().shape({
       name: yup.string().max(100, 'Name must not be more than 100 characters'),
@@ -49,15 +49,15 @@ const EmergencyContactSettingsScreen = ({ navigation }) => {
     onSubmit: () => {},
   });
 
-  const handleToggleEmergencyContact = useCallback(() => {
-    toggleEmergencyContact();
-  }, [toggleEmergencyContact]);
+  const handleToggleCaregiverContact = useCallback(() => {
+    toggleCaregiverContact();
+  }, [toggleCaregiverContact]);
 
   useEffect(() => {
     // add a listener so that when the user navigates away from this screen, commit the changes to the settings
     const unsubscribe = navigation.addListener('beforeRemove', async () => {
-      setEmergencyContactName(values.name);
-      setEmergencyContactPhoneNumber(values.phoneNumber);
+      setCaregiverContactName(values.name);
+      setCaregiverContactPhoneNumber(values.phoneNumber);
       await commit(token); // commit settings changes
       queryClient.invalidateQueries('currentUser');
     });
@@ -68,8 +68,8 @@ const EmergencyContactSettingsScreen = ({ navigation }) => {
     commit,
     token,
     values,
-    setEmergencyContactName,
-    setEmergencyContactPhoneNumber,
+    setCaregiverContactName,
+    setCaregiverContactPhoneNumber,
     queryClient,
   ]);
 
@@ -78,14 +78,15 @@ const EmergencyContactSettingsScreen = ({ navigation }) => {
       <SettingsContainer>
         <SettingListItem style={{ borderBottomWidth: 1 }}>
           <SettingInfoContainer>
-            <SettingItemText>Emergency Contact</SettingItemText>
+            <SettingItemText>Caregiver Contact</SettingItemText>
             <SettingItemDescriptionText>
-              Enable the ability to alert an emergency contact.
+              Enable the ability to alert a caregiver contact when a medication
+              has not been taken.
             </SettingItemDescriptionText>
           </SettingInfoContainer>
           <Switch
-            onValueChange={handleToggleEmergencyContact}
-            value={enableEmergencyContact}
+            onValueChange={handleToggleCaregiverContact}
+            value={enableCaregiverContact}
             trackColor={{
               false: Colors.gray[300],
               true: Colors.blue[500],
@@ -94,11 +95,11 @@ const EmergencyContactSettingsScreen = ({ navigation }) => {
           />
         </SettingListItem>
       </SettingsContainer>
-      {enableEmergencyContact && (
+      {enableCaregiverContact && (
         <InputContainer>
           <Input
             name="name"
-            label="Emergency Contact Name"
+            label="Caregiver Contact Name"
             onChangeText={handleChange('name')}
             onBlur={handleBlur('name')}
             value={values.name}
@@ -107,7 +108,7 @@ const EmergencyContactSettingsScreen = ({ navigation }) => {
           />
           <Input
             name="phoneNumber"
-            label="Phone Number"
+            label="Caregiver Contact Phone Number"
             onChangeText={handleChange('phoneNumber')}
             onBlur={handleBlur('phoneNumber')}
             value={values.phoneNumber}
@@ -160,4 +161,4 @@ const SettingItemDescriptionText = styled.Text`
   margin-top: 4px;
 `;
 
-export default EmergencyContactSettingsScreen;
+export default CaregiverContactSettingsScreen;
