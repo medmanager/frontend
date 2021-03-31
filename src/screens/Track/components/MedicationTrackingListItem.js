@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { colors, trackingColors } from '../../../utils/colors';
 
-const MedicationTrackingTile = ({ medication, isLast, isFirst }) => {
+const MedicationTrackingListItem = ({ medication, isLast, isFirst }) => {
   const navigation = useNavigation();
 
   const handleMedicationItemPress = () => {
@@ -80,4 +80,4 @@ const ProgressBar = styled.View`
   border-radius: 10px;
 `;
 
-export default MedicationTrackingTile;
+export default MedicationTrackingListItem;

@@ -219,7 +219,6 @@ const DosageTimeText = styled.Text`
   font-size: 16px;
   font-weight: 600;
   color: ${Colors.gray[900]};
-  align-self: flex-end;
 `;
 
 const ActionArea = styled.View`

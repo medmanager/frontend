@@ -1,35 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/core';
+import React from 'react';
+import { ActivityIndicator, FlatList } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
-import { defaultNavigatorScreenOptions } from '../../utils';
 import { useAuth } from '../../store/useAuth';
-import { FlatList } from 'react-native-gesture-handler';
-import MedicationTrackingTile from './components/MedicationTrackingTile';
-import api_calls from '../../utils/api-calls';
-import LoadingScreen from '../../screens/Loading/LoadingView';
-
-let medications;
+import useTracking from '../../store/useTracking';
+import { defaultNavigatorScreenOptions } from '../../utils';
+import MedicationTrackingListItem from './components/MedicationTrackingListItem';
 
 function TrackScreen() {
-  const [isLoading, setIsLoading] = useState(false);
   const token = useAuth((state) => state.userToken);
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
+  const { data: medications, status, refetch, isFetching } = useTracking(token);
+  useIsFocused(); // will cause the screen to re-render when the user navigates to it
 
-      medications = await api_calls.getTrackingInfo(token);
-
-      setIsLoading(false);
-    })();
-  }, []);
-
-  if (isLoading) {
-    return <LoadingScreen />;
+  if (status === 'loading') {
+    return (
+      <SafeArea>
+        <Centered>
+          <ActivityIndicator />
+        </Centered>
+      </SafeArea>
+    );
   }
 
-  console.log(medications);
-
-  if (medications != undefined && medications.status === 'error') {
+  if (status === 'error') {
     return (
       <SafeArea>
         <Text>Something went wrong.</Text>
@@ -38,7 +32,7 @@ function TrackScreen() {
   }
 
   const renderTrackingTile = ({ item, index }) => (
-    <MedicationTrackingTile
+    <MedicationTrackingListItem
       medication={item}
       index={index}
       isLast={index === medications.length - 1}
@@ -46,43 +40,58 @@ function TrackScreen() {
     />
   );
 
+  if (medications && medications.length === 0) {
+    return (
+      <SafeArea>
+        <Box>
+          <Title>Last 30 Days</Title>
+          <Text>No tracking data</Text>
+        </Box>
+      </SafeArea>
+    );
+  }
+
   return (
-    <Container>
-      <HBox>
+    <SafeArea>
+      <Box>
         <Title>Last 30 Days</Title>
-      </HBox>
-      <MedicationList
+      </Box>
+      <MedicationTrackingList
         data={medications}
         keyExtractor={(item) => item._id}
         renderItem={renderTrackingTile}
-        onRefresh={() => setIsLoading(true)}
-        refreshing={isLoading}
+        onRefresh={() => refetch()}
+        refreshing={isFetching}
       />
-    </Container>
+    </SafeArea>
   );
 }
 
-const Container = styled.SafeAreaView`
+const Centered = styled.View`
   flex: 1;
+  align-items: center;
+  justify-content: center;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  font-size: 16px;
+  margin-top: 8px;
+`;
 
-const MedicationList = styled(FlatList)``;
+const MedicationTrackingList = styled(FlatList)``;
 
 const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const HBox = styled.View`
-  flex-direction: row;
+const Box = styled.View`
+  margin-horizontal: 24px;
+  margin-vertical: 16px;
 `;
 
 const Title = styled.Text`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
-  padding-left: 20px;
-  padding-top: 20px;
 `;
 
 const TrackStack = createNativeStackNavigator();
