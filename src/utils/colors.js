@@ -5,7 +5,7 @@ const colors = {
     500: '#2F80ED',
     400: '#00A3E8',
     300: '#56CCF2',
-    100: '#A7DBFF'
+    100: '#A7DBFF',
   },
   orange: {
     500: '#FF7F26',
@@ -50,4 +50,6 @@ const medicationGreyedColors = [
   '#ffa9f8',
 ];
 
-export { colors, medicationColors, medicationGreyedColors };
+const trackingColors = ['#3de369', '#f5e03d', '#f53d3d'];
+
+export { colors, medicationColors, medicationGreyedColors, trackingColors };

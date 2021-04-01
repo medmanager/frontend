@@ -17,10 +17,12 @@ function MedicationScreen({ route, navigation }) {
   const { data: medication, status } = useMedication(medId, token);
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: medication.name,
-    });
-  }, [navigation, medication, medId]);
+    if (medication) {
+      navigation.setOptions({
+        headerTitle: medication.name,
+      });
+    }
+  }, [navigation, medication]);
 
   const handleEditPress = useCallback(() => {
     navigation.navigate('EditMedication', { medId });
