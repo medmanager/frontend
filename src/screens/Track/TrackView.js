@@ -58,7 +58,7 @@ function TrackScreen() {
       </Box>
       <MedicationTrackingList
         data={medications}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.medicationId}
         renderItem={renderTrackingTile}
         onRefresh={() => refetch()}
         refreshing={isFetching}

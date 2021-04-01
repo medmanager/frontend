@@ -31,7 +31,9 @@ const MedicationTrackingListItem = ({ medication, isLast, isFirst }) => {
           <MedicationName>{medication.name}</MedicationName>
         </MedicationInfo>
       </HBox>
-      <ComplianceValue>{medication.compliance * 100}%</ComplianceValue>
+      <ComplianceValue>
+        {Number(medication.compliance * 100).toFixed()}%
+      </ComplianceValue>
     </MedicationItem>
   );
 };
