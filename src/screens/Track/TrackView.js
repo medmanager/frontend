@@ -66,9 +66,8 @@ function TrackScreen() {
         keyExtractor={(item) => item._id}
         renderItem={renderTrackingTile}
         onRefresh={() => {
-          console.log(refetchData);
-          refetch();
           setRefetchData(!refetchData);
+          refetch();
         }}
         refreshing={isFetching}
         extraData={refetchData}
