@@ -7,10 +7,12 @@ import { useAuth } from '../../store/useAuth';
 import useTracking from '../../store/useTracking';
 import { defaultNavigatorScreenOptions } from '../../utils';
 import MedicationTrackingListItem from './components/MedicationTrackingListItem';
+import { useState } from 'react';
 
 function TrackScreen() {
   const token = useAuth((state) => state.userToken);
   const { data: medications, status, refetch, isFetching } = useTracking(token);
+  const [refetchData, setRefetchData] = useState(false);
   useIsFocused(); // will cause the screen to re-render when the user navigates to it
 
   if (status === 'loading') {
@@ -31,14 +33,17 @@ function TrackScreen() {
     );
   }
 
-  const renderTrackingTile = ({ item, index }) => (
-    <MedicationTrackingListItem
-      medication={item}
-      index={index}
-      isLast={index === medications.length - 1}
-      isFirst={index === 0}
-    />
-  );
+  const renderTrackingTile = ({ item, index }) => {
+    return (
+      <MedicationTrackingListItem
+        medication={item}
+        index={index}
+        isLast={index === medications.length - 1}
+        isFirst={index === 0}
+        refetchData={refetchData}
+      />
+    );
+  };
 
   if (medications && medications.length === 0) {
     return (
@@ -60,8 +65,13 @@ function TrackScreen() {
         data={medications}
         keyExtractor={(item) => item._id}
         renderItem={renderTrackingTile}
-        onRefresh={() => refetch()}
+        onRefresh={() => {
+          console.log(refetchData);
+          refetch();
+          setRefetchData(!refetchData);
+        }}
         refreshing={isFetching}
+        extraData={refetchData}
       />
     </SafeArea>
   );

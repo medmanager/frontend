@@ -1,10 +1,27 @@
 import { useNavigation } from '@react-navigation/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { Animated } from 'react-native';
+import { useState } from 'react';
 import { colors, trackingColors } from '../../../utils/colors';
 
-const MedicationTrackingListItem = ({ medication, isLast, isFirst }) => {
+const MedicationTrackingListItem = ({
+  medication,
+  isLast,
+  isFirst,
+  refetchData,
+}) => {
   const navigation = useNavigation();
+  const [animationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    animationValue.setValue(0);
+    Animated.timing(animationValue, {
+      toValue: medication.compliance * 379,
+      duration: 1500,
+      useNativeDriver: false,
+    }).start();
+  }, [refetchData]);
 
   const handleMedicationItemPress = () => {
     navigation.navigate('Medication', { medId: medication.medicationId });
@@ -19,13 +36,27 @@ const MedicationTrackingListItem = ({ medication, isLast, isFirst }) => {
     complianceColor = trackingColors[2];
   }
 
+  const animatedStyle = {
+    width: animationValue,
+  };
+
   return (
     <MedicationItem
       isLast={isLast}
       isFirst={isFirst}
       activeOpacity={0.7}
       onPress={handleMedicationItemPress}>
-      <ProgressBar compliance={medication.compliance} color={complianceColor} />
+      <Animated.View
+        style={[
+          { backgroundColor: complianceColor },
+          { width: medication.compliance * 100 },
+          { height: '100%' },
+          { borderRadius: 10 },
+          { paddingLeft: 10 },
+          { position: 'absolute' },
+          animatedStyle,
+        ]}
+      />
       <HBox>
         <MedicationInfo>
           <MedicationName>{medication.name}</MedicationName>
@@ -69,15 +100,6 @@ const HBox = styled.View`
 const ComplianceValue = styled.Text`
   font-size: 16px;
   padding-right: 16px;
-`;
-
-const ProgressBar = styled.View`
-  background-color: ${(props) => props.color};
-  height: 100%;
-  width: ${(props) => props.compliance * 100}%;
-  position: absolute;
-  padding-left: 40px;
-  border-radius: 10px;
 `;
 
 export default MedicationTrackingListItem;
