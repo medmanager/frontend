@@ -150,7 +150,7 @@ export const dosageMultiSelectChoices = () => {
  */
 export const getSelectedDays = (frequency) =>
   Object.entries(frequency.weekdays || {})
-    .filter(([key, value]) => !!value) // only get days which are marked as true
+    .filter(([key, value]) => key !== '_id' && !!value) // only get days which are marked as true
     .map(([key, value]) => key);
 
 /**
@@ -165,7 +165,9 @@ export const getFrequencyStatusText = (frequency) => {
       return `every ${frequency.interval} days`;
     }
   } else {
+    console.log({ frequency });
     const selectedDays = getSelectedDays(frequency);
+    console.log({ selectedDays });
     const selectedDaysShort = selectedDays.map((day) =>
       capitalize(day).substring(0, 3),
     );
