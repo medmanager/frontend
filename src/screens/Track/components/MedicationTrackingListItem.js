@@ -12,7 +12,7 @@ const MedicationTrackingListItem = ({
   refetchData,
 }) => {
   const navigation = useNavigation();
-  const [animationValue] = useState(new Animated.Value(0));
+  const [animationValue, setAnimationValue] = useState(new Animated.Value(0));
 
   useEffect(() => {
     animationValue.setValue(0);
@@ -62,7 +62,9 @@ const MedicationTrackingListItem = ({
           <MedicationName>{medication.name}</MedicationName>
         </MedicationInfo>
       </HBox>
-      <ComplianceValue>{medication.compliance * 100}%</ComplianceValue>
+      <ComplianceValue>
+        {Number(medication.compliance * 100).toFixed()}%
+      </ComplianceValue>
     </MedicationItem>
   );
 };
