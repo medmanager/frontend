@@ -14,13 +14,15 @@ import { Colors } from '../../../utils';
 import apiCalls from '../../../utils/api-calls';
 
 dayjs.extend(calendar);
-export const DosageOccurrenceListItemPlaceholder = () => (
-  <OccurrenceContainer>
-    <Placeholder Animation={Fade}>
-      <PlaceholderLine width={50} />
-      <PlaceholderLine width={30} noMargin />
-    </Placeholder>
-  </OccurrenceContainer>
+export const DosageOccurrenceListItemPlaceholder = ({ isLast }) => (
+  <Container isLast={isLast}>
+    <OccurrenceContainer>
+      <Placeholder Animation={Fade}>
+        <PlaceholderLine width={50} />
+        <PlaceholderLine width={30} noMargin />
+      </Placeholder>
+    </OccurrenceContainer>
+  </Container>
 );
 
 const DosageOccurrenceListItem = ({
@@ -77,7 +79,7 @@ const DosageOccurrenceListItem = ({
   }, [occurrence.timeTaken]);
 
   if (status === 'loading') {
-    return <DosageOccurrenceListItemPlaceholder />;
+    return <DosageOccurrenceListItemPlaceholder isLast={isLast} />;
   }
 
   if (status === 'error') {

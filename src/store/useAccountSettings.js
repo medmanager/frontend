@@ -35,7 +35,9 @@ const useAccountSettings = create(
       console.log('updating account settings...');
       console.log('new account settings:');
       console.log({ accountSettings });
-      await apiCalls.updateUserAccountSettings(accountSettings, token);
+      try {
+        await apiCalls.updateUserAccountSettings(accountSettings, token);
+      } catch (ignored) {}
     },
     // state actions
     reset: () => set((state) => ({ ...state, ...defaultState })),

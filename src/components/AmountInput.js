@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
-import { useAddMedication } from '../store/useAddMedication';
+import { useMedicationState } from '../store/useMedicationState';
 import { amountUnitChoices, capitalize, Colors } from '../utils';
 import Error from './Error';
 import Label from './Label';
@@ -11,7 +11,7 @@ import { RadioGroupValueSelector } from './RadioButtonGroup';
 
 const AmountInput = ({ touched, error, ...props }) => {
   const [showModal, setShowModal] = useState(false);
-  const { amountUnit, setAmountUnit } = useAddMedication((state) => ({
+  const { amountUnit, setAmountUnit } = useMedicationState((state) => ({
     amountUnit: state.amountUnit,
     setAmountUnit: state.setAmountUnit,
   }));

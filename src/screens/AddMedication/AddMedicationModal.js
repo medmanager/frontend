@@ -1,7 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import { Colors } from '../../utils';
-import AddMedicationCamera from './AddMedicationCameraView';
 import AddMedicationConfirmationView from './AddMedicationConfirmationView';
 import AddMedicationCustomFrequencyView from './AddMedicationCustomFrequencyView';
 import AddMedicationScheduleView from './AddMedicationScheduleView';
@@ -38,10 +37,6 @@ const AddMedicationModal = () => {
         name="AddMedicationConfirmation"
         component={AddMedicationConfirmationView}
         options={{ title: 'Confirm' }}
-      />
-      <Stack.Screen
-        name="AddMedicationCamera"
-        component={AddMedicationCamera}
       />
     </Stack.Navigator>
   );

@@ -1,26 +1,22 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useRef, useState } from 'react';
-import { Text } from 'react-native';
+import React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
 import AmountInput from '../../components/AmountInput';
-import Autocomplete from '../../components/Autocomplete';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import MedicationNameAutocompleteInput from '../../components/MedicationNameAutocompleteInput';
 import StrengthInput from '../../components/StrengthInput';
-import { useAddMedication } from '../../store/useAddMedication';
+import { useMedicationState } from '../../store/useMedicationState';
 import { Colors } from '../../utils';
-import api from '../../utils/api-calls';
-
-const MIN_SEARCH_QUERY_LENGTH = 2;
 
 const AddMedicationView = ({ navigation }) => {
   const initialValues = {
     name: '',
     strength: null,
     amount: null,
-    notes: '',
+    condition: '',
   };
   const {
     values,
@@ -43,57 +39,16 @@ const AddMedicationView = ({ navigation }) => {
         .nullable()
         .required('Strength is a required field'),
       amount: yup.number().nullable().required('Amount is a required field'),
-      notes: yup.string(),
+      condition: yup.string(),
     }),
     onSubmit: (formValues) => {
-      setFormValues(formValues);
-      clearAutocompleteSuggestions();
+      setMedicationInfo(formValues);
       navigation.navigate('AddMedicationSchedule');
     },
   });
-  const setFormValues = useAddMedication((state) => state.setFormValues);
-  const clearAutocomplete = useRef(false);
-  const [medicationNameSuggestions, setMedicationNameSuggestions] = useState(
-    [],
+  const setMedicationInfo = useMedicationState(
+    (state) => state.setMedicationInfo,
   );
-
-  const filterMedications = async (query) => {
-    if (query === '') {
-      return [];
-    }
-    if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
-      try {
-        const results = await api.searchAutoComplete(query);
-        return results;
-      } catch (e) {
-        return [];
-      }
-    }
-    return [];
-  };
-
-  const clearAutocompleteSuggestions = () => {
-    setMedicationNameSuggestions([]);
-  };
-
-  useEffect(() => {
-    if (clearAutocomplete.current) {
-      clearAutocompleteSuggestions();
-    } else {
-      (async () => {
-        try {
-          const suggestions = await filterMedications(values.name);
-          setMedicationNameSuggestions(suggestions);
-        } catch (e) {}
-      })();
-    }
-    clearAutocomplete.current = false;
-  }, [values.name, clearAutocomplete]);
-
-  const handleMedNameBlur = () => {
-    clearAutocompleteSuggestions();
-    handleBlur('name');
-  };
 
   const textAreaInputStyle = {
     height: 150,
@@ -104,54 +59,42 @@ const AddMedicationView = ({ navigation }) => {
     <SafeArea>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <Form>
-          <Autocomplete
-            data={medicationNameSuggestions}
+          <MedicationNameAutocompleteInput
             onChangeText={handleChange('name')}
-            onBlur={handleMedNameBlur}
+            onBlur={handleBlur('name')}
             value={values.name}
             touched={touched}
             error={errors.name}
             label="Name"
-            keyExtractor={(item) => item.toString()}
-            renderItem={(item) => (
-              <AutoCompleteSuggestion
-                onPress={() => {
-                  if (values.name === item) {
-                    clearAutocompleteSuggestions();
-                  } else {
-                    setFieldValue('name', item);
-                    clearAutocomplete.current = true;
-                  }
-                }}>
-                <Text>{item}</Text>
-              </AutoCompleteSuggestion>
-            )}
+            onPress={(name) => setFieldValue('name', name)}
           />
-          <StrengthInput
-            onChangeText={handleChange('strength')}
-            onBlur={handleBlur('strength')}
-            value={values.strength}
-            touched={touched}
-            error={errors.strength}
-          />
-          <AmountInput
-            onChangeText={handleChange('amount')}
-            onBlur={handleBlur('amount')}
-            value={values.amount}
-            touched={touched}
-            error={errors.amount}
-          />
-          <Input
-            onChangeText={handleChange('notes')}
-            onBlur={handleBlur('notes')}
-            value={values.notes}
-            touched={touched}
-            error={errors.notes}
-            inputStyle={textAreaInputStyle}
-            multiline
-            numberOfLines={10}
-            label="Condition"
-          />
+          <BottomLayer>
+            <StrengthInput
+              onChangeText={handleChange('strength')}
+              onBlur={handleBlur('strength')}
+              value={values.strength}
+              touched={touched}
+              error={errors.strength}
+            />
+            <AmountInput
+              onChangeText={handleChange('amount')}
+              onBlur={handleBlur('amount')}
+              value={values.amount}
+              touched={touched}
+              error={errors.amount}
+            />
+            <Input
+              onChangeText={handleChange('condition')}
+              onBlur={handleBlur('condition')}
+              value={values.condition}
+              touched={touched}
+              error={errors.condition}
+              inputStyle={textAreaInputStyle}
+              multiline
+              numberOfLines={10}
+              label="Condition"
+            />
+          </BottomLayer>
         </Form>
       </KeyboardAwareScrollView>
       <ButtonContainer>
@@ -161,13 +104,6 @@ const AddMedicationView = ({ navigation }) => {
   );
 };
 
-const AutoCompleteSuggestion = styled.TouchableOpacity`
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-`;
-
 const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
@@ -175,6 +111,10 @@ const SafeArea = styled.SafeAreaView`
 const Form = styled.View`
   flex: 1;
   padding: 24px;
+`;
+
+const BottomLayer = styled.View`
+  z-index: -1;
 `;
 
 const ButtonContainer = styled.View`

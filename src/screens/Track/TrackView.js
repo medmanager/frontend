@@ -45,7 +45,7 @@ function TrackScreen() {
       <SafeArea>
         <Box>
           <Title>Last 30 Days</Title>
-          <Text>No tracking data</Text>
+          <Text>No tracking data yet</Text>
         </Box>
       </SafeArea>
     );

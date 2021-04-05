@@ -47,9 +47,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'stretch',
     justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 12,
   },
 });

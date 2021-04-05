@@ -1,19 +1,30 @@
 import { useFormik } from 'formik';
-import React from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import React, { useCallback, useLayoutEffect } from 'react';
+import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
-import AmountInput from '../../components/AmountInput';
+import shallow from 'zustand/shallow';
 import Input from '../../components/Input';
 import StrengthInput from '../../components/StrengthInput';
-import { useAddMedication } from '../../store/useAddMedication';
+import { useMedicationState } from '../../store/useMedicationState';
 
 const EditMedicationInfoView = ({ navigation }) => {
+  const textAreaInputStyle = {
+    height: 150,
+    justifyContent: 'flex-start',
+  };
+  const { setMedicationInfo, strength, condition } = useMedicationState(
+    (state) => ({
+      setMedicationInfo: state.setMedicationInfo,
+      condition: state.condition,
+      strength: state.strength,
+      strengthUnit: state.strengthUnit,
+    }),
+    shallow,
+  );
   const initialValues = {
-    name: '',
-    strength: null,
-    amount: null,
-    notes: '',
+    strength,
+    condition,
   };
   const {
     values,
@@ -27,69 +38,56 @@ const EditMedicationInfoView = ({ navigation }) => {
   } = useFormik({
     initialValues,
     validationSchema: yup.object().shape({
-      name: yup
-        .string()
-        .required('Name is a required field')
-        .max(100, 'Name must not be more than 100 characters'),
       strength: yup
         .number()
         .nullable()
         .required('Strength is a required field'),
-      amount: yup.number().nullable().required('Amount is a required field'),
-      notes: yup.string(),
+      condition: yup.string(),
     }),
-    onSubmit: (formValues) => {
-      setFormValues(formValues);
+    onSubmit: (medicationInfo) => {
+      setMedicationInfo(medicationInfo);
     },
   });
-  const setFormValues = useAddMedication((state) => state.setFormValues);
 
-  const textAreaInputStyle = {
-    height: 150,
-    justifyContent: 'flex-start',
-  };
+  const handleUpdateSchedule = useCallback(() => {
+    console.log('update');
+  }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleUpdateSchedule}>
+          <HeaderText>Save</HeaderText>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, handleUpdateSchedule]);
 
   return (
     <SafeArea>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <Form>
-          <StrengthInput
-            onChangeText={handleChange('strength')}
-            onBlur={handleBlur('strength')}
-            value={values.strength}
-            touched={touched}
-            error={errors.strength}
-          />
-          <AmountInput
-            onChangeText={handleChange('amount')}
-            onBlur={handleBlur('amount')}
-            value={values.amount}
-            touched={touched}
-            error={errors.amount}
-          />
-          <Input
-            onChangeText={handleChange('notes')}
-            onBlur={handleBlur('notes')}
-            value={values.notes}
-            touched={touched}
-            error={errors.notes}
-            inputStyle={textAreaInputStyle}
-            multiline
-            numberOfLines={10}
-            label="Condition"
-          />
-        </Form>
-      </KeyboardAwareScrollView>
+      <Form>
+        <StrengthInput
+          onChangeText={handleChange('strength')}
+          onBlur={handleBlur('strength')}
+          value={values.strength}
+          touched={touched}
+          error={errors.strength}
+        />
+        <Input
+          onChangeText={handleChange('condition')}
+          onBlur={handleBlur('condition')}
+          value={values.condition}
+          touched={touched}
+          error={errors.condition}
+          inputStyle={textAreaInputStyle}
+          multiline
+          numberOfLines={10}
+          label="Condition"
+        />
+      </Form>
     </SafeArea>
   );
 };
-
-const AutoCompleteSuggestion = styled.TouchableOpacity`
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-`;
 
 const SafeArea = styled.SafeAreaView`
   flex: 1;
@@ -98,6 +96,11 @@ const SafeArea = styled.SafeAreaView`
 const Form = styled.View`
   flex: 1;
   padding: 24px;
+`;
+
+const HeaderText = styled.Text`
+  color: white;
+  font-size: 18px;
 `;
 
 export default EditMedicationInfoView;

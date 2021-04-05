@@ -1,10 +1,10 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Platform, Switch, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import shallow from 'zustand/shallow';
-import { useAddMedication } from '../store/useAddMedication';
+import { useMedicationState } from '../store/useMedicationState';
 import { Colors, formatTime } from '../utils';
 
 const Checkbox = ({ selected }) => {
@@ -32,27 +32,35 @@ const CheckMark = styled(Icon)`
   color: #fff;
 `;
 
-const AnroidTimePicker = ({ value, sendTimePicker, id, setReminderTime }) => (
-  <Fragment>
-    <Opacity
+const AndroidTimePicker = ({
+  value,
+  displayTimePicker,
+  id,
+  toggleDisplayTimePicker,
+  setReminderTime,
+}) => (
+  <AndroidTimePickerContainer>
+    <TimePickerButton
+      activeOpacity={0.7}
       onPress={() => {
-        sendTimePicker(id);
+        toggleDisplayTimePicker(id);
       }}>
-      <Text>{formatTime(value.reminderTime)}</Text>
-    </Opacity>
-    {value.sendTimePicker && (
+      <TimePickerButtonText>
+        {formatTime(value.reminderTime)}
+      </TimePickerButtonText>
+    </TimePickerButton>
+    {displayTimePicker && (
       <DateTimePicker
         value={value.reminderTime}
         mode="time"
-        is24Hour={true}
         display="default"
         onChange={(_, selectedTime) => {
-          sendTimePicker(id);
+          toggleDisplayTimePicker(id);
           setReminderTime(id, selectedTime || value.reminderTime);
         }}
       />
     )}
-  </Fragment>
+  </AndroidTimePickerContainer>
 );
 
 const iOSTimePicker = ({ value, id, setReminderTime }) => (
@@ -68,7 +76,7 @@ const iOSTimePicker = ({ value, id, setReminderTime }) => (
 );
 
 const TimePicker = Platform.select({
-  android: AnroidTimePicker,
+  android: AndroidTimePicker,
   ios: iOSTimePicker,
 });
 
@@ -80,8 +88,8 @@ const DosageMultiSelect = () => {
     setDose,
     setReminderTime,
     toggleReminder,
-    sendTimePicker,
-  } = useAddMedication(
+    toggleDisplayTimePicker,
+  } = useMedicationState(
     (state) => ({
       dosages: state.dosages,
       selectedDosages: state.selectedDosages,
@@ -89,7 +97,7 @@ const DosageMultiSelect = () => {
       setDose: state.setDose,
       setReminderTime: state.setReminderTime,
       toggleReminder: state.toggleReminder,
-      sendTimePicker: state.sendTimePicker,
+      toggleDisplayTimePicker: state.toggleDisplayTimePicker,
     }),
     shallow,
   );
@@ -108,7 +116,7 @@ const DosageMultiSelect = () => {
 
   return (
     <Container>
-      {dosages.map(({ value, label, id }) => {
+      {dosages.map(({ value, label, id, displayTimePicker }) => {
         const selected = selectedDosages.includes(id);
 
         return (
@@ -162,7 +170,8 @@ const DosageMultiSelect = () => {
                       id={id}
                       value={value}
                       setReminderTime={setReminderTime}
-                      sendTimePicker={sendTimePicker}
+                      displayTimePicker={displayTimePicker}
+                      toggleDisplayTimePicker={toggleDisplayTimePicker}
                     />
                   )}
                 </TimePickerContainer>
@@ -228,18 +237,27 @@ const Text = styled.Text`
   font-size: 16px;
 `;
 
+const TimePickerButtonText = styled.Text`
+  color: ${Colors.blue[500]};
+  font-size: 16px;
+`;
+
 const DosageSettingsContainer = styled.View`
   padding: 16px;
 `;
 
-const Opacity = styled.TouchableOpacity`
+const TimePickerButton = styled.TouchableOpacity`
   padding: 10px;
   border-radius: 5px;
-  background-color: ${Colors.gray[100]};
+  background-color: ${Colors.gray[200]};
 `;
 
 const TimePickerContainer = styled.View`
   margin-top: 16px;
+`;
+
+const AndroidTimePickerContainer = styled.View`
+  flex-direction: row;
 `;
 
 const Container = styled.View``;

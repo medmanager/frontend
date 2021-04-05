@@ -4,11 +4,13 @@ import { Platform } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import AddMedicationModal from '../screens/AddMedication/AddMedicationModal';
+import EditMedicationCustomFrequencyView from '../screens/EditMedication/EditMedicationCustomFrequencyView';
 import EditMedicationInfoView from '../screens/EditMedication/EditMedicationInfoView';
+import EditMedicationScheduleView from '../screens/EditMedication/EditMedicationScheduleView';
 import EditMedicationView from '../screens/EditMedication/EditMedicationView';
 import MedicationView from '../screens/Medication/MedicationView';
 import OccurrenceGroupNotificationModal from '../screens/OccurrenceGroupNotification/OccurrenceGroupNotificationModal';
-import { Colors } from '../utils';
+import { Colors, defaultNavigatorScreenOptions } from '../utils';
 import { setupPushNotifications } from '../utils/notifications';
 import Tabs from './Tabs';
 
@@ -39,7 +41,8 @@ const Main = ({ navigation }) => {
   }, [handleNotificationOpen]);
 
   return (
-    <MainStack.Navigator screenOptions={{ headerShown: false }}>
+    <MainStack.Navigator
+      screenOptions={{ headerShown: false, ...defaultNavigatorScreenOptions }}>
       <MainStack.Screen name="Home" component={Tabs} />
       <MainStack.Screen
         name="Medication"
@@ -71,7 +74,29 @@ const Main = ({ navigation }) => {
           stackPresentation: 'push',
           headerTintColor: 'white',
           headerStyle: { backgroundColor: Colors.blue[500] },
-          headerTitle: 'Medication Info',
+          headerTitle: 'Edit Medication Info',
+        }}
+      />
+      <MainStack.Screen
+        name="EditMedicationSchedule"
+        component={EditMedicationScheduleView}
+        options={{
+          headerShown: true,
+          stackPresentation: 'push',
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: Colors.blue[500] },
+          headerTitle: 'Edit Medication Schedule',
+        }}
+      />
+      <MainStack.Screen
+        name="EditMedicationCustomFrequency"
+        component={EditMedicationCustomFrequencyView}
+        options={{
+          headerShown: true,
+          stackPresentation: 'push',
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: Colors.blue[500] },
+          headerTitle: 'Edit Custom Frequency',
         }}
       />
       <MainStack.Screen

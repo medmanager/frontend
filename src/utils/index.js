@@ -67,6 +67,22 @@ export const formatTime = (time) => {
 };
 
 /**
+ * Check deep object equality between two objects
+ * @param {*} first Object one
+ * @param {*} second Object two
+ * @returns true or false
+ */
+export const deepEqual = (first, second) => {
+  const ok = Object.keys,
+    firstType = typeof first,
+    secondType = typeof second;
+  return first && second && firstType === 'object' && firstType === secondType
+    ? ok(first).length === ok(second).length &&
+        ok(first).every((key) => deepEqual(first[key], second[key]))
+    : first === second;
+};
+
+/**
  * Used when configuring React Navigation
  */
 export const defaultNavigatorScreenOptions = {
@@ -74,6 +90,7 @@ export const defaultNavigatorScreenOptions = {
   headerStyle: { backgroundColor: Colors.blue[500] },
   headerBackTitle: '',
   statusBarAnimation: 'slide',
+  headerTopInsetEnabled: false,
 };
 
 /**

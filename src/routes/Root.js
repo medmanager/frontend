@@ -18,6 +18,7 @@ LogBox.ignoreLogs([
   'Warning: Setting a timer',
   'Setting a timer for a long period of time',
   "Warning: Can't perform a React state update",
+  'VirtualizedLists should never be nested',
 ]);
 
 const Root = () => {

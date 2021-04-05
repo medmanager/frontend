@@ -39,17 +39,11 @@ const useAuth = create(
       } catch (ignore) {}
     },
     signIn: async (email, password) => {
+      let token;
       try {
         let response = await api.loginUser(email, password);
-        let token = response.token;
+        token = response.token;
         await setToken(token); // persists the token
-        const deviceToken = await getDeviceToken();
-        const deviceOS = Platform.OS;
-        const deviceInfo = {
-          token: deviceToken,
-          os: deviceOS,
-        };
-        await api.registerDevice(token, deviceInfo);
         set((state) => {
           state.userToken = token;
           state.isSignout = false;
@@ -61,6 +55,14 @@ const useAuth = create(
           state.error = err.message;
         });
       }
+
+      const deviceToken = await getDeviceToken();
+      const deviceOS = Platform.OS;
+      const deviceInfo = {
+        token: deviceToken,
+        os: deviceOS,
+      };
+      await api.registerDevice(token, deviceInfo);
     },
     signUp: async (firstName, lastName, email, password) => {
       const { signIn } = get();

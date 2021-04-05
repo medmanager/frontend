@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export const MIN_SEARCH_QUERY_LENGTH = 2;
 
 export const days = [
@@ -96,6 +98,19 @@ export const dayChoices = [
     label: 'Sunday',
   },
 ];
+
+export const morningInterval = (now = new Date()) => ({
+  lower: dayjs(now).hour(0).minute(0).valueOf(),
+  upper: dayjs(now).hour(9).minute(59).valueOf(),
+});
+export const afternoonInterval = (now = new Date()) => ({
+  lower: dayjs(now).hour(10).minute(0).valueOf(),
+  upper: dayjs(now).hour(14).minute(59).valueOf(),
+});
+export const eveningInterval = (now = new Date()) => ({
+  lower: dayjs(now).hour(15).minute(0).valueOf(),
+  upper: dayjs(now).hour(19).minute(59).valueOf(),
+});
 
 /**
  * Used for storing the auth token

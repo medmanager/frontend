@@ -1,20 +1,19 @@
 import { useFormik } from 'formik';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
-import Autocomplete from '../../components/Autocomplete';
-import { useAddMedication } from '../../store/useAddMedication';
+import shallow from 'zustand/shallow';
+import MedicationNameAutocompleteInput from '../../components/MedicationNameAutocompleteInput';
 import { useAuth } from '../../store/useAuth';
 import useMedication from '../../store/useMedication';
-import { Colors, MIN_SEARCH_QUERY_LENGTH } from '../../utils';
-import api from '../../utils/api-calls';
+import { useMedicationState } from '../../store/useMedicationState';
+import { Colors } from '../../utils';
+import {
+  getDosageTimesString,
+  getFrequencyStatusText,
+} from '../../utils/medication';
 
 const EditMedicationView = ({ navigation, route }) => {
   const { medId } = route.params;
@@ -22,9 +21,6 @@ const EditMedicationView = ({ navigation, route }) => {
   const { data: medication } = useMedication(medId, token);
   const initialValues = {
     name: medication ? medication.name : '',
-    strength: medication ? medication.strength : null,
-    amount: medication ? medication.amount : null,
-    condition: medication ? medication.condition : null,
   };
   const {
     values,
@@ -42,43 +38,26 @@ const EditMedicationView = ({ navigation, route }) => {
         .string()
         .required('Name is a required field')
         .max(100, 'Name must not be more than 100 characters'),
-      strength: yup
-        .number()
-        .nullable()
-        .required('Strength is a required field'),
-      amount: yup.number().nullable().required('Amount is a required field'),
-      notes: yup.string(),
     }),
     onSubmit: (formValues) => {
-      setFormValues(formValues);
-      clearAutocompleteSuggestions();
+      setMedicationInfo(formValues);
     },
   });
-  const setFormValues = useAddMedication((state) => state.setFormValues);
-  const clearAutocomplete = useRef(false);
-  const [medicationNameSuggestions, setMedicationNameSuggestions] = useState(
-    [],
+  const {
+    setMedicationInfo,
+    medicationInfoStatusText,
+    setStateValuesFromMedicationObject,
+  } = useMedicationState(
+    (state) => ({
+      setMedicationInfo: state.setMedicationInfo,
+      setStateValuesFromMedicationObject:
+        state.setStateValuesFromMedicationObject,
+      medicationInfoStatusText: `${state.strength} ${state.strengthUnit}${
+        state.condition ? `, ${state.condition}` : ''
+      }`,
+    }),
+    shallow,
   );
-
-  const filterMedications = async (query) => {
-    if (query === '') {
-      return [];
-    }
-    if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
-      try {
-        const results = await api.searchAutoComplete(query);
-        console.log(results);
-        return results;
-      } catch (e) {
-        return [];
-      }
-    }
-    return [];
-  };
-
-  const clearAutocompleteSuggestions = () => {
-    setMedicationNameSuggestions([]);
-  };
 
   const handleUpdateMedication = useCallback(() => {
     console.log('update');
@@ -90,7 +69,7 @@ const EditMedicationView = ({ navigation, route }) => {
         title: `Edit ${medication.name}`,
         headerRight: () => (
           <TouchableOpacity onPress={handleUpdateMedication}>
-            <HeaderText>Update</HeaderText>
+            <HeaderText>Save</HeaderText>
           </TouchableOpacity>
         ),
       });
@@ -98,50 +77,56 @@ const EditMedicationView = ({ navigation, route }) => {
   }, [medication, navigation, handleUpdateMedication]);
 
   useEffect(() => {
-    if (clearAutocomplete.current) {
-      clearAutocompleteSuggestions();
-    } else {
-      (async () => {
-        try {
-          const suggestions = await filterMedications(values.name);
-          setMedicationNameSuggestions(suggestions);
-        } catch (e) {}
-      })();
-    }
-    clearAutocomplete.current = false;
-  }, [values.name, clearAutocomplete]);
+    setStateValuesFromMedicationObject(medication);
+  }, [medication]);
 
-  const handleMedNameBlur = () => {
-    clearAutocompleteSuggestions();
-    handleBlur('name');
-  };
+  const handleMedicationInfoPress = useCallback(() => {
+    navigation.navigate('EditMedicationInfo');
+  }, [navigation]);
+
+  const handleDosageSchedulePress = useCallback(() => {
+    navigation.navigate('EditMedicationSchedule');
+  }, [navigation]);
+
+  const dosageTimesString = getDosageTimesString(medication);
 
   return (
     <SafeArea>
       <Form>
-        <Autocomplete
-          data={medicationNameSuggestions}
+        <MedicationNameAutocompleteInput
           onChangeText={handleChange('name')}
-          onBlur={handleMedNameBlur}
+          onBlur={handleBlur('name')}
+          onPress={(name) => setFieldValue('name', name)}
           value={values.name}
           touched={touched}
           error={errors.name}
           label="Name"
-          keyExtractor={(item) => item.toString()}
-          renderItem={(item) => (
-            <AutoCompleteSuggestion
-              onPress={() => {
-                if (values.name === item) {
-                  clearAutocompleteSuggestions();
-                } else {
-                  setFieldValue('name', item);
-                  clearAutocomplete.current = true;
-                }
-              }}>
-              <Text>{item}</Text>
-            </AutoCompleteSuggestion>
-          )}
         />
+        <BottomLayer>
+          <NavigationButton
+            onPress={handleMedicationInfoPress}
+            activeOpacity={0.6}>
+            <Container>
+              <Text>Medication Info</Text>
+              <NavigationButtonText>
+                {medicationInfoStatusText}
+              </NavigationButtonText>
+            </Container>
+            <Icon name="chevron-right" size={18} color={Colors.gray[400]} />
+          </NavigationButton>
+          <NavigationButton
+            onPress={handleDosageSchedulePress}
+            activeOpacity={0.6}>
+            <Container>
+              <Text>Dosage Schedule</Text>
+              <NavigationButtonText>
+                Take {dosageTimesString}{' '}
+                {getFrequencyStatusText(medication.frequency)}
+              </NavigationButtonText>
+            </Container>
+            <Icon name="chevron-right" size={18} color={Colors.gray[400]} />
+          </NavigationButton>
+        </BottomLayer>
       </Form>
       <ActionArea>
         <ActionItem activeOpacity={0.7} style={{ borderBottomWidth: 1 }}>
@@ -152,33 +137,54 @@ const EditMedicationView = ({ navigation, route }) => {
   );
 };
 
-const AutoCompleteSuggestion = styled.TouchableOpacity`
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-`;
-
 const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
 const Form = styled.View`
   padding: 24px;
+  flex: 1;
+`;
+
+const BottomLayer = styled.View`
+  z-index: -1;
+`;
+
+const Container = styled.View`
+  flex-direction: column;
+`;
+
+const HeaderText = styled.Text`
+  color: white;
+  font-size: 18px;
+`;
+
+const NavigationButton = styled.TouchableOpacity`
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  border-width: 0.5px;
+  border-color: ${Colors.gray[300]};
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  margin-bottom: 16px;
+`;
+
+const NavigationButtonText = styled.Text`
+  font-size: 14px;
+  color: ${Colors.gray[500]};
 `;
 
 const Text = styled.Text`
   font-size: 16px;
 `;
 
-const HeaderText = styled.Text`
-  color: white;
-  font-size: 16px;
-`;
-
 const ActionArea = styled.View`
-  margin-top: 16px;
-  z-index: -1;
+  margin-vertical: 48px;
 `;
 
 const ActionItem = styled.TouchableOpacity`

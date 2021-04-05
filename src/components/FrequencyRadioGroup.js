@@ -1,6 +1,6 @@
 import React from 'react';
 import shallow from 'zustand/shallow';
-import { useAddMedication } from '../store/useAddMedication';
+import { useMedicationState } from '../store/useMedicationState';
 import RadioButtonGroup from './RadioButtonGroup';
 
 const FrequencyRadioGroup = () => {
@@ -8,7 +8,7 @@ const FrequencyRadioGroup = () => {
     frequencies,
     selectedFrequency,
     setSelectedFrequency,
-  } = useAddMedication(
+  } = useMedicationState(
     (state) => ({
       frequencies: state.frequencies,
       selectedFrequency: state.selectedFrequency,

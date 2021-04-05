@@ -6,8 +6,8 @@ import Button from '../../components/Button';
 import { ColorSelect } from '../../components/ColorSelect';
 import Label from '../../components/Label';
 import Modal from '../../components/Modal';
-import { useAddMedication } from '../../store/useAddMedication';
 import { useAuth } from '../../store/useAuth';
+import { useMedicationState } from '../../store/useMedicationState';
 import { Colors } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 import {
@@ -24,22 +24,22 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     name,
     strength,
     strengthUnit,
-    notes,
+    condition,
     color,
     reset,
-  } = useAddMedication((state) => ({
+  } = useMedicationState((state) => ({
     dosages: state.selectedDosages.map(
       (id) => state.dosages.find((dosage) => dosage.id === id).value,
     ),
     frequency: state.frequencies.find(
       (frequency) => frequency.id === state.selectedFrequency,
     ).value,
-    name: state.formValues.name,
-    amount: state.formValues.amount,
+    name: state.name,
+    amount: state.amount,
     amountUnit: state.amountUnit,
-    strength: state.formValues.strength,
+    strength: state.strength,
     strengthUnit: state.strengthUnit,
-    notes: state.formValues.notes,
+    condition: state.condition,
     color: state.color,
     reset: state.reset,
   }));
@@ -76,7 +76,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     amountUnit,
     strength,
     strengthUnit,
-    notes,
+    condition,
     frequency,
     dosages,
     color,
@@ -111,7 +111,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
           <Field>
             <Label>Condition</Label>
             <Text>
-              {medication.notes.length > 0 ? medication.notes : 'Empty'}
+              {medication.condition.length > 0 ? medication.condition : 'None'}
             </Text>
           </Field>
           <Field>

@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
-import { useAddMedication } from '../store/useAddMedication';
+import { useMedicationState } from '../store/useMedicationState';
 import { Colors, strengthUnitChoices } from '../utils';
 import Error from './Error';
 import Label from './Label';
@@ -11,7 +11,7 @@ import { RadioGroupValueSelector } from './RadioButtonGroup';
 
 const StrengthInput = ({ touched, error, ...props }) => {
   const [showModal, setShowModal] = useState(false);
-  const { strengthUnit, setStrengthUnit } = useAddMedication((state) => ({
+  const { strengthUnit, setStrengthUnit } = useMedicationState((state) => ({
     strengthUnit: state.strengthUnit,
     setStrengthUnit: state.setStrengthUnit,
   }));

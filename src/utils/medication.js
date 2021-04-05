@@ -11,7 +11,15 @@ export const frequencyRadioInputChoices = () => {
       value: {
         interval: 1,
         intervalUnit: 'days',
-        weekdays: null,
+        weekdays: {
+          monday: false,
+          tuesday: false,
+          wednesday: false,
+          thursday: false,
+          friday: false,
+          saturday: false,
+          sunday: false,
+        },
       },
     },
     {
@@ -104,41 +112,41 @@ export const dosageMultiSelectChoices = () => {
     {
       id: 0,
       label: 'Morning',
+      displayTimePicker: false,
       value: {
         dose: 1,
         sendReminder: true,
         reminderTime: new Date(now.setHours(8)),
-        sendTimePicker: false,
       },
     },
     {
       id: 1,
       label: 'Afternoon',
+      displayTimePicker: false,
       value: {
         dose: 1,
         sendReminder: true,
         reminderTime: new Date(now.setHours(12)),
-        sendTimePicker: false,
       },
     },
     {
       id: 2,
       label: 'Evening',
+      displayTimePicker: false,
       value: {
         dose: 1,
         sendReminder: true,
         reminderTime: new Date(now.setHours(16)),
-        sendTimePicker: false,
       },
     },
     {
       id: 3,
       label: 'Night',
+      displayTimePicker: false,
       value: {
         dose: 1,
         sendReminder: true,
         reminderTime: new Date(now.setHours(20)),
-        sendTimePicker: false,
       },
     },
   ];
@@ -150,7 +158,7 @@ export const dosageMultiSelectChoices = () => {
  */
 export const getSelectedDays = (frequency) =>
   Object.entries(frequency.weekdays || {})
-    .filter(([key, value]) => key !== '_id' && !!value) // only get days which are marked as true
+    .filter(([key, value]) => !!value) // only get days which are marked as true
     .map(([key, value]) => key);
 
 /**
@@ -165,9 +173,7 @@ export const getFrequencyStatusText = (frequency) => {
       return `every ${frequency.interval} days`;
     }
   } else {
-    console.log({ frequency });
     const selectedDays = getSelectedDays(frequency);
-    console.log({ selectedDays });
     const selectedDaysShort = selectedDays.map((day) =>
       capitalize(day).substring(0, 3),
     );

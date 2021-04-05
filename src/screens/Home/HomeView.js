@@ -8,7 +8,13 @@ import FloatingAddMedicationButton from '../../components/FloatingAddMedicationB
 import ProgressBar from '../../components/ProgressBar';
 import { useAuth } from '../../store/useAuth';
 import useOccurrences from '../../store/useOccurrences';
-import { Colors, defaultNavigatorScreenOptions } from '../../utils';
+import {
+  afternoonInterval,
+  Colors,
+  defaultNavigatorScreenOptions,
+  eveningInterval,
+  morningInterval,
+} from '../../utils';
 import DosageOccurrenceListItem, {
   DosageOccurrenceListItemPlaceholder,
 } from './components/DosageOccurrenceListItem';
@@ -58,32 +64,18 @@ function HomeScreen() {
       }
       const scheduledTime = dayjs(dosageOccurrence.occurrence.scheduledDate);
 
-      const morningInterval = {
-        lower: dayjs(now.current).hour(4).minute(0).valueOf(),
-        upper: dayjs(now.current).hour(9).minute(59).valueOf(),
-      };
-      const afternoonInterval = {
-        lower: dayjs(now.current).hour(10).minute(0).valueOf(),
-        upper: dayjs(now.current).hour(14).minute(59).valueOf(),
-      };
-      const eveningInterval = {
-        lower: dayjs(now.current).hour(15).minute(0).valueOf(),
-        upper: dayjs(now.current).hour(19).minute(59).valueOf(),
-      };
+      const firstInterval = morningInterval(now.current);
+      const secondInterval = afternoonInterval(now.current);
+      const thirdInterval = eveningInterval(now.current);
 
-      if (
-        scheduledTime.isBetween(morningInterval.lower, morningInterval.upper)
-      ) {
+      if (scheduledTime.isBetween(firstInterval.lower, firstInterval.upper)) {
         sectionsData[0].data.push(dosageOccurrence);
       } else if (
-        scheduledTime.isBetween(
-          afternoonInterval.lower,
-          afternoonInterval.upper,
-        )
+        scheduledTime.isBetween(secondInterval.lower, secondInterval.upper)
       ) {
         sectionsData[1].data.push(dosageOccurrence);
       } else if (
-        scheduledTime.isBetween(eveningInterval.lower, eveningInterval.upper)
+        scheduledTime.isBetween(thirdInterval.lower, thirdInterval.upper)
       ) {
         sectionsData[2].data.push(dosageOccurrence);
       } else {

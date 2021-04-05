@@ -68,7 +68,7 @@ function MedicationScreen({ route, navigation }) {
         <Field>
           <Label>Condition</Label>
           <Text>
-            {medication.notes.length > 0 ? medication.notes : 'Empty'}
+            {medication.condition.length > 0 ? medication.condition : 'None'}
           </Text>
         </Field>
         <Field>

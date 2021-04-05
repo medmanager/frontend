@@ -13,7 +13,7 @@ import {
 
 const Item = Picker.Item;
 
-const AddMedicationCustomFrequencyView = ({ route }) => {
+const EditMedicationCustomFrequencyView = ({ route }) => {
   const { id } = route.params;
   const itemStyle = {
     height: 120,
@@ -123,4 +123,4 @@ const StatusText = styled.Text`
   margin-top: 16px;
 `;
 
-export default AddMedicationCustomFrequencyView;
+export default EditMedicationCustomFrequencyView;
