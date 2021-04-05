@@ -158,7 +158,7 @@ export const dosageMultiSelectChoices = () => {
  */
 export const getSelectedDays = (frequency) =>
   Object.entries(frequency.weekdays || {})
-    .filter(([key, value]) => !!value) // only get days which are marked as true
+    .filter(([key, value]) => days.includes(key) && !!value) // only get days which are marked as true
     .map(([key, value]) => key);
 
 /**
