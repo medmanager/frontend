@@ -71,14 +71,22 @@ function HomeScreen() {
       const secondInterval = afternoonInterval(now.current);
       const thirdInterval = eveningInterval(now.current);
 
-      if (scheduledTime.isBetween(firstInterval.lower, firstInterval.upper)) {
+      console.log(secondInterval.lower.hour());
+      console.log(scheduledTime.hour());
+      console.log(secondInterval.upper.hour());
+      if (
+        scheduledTime.hour() >= firstInterval.lower.hour() &&
+        scheduledTime.hour() <= firstInterval.upper.hour()
+      ) {
         sectionsData[0].data.push(dosageOccurrence);
       } else if (
-        scheduledTime.isBetween(secondInterval.lower, secondInterval.upper)
+        scheduledTime.hour() >= secondInterval.lower.hour() &&
+        scheduledTime.hour() <= secondInterval.upper.hour()
       ) {
         sectionsData[1].data.push(dosageOccurrence);
       } else if (
-        scheduledTime.isBetween(thirdInterval.lower, thirdInterval.upper)
+        scheduledTime.hour() >= thirdInterval.lower.hour() &&
+        scheduledTime.hour() <= thirdInterval.upper.hour()
       ) {
         sectionsData[2].data.push(dosageOccurrence);
       } else {
@@ -108,7 +116,9 @@ function HomeScreen() {
           <FlatList
             data={new Array(5)}
             keyExtractor={(_, index) => index.toString()}
-            renderItem={() => <DosageOccurrenceListItemPlaceholder />}
+            renderItem={({ index }) => (
+              <DosageOccurrenceListItemPlaceholder isLast={index === 4} />
+            )}
           />
         </Container>
       </SafeArea>

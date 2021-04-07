@@ -100,16 +100,16 @@ export const dayChoices = [
 ];
 
 export const morningInterval = (now = new Date()) => ({
-  lower: dayjs(now).hour(0).minute(0).valueOf(),
-  upper: dayjs(now).hour(9).minute(59).valueOf(),
+  lower: dayjs(now).hour(0).minute(0),
+  upper: dayjs(now).hour(9).minute(59),
 });
 export const afternoonInterval = (now = new Date()) => ({
-  lower: dayjs(now).hour(10).minute(0).valueOf(),
-  upper: dayjs(now).hour(14).minute(59).valueOf(),
+  lower: dayjs(now).hour(10).minute(0),
+  upper: dayjs(now).hour(14).minute(59),
 });
 export const eveningInterval = (now = new Date()) => ({
-  lower: dayjs(now).hour(15).minute(0).valueOf(),
-  upper: dayjs(now).hour(19).minute(59).valueOf(),
+  lower: dayjs(now).hour(15).minute(0),
+  upper: dayjs(now).hour(19).minute(59),
 });
 
 /**
