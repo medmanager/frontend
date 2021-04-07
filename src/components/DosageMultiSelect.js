@@ -1,11 +1,12 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import dayjs from 'dayjs';
 import React from 'react';
 import { Platform, Switch, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import shallow from 'zustand/shallow';
 import { useMedicationState } from '../store/useMedicationState';
-import { Colors, formatTime } from '../utils';
+import { Colors } from '../utils';
 
 const Checkbox = ({ selected }) => {
   return (
@@ -46,7 +47,7 @@ const AndroidTimePicker = ({
         toggleDisplayTimePicker(id);
       }}>
       <TimePickerButtonText>
-        {formatTime(value.reminderTime)}
+        {dayjs(value.reminderTime).format('h:mm A')}
       </TimePickerButtonText>
     </TimePickerButton>
     {displayTimePicker && (
