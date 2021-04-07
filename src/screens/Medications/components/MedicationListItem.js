@@ -55,7 +55,6 @@ const MedicationItem = styled.TouchableOpacity`
   border-radius: 10px;
   margin-horizontal: 16px;
   margin-bottom: ${(props) => (props.isLast ? 16 : 4)}px;
-  margin-top: ${(props) => (props.isFirst ? 16 : 4)}px;
 `;
 
 const MedicationName = styled.Text`

@@ -32,6 +32,7 @@ function HomeScreen() {
     refetch,
     isFetching,
   } = useOccurrences(token);
+
   const totalNumMedsToTake = useRef(0);
   const totalNumMedsTaken = useRef(0);
   const sections = useMemo(() => {
@@ -55,6 +56,8 @@ function HomeScreen() {
     ];
     totalNumMedsTaken.current = 0;
     totalNumMedsToTake.current = 0;
+
+    if (!occurrences) return [];
 
     for (const dosageOccurrence of occurrences[today]) {
       totalNumMedsToTake.current++;
@@ -86,6 +89,16 @@ function HomeScreen() {
     return sectionsData;
   }, [today, occurrences]);
 
+  // TODO: improve error UI
+  if (status === 'error') {
+    return (
+      <SafeArea>
+        <Text>Error: {error.message}</Text>
+        <FloatingAddMedicationButton />
+      </SafeArea>
+    );
+  }
+
   // show placeholder dosage items when the list is loading
   if (status === 'loading') {
     return (
@@ -98,16 +111,6 @@ function HomeScreen() {
             renderItem={() => <DosageOccurrenceListItemPlaceholder />}
           />
         </Container>
-      </SafeArea>
-    );
-  }
-
-  // TODO: improve error UI
-  if (status === 'error') {
-    return (
-      <SafeArea>
-        <Text>Error: {error.message}</Text>
-        <FloatingAddMedicationButton />
       </SafeArea>
     );
   }

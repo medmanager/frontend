@@ -105,6 +105,7 @@ const useMedicationState = create(
       }),
     setStateValuesFromMedicationObject: (medication) =>
       set((state) => {
+        console.log('Setting medication state from backend object');
         if (medication.strength) {
           state.strength = String(medication.strength);
           state.strengthUnit = medication.strengthUnit;
@@ -112,13 +113,16 @@ const useMedicationState = create(
         if (medication.name) {
           state.name = medication.name;
         }
+        if (medication.amount) {
+          state.amount = medication.amount;
+        }
+        if (medication.color) {
+          state.color = medication.color;
+        }
 
         state.selectedFrequency = null;
         for (const frequency of state.frequencies) {
-          if ('_id' in medication.frequency) {
-            delete medication.frequency['_id']; // remove extraneous mongo id key
-          }
-
+          // check deep equality on the two frequency objects
           if (deepEqual(medication.frequency, frequency.value)) {
             state.selectedFrequency = frequency.id;
             break;
@@ -128,9 +132,9 @@ const useMedicationState = create(
             state.frequencies[4].value.intervalUnit =
               medication.frequency.intervalUnit;
             state.frequencies[4].value.weekdays = medication.frequency.weekdays;
-            state.frequencies[4].route = 'EditMedicationCustomFrequency';
           }
         }
+        state.frequencies[4].route = 'EditMedicationCustomFrequency';
 
         state.selectedDosages = [];
         for (const dosage of state.dosages) {
@@ -142,25 +146,37 @@ const useMedicationState = create(
             const thirdInterval = eveningInterval();
 
             if (dosage.value.reminderTime.getHours() === reminderTime.hour()) {
-              state.selectedDosages.push(dosage.id);
+              state.selectedDosages = [dosage.id];
             } else if (
               reminderTime.isBetween(firstInterval.lower, firstInterval.upper)
             ) {
               state.dosages[0].value.reminderTime = reminderTime.toDate();
-              state.selectedDosages.push(0);
+              state.dosages[0].value.dose = dosageObject.dose;
+              state.dosages[0].value.sendReminder = dosageObject.sendReminder;
+              state.dosages[0].value._id = dosageObject._id;
+              state.selectedDosages = [0];
             } else if (
               reminderTime.isBetween(secondInterval.lower, secondInterval.upper)
             ) {
               state.dosages[1].value.reminderTime = reminderTime.toDate();
-              state.selectedDosages.push(1);
+              state.dosages[1].value.dose = dosageObject.dose;
+              state.dosages[1].value.sendReminder = dosageObject.sendReminder;
+              state.dosages[1].value._id = dosageObject._id;
+              state.selectedDosages = [1];
             } else if (
               reminderTime.isBetween(thirdInterval.lower, thirdInterval.upper)
             ) {
               state.dosages[2].value.reminderTime = reminderTime.toDate();
-              state.selectedDosages.push(2);
+              state.dosages[2].value.dose = dosageObject.dose;
+              state.dosages[2].value.sendReminder = dosageObject.sendReminder;
+              state.dosages[2].value._id = dosageObject._id;
+              state.selectedDosages = [2];
             } else {
               state.dosages[3].value.reminderTime = reminderTime.toDate();
-              state.selectedDosages.push(3);
+              state.dosages[3].value.dose = dosageObject.dose;
+              state.dosages[3].value.sendReminder = dosageObject.sendReminder;
+              state.dosages[3].value._id = dosageObject._id;
+              state.selectedDosages = [3];
             }
           }
         }

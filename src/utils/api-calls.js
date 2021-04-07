@@ -200,6 +200,7 @@ export default {
   },
 
   async updateMedicationFromID(medication, medicationID, token) {
+    console.log({ updatedMedication: medication });
     const url = API_URL + '/medication/' + medicationID;
     const response = await fetch(url, {
       method: 'PUT',

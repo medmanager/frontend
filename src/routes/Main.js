@@ -64,6 +64,7 @@ const Main = ({ navigation }) => {
           headerTintColor: 'white',
           headerStyle: { backgroundColor: Colors.blue[500] },
           headerBackTitle: '',
+          gestureEnabled: false,
         }}
       />
       <MainStack.Screen

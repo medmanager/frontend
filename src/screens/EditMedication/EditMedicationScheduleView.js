@@ -1,31 +1,11 @@
-import React, { useCallback, useLayoutEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
+import React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import DosageMultiSelect from '../../components/DosageMultiSelect';
 import FrequencyRadioGroup from '../../components/FrequencyRadioGroup';
 import Label from '../../components/Label';
-import { useMedicationState } from '../../store/useMedicationState';
 
-const EditMedicationScheduleView = ({ navigation }) => {
-  const setMedicationInfo = useMedicationState(
-    (state) => state.setMedicationInfo,
-  );
-
-  const handleUpdateSchedule = useCallback(() => {
-    console.log('update');
-  }, []);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={handleUpdateSchedule}>
-          <HeaderText>Save</HeaderText>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation, handleUpdateSchedule]);
-
+const EditMedicationScheduleView = () => {
   return (
     <SafeArea>
       <KeyboardAwareScrollView>

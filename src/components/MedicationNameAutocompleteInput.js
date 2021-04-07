@@ -64,7 +64,7 @@ const MedicationNameAutocompleteInput = ({
       onBlur={handleOnBlur}
       value={value}
       data={medicationNameSuggestions}
-      keyExtractor={({ index }) => index}
+      keyExtractor={({ item }) => item}
       renderItem={({ item, index }) => (
         <AutoCompleteSuggestion
           key={index}

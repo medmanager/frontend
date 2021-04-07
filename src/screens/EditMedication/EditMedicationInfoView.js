@@ -1,18 +1,22 @@
 import { useFormik } from 'formik';
-import React, { useCallback, useLayoutEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
 import shallow from 'zustand/shallow';
+import { ColorSelect } from '../../components/ColorSelect';
 import Input from '../../components/Input';
+import Label from '../../components/Label';
 import StrengthInput from '../../components/StrengthInput';
 import { useMedicationState } from '../../store/useMedicationState';
 
+const textAreaInputStyle = {
+  height: 150,
+  justifyContent: 'flex-start',
+  paddingVertical: 8,
+};
+
 const EditMedicationInfoView = ({ navigation }) => {
-  const textAreaInputStyle = {
-    height: 150,
-    justifyContent: 'flex-start',
-  };
   const { setMedicationInfo, strength, condition } = useMedicationState(
     (state) => ({
       setMedicationInfo: state.setMedicationInfo,
@@ -26,16 +30,7 @@ const EditMedicationInfoView = ({ navigation }) => {
     strength,
     condition,
   };
-  const {
-    values,
-    touched,
-    errors,
-    isValid,
-    handleSubmit,
-    handleChange,
-    handleBlur,
-    setFieldValue,
-  } = useFormik({
+  const { values, touched, errors, handleChange, handleBlur } = useFormik({
     initialValues,
     validationSchema: yup.object().shape({
       strength: yup
@@ -49,42 +44,45 @@ const EditMedicationInfoView = ({ navigation }) => {
     },
   });
 
-  const handleUpdateSchedule = useCallback(() => {
-    console.log('update');
-  }, []);
+  const handleUpdateMedicationInfo = useCallback(() => {
+    setMedicationInfo(values);
+  }, [setMedicationInfo, values]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={handleUpdateSchedule}>
-          <HeaderText>Save</HeaderText>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation, handleUpdateSchedule]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener(
+      'beforeRemove',
+      handleUpdateMedicationInfo,
+    );
+
+    return unsubscribe;
+  }, [navigation, handleUpdateMedicationInfo]);
 
   return (
     <SafeArea>
-      <Form>
-        <StrengthInput
-          onChangeText={handleChange('strength')}
-          onBlur={handleBlur('strength')}
-          value={values.strength}
-          touched={touched}
-          error={errors.strength}
-        />
-        <Input
-          onChangeText={handleChange('condition')}
-          onBlur={handleBlur('condition')}
-          value={values.condition}
-          touched={touched}
-          error={errors.condition}
-          inputStyle={textAreaInputStyle}
-          multiline
-          numberOfLines={10}
-          label="Condition"
-        />
-      </Form>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <Form>
+          <StrengthInput
+            onChangeText={handleChange('strength')}
+            onBlur={handleBlur('strength')}
+            value={values.strength}
+            touched={touched}
+            error={errors.strength}
+          />
+          <Input
+            onChangeText={handleChange('condition')}
+            onBlur={handleBlur('condition')}
+            value={values.condition}
+            touched={touched}
+            error={errors.condition}
+            inputStyle={textAreaInputStyle}
+            multiline
+            numberOfLines={10}
+            label="Condition"
+          />
+          <Label>Color</Label>
+          <ColorSelect />
+        </Form>
+      </KeyboardAwareScrollView>
     </SafeArea>
   );
 };

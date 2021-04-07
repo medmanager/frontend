@@ -67,19 +67,58 @@ export const formatTime = (time) => {
 };
 
 /**
- * Check deep object equality between two objects
- * @param {*} first Object one
- * @param {*} second Object two
+ * Recursively check equality between two objects
+ * @param {*} first
+ * @param {*} second
+ * @param {String[]} invalidKeys List of invalid object keys to consider when comparing
  * @returns true or false
  */
-export const deepEqual = (first, second) => {
-  const ok = Object.keys,
-    firstType = typeof first,
+export const deepEqual = (first, second, invalidKeys = ['_id']) => {
+  const filterFn = (key) => !invalidKeys.includes(key);
+
+  const firstType = typeof first,
     secondType = typeof second;
-  return first && second && firstType === 'object' && firstType === secondType
-    ? ok(first).length === ok(second).length &&
-        ok(first).every((key) => deepEqual(first[key], second[key]))
-    : first === second;
+
+  // both are arrays
+  if (
+    Array.isArray(first) &&
+    Array.isArray(second) &&
+    first.length === second.length
+  ) {
+    return first.every((obj, idx) => deepEqual(obj, second[idx], invalidKeys));
+  }
+
+  // first is Date, second is date string
+  if (
+    firstType === 'object' &&
+    first instanceof Date &&
+    secondType === 'string'
+  ) {
+    return first.getTime() === new Date(second).getTime();
+  }
+
+  // first is Date, second is also Date
+  if (
+    firstType === 'object' &&
+    firstType === secondType &&
+    first instanceof Date &&
+    second instanceof Date
+  ) {
+    return first.getTime() === second.getTime();
+  }
+
+  // both are objects
+  if (firstType === 'object' && firstType === secondType) {
+    return (
+      Object.keys(first).filter(filterFn).length ===
+        Object.keys(second).filter(filterFn).length &&
+      Object.keys(first)
+        .filter(filterFn)
+        .every((key) => deepEqual(first[key], second[key], invalidKeys))
+    );
+  }
+
+  return first === second;
 };
 
 /**

@@ -18,7 +18,8 @@ const OuterCircle = styled.View`
   border-radius: 12px;
   border-width: 2px;
   border-color: ${Colors.blue[500]};
-  background-color: ${(props) => (props.selected ? Colors.blue[500] : '#fff')}
+  background-color: ${(props) =>
+    props.selected ? Colors.blue[500] : 'transparent'}
   align-items: center;
   justify-content: center;
   margin-right: 16px;

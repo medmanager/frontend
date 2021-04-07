@@ -184,6 +184,7 @@ const OccurrenceContainer = styled.TouchableOpacity`
 const OccurrenceTextContainer = styled.View`
   flex-direction: column;
   flex-shrink: 1;
+  margin-right: 8px;
 `;
 
 const Label = styled.Text`

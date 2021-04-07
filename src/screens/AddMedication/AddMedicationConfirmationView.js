@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import { ColorSelect } from '../../components/ColorSelect';
 import Label from '../../components/Label';
 import Modal from '../../components/Modal';
+import ModalActivityIndicator from '../../components/ModalActivityIndicator';
 import { useAuth } from '../../store/useAuth';
 import { useMedicationState } from '../../store/useMedicationState';
 import { Colors } from '../../utils';
@@ -97,6 +98,10 @@ const AddMedicationConfirmationView = ({ navigation }) => {
 
   return (
     <Fragment>
+      <ModalActivityIndicator
+        loadingMessage="Adding medication..."
+        show={addMedication.isLoading}
+      />
       <Container>
         <InfoContainer>
           <Title>{medication.name}</Title>
@@ -138,9 +143,9 @@ const AddMedicationConfirmationView = ({ navigation }) => {
         showModal={showSuccessModal}
         showActionBar={false}
         backdropDismiss={false}>
-        <SuccessIconContainer>
+        <IconContainer>
           <Icon name="check-circle" color="#10B981" size={48} />
-        </SuccessIconContainer>
+        </IconContainer>
         <AddMedButton onPress={handleAddAnotherMed}>
           <AddMedButtonText>Add Another Med</AddMedButtonText>
         </AddMedButton>
@@ -153,9 +158,9 @@ const AddMedicationConfirmationView = ({ navigation }) => {
         showModal={showErrorModal}
         showActionBar={false}
         backdropDismiss={false}>
-        <SuccessIconContainer>
+        <IconContainer>
           <Icon name="alert-circle" color="#EF4444" size={48} />
-        </SuccessIconContainer>
+        </IconContainer>
         <ErrorText>
           We are sorry, but there was a problem adding {medication.name} to your
           medications. Please try again later.
@@ -217,7 +222,7 @@ const ContinueButtonText = styled.Text`
   font-size: 16px;
 `;
 
-const SuccessIconContainer = styled.View`
+const IconContainer = styled.View`
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;

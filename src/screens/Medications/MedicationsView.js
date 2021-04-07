@@ -1,11 +1,11 @@
-import React from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import React, { useMemo } from 'react';
+import { ActivityIndicator, SectionList } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
 import FloatingAddMedicationButton from '../../components/FloatingAddMedicationButton';
 import { useAuth } from '../../store/useAuth';
 import useMedications from '../../store/useMedications';
-import { defaultNavigatorScreenOptions } from '../../utils';
+import { Colors, defaultNavigatorScreenOptions } from '../../utils';
 import MedicationListItem from './components/MedicationListItem';
 
 function MedicationsScreen() {
@@ -13,6 +13,31 @@ function MedicationsScreen() {
   const { data: medications, isFetching, status, refetch } = useMedications(
     token,
   );
+
+  const sections = useMemo(() => {
+    const sectionsData = [
+      {
+        title: 'Active Meds',
+        data: [],
+      },
+      {
+        title: 'Inactive Meds',
+        data: [],
+      },
+    ];
+
+    if (!medications) return [];
+
+    for (const medication of medications) {
+      if (medication.active) {
+        sectionsData[0].data.push(medication);
+      } else {
+        sectionsData[1].data.push(medication);
+      }
+    }
+
+    return sectionsData;
+  }, [medications]);
 
   if (status === 'loading') {
     return (
@@ -47,9 +72,14 @@ function MedicationsScreen() {
   return (
     <SafeArea>
       <MedicationList
-        data={medications}
+        sections={sections}
         keyExtractor={(item) => item._id}
         renderItem={renderMedication}
+        renderSectionHeader={({ section: { title, data } }) => {
+          if (data.length) {
+            return <SectionHeader>{title}</SectionHeader>;
+          }
+        }}
         onRefresh={() => refetch()}
         refreshing={isFetching}
       />
@@ -60,9 +90,18 @@ function MedicationsScreen() {
 
 const SafeArea = styled.SafeAreaView`
   flex: 1;
+  margin-top: 16px;
 `;
 
-const MedicationList = styled(FlatList)``;
+const MedicationList = styled(SectionList)``;
+
+const SectionHeader = styled.Text`
+  font-size: 16px;
+  color: ${Colors.gray[600]};
+  padding-vertical: 10px;
+  background-color: #f2f2f2;
+  padding-horizontal: 16px;
+`;
 
 const Container = styled.View`
   padding: 16px;

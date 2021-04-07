@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styled from 'styled-components/native';
 import * as yup from 'yup';
@@ -11,6 +11,11 @@ import StrengthInput from '../../components/StrengthInput';
 import { useMedicationState } from '../../store/useMedicationState';
 import { Colors } from '../../utils';
 
+const textAreaInputStyle = {
+  height: 150,
+  justifyContent: 'flex-start',
+};
+
 const AddMedicationView = ({ navigation }) => {
   const initialValues = {
     name: '',
@@ -18,6 +23,10 @@ const AddMedicationView = ({ navigation }) => {
     amount: null,
     condition: '',
   };
+  const setMedicationInfo = useMedicationState(
+    (state) => state.setMedicationInfo,
+  );
+  const resetMedicationState = useMedicationState((state) => state.reset);
   const {
     values,
     touched,
@@ -41,19 +50,15 @@ const AddMedicationView = ({ navigation }) => {
       amount: yup.number().nullable().required('Amount is a required field'),
       condition: yup.string(),
     }),
-    onSubmit: (formValues) => {
-      setMedicationInfo(formValues);
+    onSubmit: (medicationInfo) => {
+      setMedicationInfo(medicationInfo);
       navigation.navigate('AddMedicationSchedule');
     },
   });
-  const setMedicationInfo = useMedicationState(
-    (state) => state.setMedicationInfo,
-  );
 
-  const textAreaInputStyle = {
-    height: 150,
-    justifyContent: 'flex-start',
-  };
+  useEffect(() => {
+    resetMedicationState();
+  }, [resetMedicationState]);
 
   return (
     <SafeArea>

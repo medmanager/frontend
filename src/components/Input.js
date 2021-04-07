@@ -31,8 +31,8 @@ const TextInput = styled.TextInput`
   min-height: 40px;
   padding-left: 16px;
   padding-right: 16px;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   border-radius: 8px;
 `;
 

@@ -84,7 +84,7 @@ function MedicationScreen({ route, navigation }) {
           <ActionItemText>Edit</ActionItemText>
         </ActionItem>
         <ActionItem activeOpacity={0.7} style={{ borderBottomWidth: 1 }}>
-          <SuspendActionItemText>Suspend</SuspendActionItemText>
+          <SuspendActionItemText>Stop Taking</SuspendActionItemText>
         </ActionItem>
       </ActionArea>
     </SafeArea>
