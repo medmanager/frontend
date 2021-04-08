@@ -106,7 +106,7 @@ export default {
    * An example medication
    *  {
    *    name: "tylenol",
-   *    notes: "Do not take with advil",
+   *    condition: "Pain management",
    *    dosage: 200,
    *    dosageUnits: "milligrams",
    *    amount: 100,
@@ -125,7 +125,7 @@ export default {
    *      sendReminder: true,
    *      reminderTime: 9am (date object)
    *    },
-   *      medicationAmount: 1,
+   *      dose: 1,
    *      sendReminder: true,
    *      reminderTime: 9pm (date object)
    *    ]
@@ -232,12 +232,10 @@ export default {
   },
 
   async updateMedicationFromID(medication, medicationID, token) {
-    console.log({ updatedMedication: medication });
     const url = API_URL + '/medication/' + medicationID;
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        Accept: 'application/json',
         'Content-Type': 'application/json',
         Authorization: 'JWT ' + token,
       },

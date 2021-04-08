@@ -24,10 +24,10 @@ function MedicationScreen({ route, navigation }) {
     () => apiCalls.deactivateMedication(medId, token),
     {
       retry: 3, // retry three times if the mutation fails
-      onSuccess: () => {
+      onSuccess: async () => {
         // Invalidate all calendar occurrences due to new medication being added
-        queryClient.invalidateQueries('occurrences');
-        queryClient.invalidateQueries('medications');
+        await queryClient.invalidateQueries('occurrences');
+        await queryClient.invalidateQueries('medications');
         navigation.navigate('Home');
       },
       onError: () => {
@@ -41,10 +41,10 @@ function MedicationScreen({ route, navigation }) {
     () => apiCalls.activateMedication(medId, token),
     {
       retry: 3, // retry three times if the mutation fails
-      onSuccess: () => {
+      onSuccess: async () => {
         // Invalidate all calendar occurrences due to new medication being added
-        queryClient.invalidateQueries('occurrences');
-        queryClient.invalidateQueries('medications');
+        await queryClient.invalidateQueries('occurrences');
+        await queryClient.invalidateQueries('medications');
         navigation.navigate('Home');
       },
       onError: () => {

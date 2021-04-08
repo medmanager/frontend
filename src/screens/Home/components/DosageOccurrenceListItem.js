@@ -42,10 +42,9 @@ const DosageOccurrenceListItem = ({
   const takeDose = useMutation(
     () => apiCalls.takeCalendarOccurrence(occurrenceId, token),
     {
-      retry: 3, // retry three times if the mutation fails
-      onSuccess: () => {
+      onSuccess: async () => {
         // Invalidate all calendar occurrences due to update
-        queryClient.invalidateQueries('occurrences');
+        await queryClient.invalidateQueries('occurrences');
       },
     },
   );

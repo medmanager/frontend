@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, SectionList } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import styled from 'styled-components/native';
@@ -94,6 +94,16 @@ function HomeScreen() {
     return sectionsData;
   }, [today, occurrences]);
 
+  useEffect(() => {
+    console.log('CALENDAR:');
+    for (let i = 0; i < occurrences.length; i++) {
+      const dayOfweek = dayjs().day(i);
+      console.log(dayOfweek.format('dddd'));
+      console.log(`${occurrences[i].length} occurrences`);
+      console.log(occurrences[i]);
+    }
+  }, []);
+
   // TODO: improve error UI
   if (status === 'error') {
     return (
@@ -171,7 +181,7 @@ function HomeScreen() {
               return <SectionHeader idx={idx}>{title}</SectionHeader>;
             }
           }}
-          onRefresh={() => refetch()}
+          onRefresh={refetch}
           refreshing={isFetching}
         />
       </Container>

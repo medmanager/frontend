@@ -10,7 +10,7 @@ import { useAuth } from '../../store/useAuth';
 import useSettings from '../../store/useSettings';
 import { Colors } from '../../utils';
 
-const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+const phoneRegExp = /^\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
 
 const CaregiverContactSettingsScreen = ({ navigation }) => {
   const token = useAuth((state) => state.userToken);
@@ -59,7 +59,7 @@ const CaregiverContactSettingsScreen = ({ navigation }) => {
       setCaregiverContactName(values.name);
       setCaregiverContactPhoneNumber(values.phoneNumber);
       await commit(token); // commit settings changes
-      queryClient.invalidateQueries('currentUser');
+      await queryClient.invalidateQueries('currentUser');
     });
 
     return unsubscribe;

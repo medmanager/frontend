@@ -8,7 +8,7 @@ import apiCalls from '../utils/api-calls';
  */
 export default function useMedication(id, token) {
   return useQuery(
-    ['medciation', id],
+    ['medication', id],
     () => apiCalls.getMedicationFromID(id, token),
     { enabled: !!token }, // only execute the query if the token exists
   );

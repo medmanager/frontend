@@ -12,9 +12,9 @@ function ErrorFallback({ resetErrorBoundary }) {
   const queryClient = useQueryClient();
   const navigation = useNavigation();
 
-  const handleTryAgain = useCallback(() => {
+  const handleTryAgain = useCallback(async () => {
     // Invalidate all query caches
-    queryClient.invalidateQueries();
+    await queryClient.invalidateQueries();
 
     // Reset the navigation state and try again
     navigation.dispatch((state) => {
@@ -30,10 +30,8 @@ function ErrorFallback({ resetErrorBoundary }) {
 
   return (
     <View style={[styles.container]}>
-      <View>
-        <Text>Something went wrong:</Text>
-        <Button title="Try Again" onPress={handleTryAgain} />
-      </View>
+      <Text>Something went wrong:</Text>
+      <Button title="Try Again" onPress={handleTryAgain} />
     </View>
   );
 }

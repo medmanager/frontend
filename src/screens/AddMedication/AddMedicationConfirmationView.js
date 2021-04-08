@@ -56,10 +56,10 @@ const AddMedicationConfirmationView = ({ navigation }) => {
     (medication) => apiCalls.addMedication(medication, token),
     {
       retry: 3, // retry three times if the mutation fails
-      onSuccess: () => {
+      onSuccess: async () => {
         // Invalidate all calendar occurrences due to new medication being added
-        queryClient.invalidateQueries('occurrences');
-        queryClient.invalidateQueries('medications');
+        await queryClient.invalidateQueries('occurrences');
+        await queryClient.invalidateQueries('medications');
 
         // Show success modal
         setShowSuccessModal(true);

@@ -53,7 +53,7 @@ const AccountSettingsScreen = ({ navigation }) => {
       setLastName(values.lastName);
       setEmail(values.email);
       await commit(token); // commit settings changes
-      queryClient.invalidateQueries('currentUser');
+      await queryClient.invalidateQueries('currentUser');
     });
 
     return unsubscribe;

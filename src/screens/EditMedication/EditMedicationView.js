@@ -40,8 +40,6 @@ const EditMedicationView = ({ navigation, route }) => {
     values,
     touched,
     errors,
-    isValid,
-    handleSubmit,
     handleChange,
     handleBlur,
     setFieldValue,
@@ -101,11 +99,11 @@ const EditMedicationView = ({ navigation, route }) => {
     () => apiCalls.updateMedicationFromID(updatedMedication, medId, token),
     {
       retry: 3, // retry three times if the mutation fails
-      onSuccess: () => {
+      onSuccess: async () => {
         // Invalidate all calendar occurrences due to new medication being added
-        queryClient.invalidateQueries('occurrences');
-        queryClient.invalidateQueries('medications');
-        queryClient.invalidateQueries(['medication', medId]);
+        await queryClient.invalidateQueries('occurrences');
+        await queryClient.invalidateQueries('medications');
+        await queryClient.invalidateQueries(['medication', medId]);
         navigation.navigate('Home');
       },
       onError: () => {
@@ -119,11 +117,12 @@ const EditMedicationView = ({ navigation, route }) => {
     () => apiCalls.deleteMedicationFromID(medId, token),
     {
       retry: 3, // retry three times if the mutation fails
-      onSuccess: () => {
+      onSuccess: async () => {
         // Invalidate all calendar occurrences due to new medication being added
-        queryClient.invalidateQueries('occurrences');
-        queryClient.invalidateQueries('medications');
-        navigation.navigate('Home');
+        await queryClient.invalidateQueries('occurrences');
+        await queryClient.invalidateQueries('medications');
+        await queryClient.invalidateQueries(['medication', medId]);
+        await navigation.navigate('Home');
       },
       onError: () => {
         // Show error modal

@@ -39,7 +39,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
     // add a listener so that when the user navigates away from this screen, commit the changes to the settings
     const unsubscribe = navigation.addListener('beforeRemove', async () => {
       await commit(token); // commit settings changes
-      queryClient.invalidateQueries('currentUser');
+      await queryClient.invalidateQueries('currentUser');
     });
 
     return unsubscribe;

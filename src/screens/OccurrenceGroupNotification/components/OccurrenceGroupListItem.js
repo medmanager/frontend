@@ -21,12 +21,12 @@ const OccurrenceListItem = ({ occurrence, onTakeDose }) => {
   const takeDose = useMutation(
     () => apiCalls.takeCalendarOccurrence(occurrence._id, token),
     {
-      onSuccess: () => {
+      onSuccess: async () => {
         // take dose callback from the view
         onTakeDose(occurrence._id);
 
         // Invalidate all calendar occurrences due to update
-        queryClient.invalidateQueries('occurrences');
+        await queryClient.invalidateQueries('occurrences');
       },
     },
   );
