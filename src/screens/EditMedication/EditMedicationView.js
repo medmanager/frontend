@@ -193,7 +193,7 @@ const EditMedicationView = ({ navigation, route }) => {
   useLayoutEffect(() => {
     if (medication) {
       navigation.setOptions({
-        title: `Edit ${medication.name}`,
+        title: 'Edit Med',
         headerLeft: () => (
           <TouchableOpacity onPress={handleCancel}>
             <HeaderText>Cancel</HeaderText>

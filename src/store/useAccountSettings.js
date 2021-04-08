@@ -32,9 +32,6 @@ const useAccountSettings = create(
         email,
       };
 
-      console.log('updating account settings...');
-      console.log('new account settings:');
-      console.log({ accountSettings });
       try {
         await apiCalls.updateUserAccountSettings(accountSettings, token);
       } catch (ignored) {}

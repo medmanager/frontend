@@ -154,6 +154,38 @@ export default {
     return response.json();
   },
 
+  async activateMedication(medicationID, token) {
+    const url = API_URL + '/medication/' + medicationID + '/activate';
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'JWT ' + token,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  },
+
+  async deactivateMedication(medicationID, token) {
+    const url = API_URL + '/medication/' + medicationID + '/deactivate';
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'JWT ' + token,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  },
+
   async getMedications(token) {
     const url = API_URL + '/medication';
     const response = await fetch(url, {

@@ -94,6 +94,10 @@ const DosageOccurrenceListItem = ({
     (dosage) => dosage._id === dosageId,
   )[0];
 
+  if (!dosage) {
+    return null;
+  }
+
   return (
     <Container isLast={isLast}>
       <OccurrenceContainer

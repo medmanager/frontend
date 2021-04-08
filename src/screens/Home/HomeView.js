@@ -71,9 +71,6 @@ function HomeScreen() {
       const secondInterval = afternoonInterval(now.current);
       const thirdInterval = eveningInterval(now.current);
 
-      console.log(secondInterval.lower.hour());
-      console.log(scheduledTime.hour());
-      console.log(secondInterval.upper.hour());
       if (
         scheduledTime.hour() >= firstInterval.lower.hour() &&
         scheduledTime.hour() <= firstInterval.upper.hour()
@@ -217,7 +214,8 @@ const SafeArea = styled.SafeAreaView`
 const SectionHeader = styled.Text`
   font-size: 16px;
   color: ${Colors.gray[600]};
-  padding-vertical: 8px;
+  padding-top: 10px;
+  padding-bottom: 8px;
   background-color: #f2f2f2;
   padding-horizontal: 16px;
 `;

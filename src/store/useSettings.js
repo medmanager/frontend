@@ -52,9 +52,6 @@ const useSettings = create(
         caregiverContact,
       };
 
-      console.log('updating settings...');
-      console.log('new settings:');
-      console.log({ settings });
       await apiCalls.updateUserSettings(settings, token);
     },
     // state actions

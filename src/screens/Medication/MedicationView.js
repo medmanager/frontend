@@ -1,10 +1,13 @@
-import React, { useCallback, useLayoutEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
+import React, { useCallback } from 'react';
+import { ActivityIndicator, Alert } from 'react-native';
+import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components/native';
 import Label from '../../components/Label';
+import ModalActivityIndicator from '../../components/ModalActivityIndicator';
 import { useAuth } from '../../store/useAuth';
 import useMedication from '../../store/useMedication';
 import { Colors } from '../../utils';
+import apiCalls from '../../utils/api-calls';
 import { medicationColors } from '../../utils/colors';
 import {
   getDosageTimesString,
@@ -15,18 +18,66 @@ function MedicationScreen({ route, navigation }) {
   const { medId } = route.params;
   const token = useAuth((state) => state.userToken);
   const { data: medication, status } = useMedication(medId, token);
+  const queryClient = useQueryClient();
 
-  useLayoutEffect(() => {
-    if (medication) {
-      navigation.setOptions({
-        headerTitle: medication.name,
-      });
-    }
-  }, [navigation, medication]);
+  const stopTaking = useMutation(
+    () => apiCalls.deactivateMedication(medId, token),
+    {
+      retry: 3, // retry three times if the mutation fails
+      onSuccess: () => {
+        // Invalidate all calendar occurrences due to new medication being added
+        queryClient.invalidateQueries('occurrences');
+        queryClient.invalidateQueries('medications');
+        navigation.navigate('Home');
+      },
+      onError: () => {
+        // Show error modal
+        // setShowErrorModal(true);
+      },
+    },
+  );
+
+  const resumeTaking = useMutation(
+    () => apiCalls.activateMedication(medId, token),
+    {
+      retry: 3, // retry three times if the mutation fails
+      onSuccess: () => {
+        // Invalidate all calendar occurrences due to new medication being added
+        queryClient.invalidateQueries('occurrences');
+        queryClient.invalidateQueries('medications');
+        navigation.navigate('Home');
+      },
+      onError: () => {
+        // Show error modal
+        // setShowErrorModal(true);
+      },
+    },
+  );
 
   const handleEditPress = useCallback(() => {
     navigation.navigate('EditMedication', { medId });
   }, [navigation, medId]);
+
+  const handleStopTakingPress = useCallback(() => {
+    Alert.alert(
+      'Stop Taking Your Medication',
+      'Are you sure you want to stop taking this medication? Doing so will stop all future medication reminders.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          style: 'destructive',
+          onPress: async () => {
+            await stopTaking.mutateAsync();
+          },
+        },
+      ],
+    );
+  }, [stopTaking]);
+
+  const handleResumeTakingPress = useCallback(async () => {
+    await resumeTaking.mutateAsync();
+  }, [resumeTaking]);
 
   if (status === 'loading') {
     return (
@@ -50,11 +101,23 @@ function MedicationScreen({ route, navigation }) {
 
   return (
     <SafeArea>
+      <ModalActivityIndicator
+        loadingMessage="Stopping medication..."
+        show={stopTaking.isLoading}
+      />
+      <ModalActivityIndicator
+        loadingMessage="Resuming medication..."
+        show={resumeTaking.isLoading}
+      />
       <InfoContainer>
         <TitleContainer>
           <ColorBar color={medicationColors[medication.color]} />
           <Title>{medication.name}</Title>
         </TitleContainer>
+        <Field>
+          <Label>Active</Label>
+          <Text>{medication.active ? 'Yes' : 'No'}</Text>
+        </Field>
         <Field>
           <Label>Strength</Label>
           <Text>{medication.strength + ' ' + medication.strengthUnit}</Text>
@@ -83,8 +146,15 @@ function MedicationScreen({ route, navigation }) {
         <ActionItem onPress={handleEditPress} activeOpacity={0.7}>
           <ActionItemText>Edit</ActionItemText>
         </ActionItem>
-        <ActionItem activeOpacity={0.7} style={{ borderBottomWidth: 1 }}>
-          <SuspendActionItemText>Stop Taking</SuspendActionItemText>
+        <ActionItem
+          onPress={
+            medication.active ? handleStopTakingPress : handleResumeTakingPress
+          }
+          activeOpacity={0.7}
+          style={{ borderBottomWidth: 1 }}>
+          <ActionItemText>
+            {medication.active ? 'Stop Taking' : 'Resume Taking'}
+          </ActionItemText>
         </ActionItem>
       </ActionArea>
     </SafeArea>
@@ -146,11 +216,6 @@ const ActionItemText = styled.Text`
   font-size: 16px;
   text-align: center;
   color: ${Colors.blue[500]};
-`;
-const SuspendActionItemText = styled.Text`
-  font-size: 16px;
-  text-align: center;
-  color: red;
 `;
 
 export default MedicationScreen;

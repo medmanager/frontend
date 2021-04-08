@@ -105,7 +105,6 @@ const useMedicationState = create(
       }),
     setStateValuesFromMedicationObject: (medication) =>
       set((state) => {
-        console.log('Setting medication state from backend object');
         if (medication.strength) {
           state.strength = String(medication.strength);
           state.strengthUnit = medication.strengthUnit;
@@ -134,6 +133,8 @@ const useMedicationState = create(
             state.frequencies[4].value.weekdays = medication.frequency.weekdays;
           }
         }
+        // set edit custom frequency route
+        // this is a click through item
         state.frequencies[4].route = 'EditMedicationCustomFrequency';
 
         state.selectedDosages = [];
@@ -146,9 +147,10 @@ const useMedicationState = create(
             const thirdInterval = eveningInterval();
 
             if (dosage.value.reminderTime.getHours() === reminderTime.hour()) {
-              state.selectedDosages = [dosage.id];
+              reminderTime.isBetween(firstInterval.lower, firstInterval.upper);
             } else if (
-              reminderTime.isBetween(firstInterval.lower, firstInterval.upper)
+              reminderTime.hour() >= firstInterval.lower.hour() &&
+              reminderTime.hour() <= firstInterval.upper.hour()
             ) {
               state.dosages[0].value.reminderTime = reminderTime.toDate();
               state.dosages[0].value.dose = dosageObject.dose;
@@ -156,7 +158,8 @@ const useMedicationState = create(
               state.dosages[0].value._id = dosageObject._id;
               state.selectedDosages = [0];
             } else if (
-              reminderTime.isBetween(secondInterval.lower, secondInterval.upper)
+              reminderTime.hour() >= secondInterval.lower.hour() &&
+              reminderTime.hour() <= secondInterval.upper.hour()
             ) {
               state.dosages[1].value.reminderTime = reminderTime.toDate();
               state.dosages[1].value.dose = dosageObject.dose;
@@ -164,7 +167,8 @@ const useMedicationState = create(
               state.dosages[1].value._id = dosageObject._id;
               state.selectedDosages = [1];
             } else if (
-              reminderTime.isBetween(thirdInterval.lower, thirdInterval.upper)
+              reminderTime.hour() >= thirdInterval.lower.hour() &&
+              reminderTime.hour() <= thirdInterval.upper.hour()
             ) {
               state.dosages[2].value.reminderTime = reminderTime.toDate();
               state.dosages[2].value.dose = dosageObject.dose;
