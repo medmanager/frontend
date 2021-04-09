@@ -114,10 +114,12 @@ const useMedicationState = create(
         }
         if (medication.amount) {
           state.amount = medication.amount;
+          state.amountUnit = medication.amountUnit;
         }
         if (medication.color) {
           state.color = medication.color;
         }
+        state.condition = medication.condition;
 
         state.selectedFrequency = null;
         for (const frequency of state.frequencies) {

@@ -210,6 +210,7 @@ export default {
       },
     });
     if (!response.ok) {
+      console.log('Error in get medication');
       const error = await response.json();
       throw error;
     }
@@ -242,6 +243,7 @@ export default {
       body: JSON.stringify(medication),
     });
     if (!response.ok) {
+      console.log('Error in update medication');
       const error = await response.json();
       throw error;
     }
@@ -258,6 +260,7 @@ export default {
       },
     });
     if (!response.ok) {
+      console.log('Error in delete medication');
       const error = await response.json();
       throw error;
     }

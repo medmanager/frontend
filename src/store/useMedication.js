@@ -6,10 +6,10 @@ import apiCalls from '../utils/api-calls';
  * @param {*} id Medication id
  * @param {*} token User token
  */
-export default function useMedication(id, token) {
+export default function useMedication(id, token, options = {}) {
   return useQuery(
     ['medication', id],
     () => apiCalls.getMedicationFromID(id, token),
-    { enabled: !!token }, // only execute the query if the token exists
+    { enabled: !!token, ...options }, // only execute the query if the token exists
   );
 }

@@ -45,6 +45,9 @@ const DosageOccurrenceListItem = ({
       onSuccess: async () => {
         // Invalidate all calendar occurrences due to update
         await queryClient.invalidateQueries('occurrences');
+        const now = new Date();
+        setIsTaken(true);
+        setTimeTaken(now);
       },
     },
   );
@@ -58,9 +61,6 @@ const DosageOccurrenceListItem = ({
   }, [showModal, setShowModal]);
 
   const handleTakePressed = useCallback(async () => {
-    const now = new Date();
-    setIsTaken(true);
-    setTimeTaken(now);
     await takeDose.mutateAsync();
   }, [takeDose]);
 

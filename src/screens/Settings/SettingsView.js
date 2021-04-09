@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import Icon from 'react-native-vector-icons/Feather';
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import styled from 'styled-components/native';
 import BellIcon from '../../components/icons/bell';
 import PhoneIcon from '../../components/icons/phone';
@@ -46,14 +46,6 @@ const SettingsScreen = ({ navigation }) => {
     }
   }, [user, setSettingsState]);
 
-  if (status === 'loading') {
-    return (
-      <Container>
-        <ActivityIndicator />
-      </Container>
-    );
-  }
-
   return (
     <Container>
       <Flex>
@@ -61,9 +53,19 @@ const SettingsScreen = ({ navigation }) => {
           <Avatar>
             <UserIcon color={Colors.blue[500]} size={48} />
           </Avatar>
-          <UserFullName>
-            {user ? `${user.firstName} ${user.lastName}` : 'Unknown'}
-          </UserFullName>
+          {status === 'loading' ? (
+            <Placeholder Animation={Fade} style={{ marginTop: 8 }}>
+              <PlaceholderLine
+                width={50}
+                height={32}
+                style={{ alignSelf: 'center' }}
+              />
+            </Placeholder>
+          ) : (
+            <UserFullName>
+              {user ? `${user.firstName} ${user.lastName}` : 'Unknown'}
+            </UserFullName>
+          )}
         </UserInfoContainer>
         <NavigationMenuContainer>
           <NavigationMenuItem
@@ -120,6 +122,11 @@ const Container = styled.SafeAreaView`
 
 const Flex = styled.View`
   flex: 1;
+`;
+
+const Centered = styled.View`
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const UserInfoContainer = styled.View`
