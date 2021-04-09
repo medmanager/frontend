@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components/native';
@@ -85,16 +85,21 @@ const AddMedicationConfirmationView = ({ navigation }) => {
 
   const dosageTimesString = getDosageTimesString(medication);
 
-  const handleAddAnotherMed = () => {
+  const handleAddAnotherMed = useCallback(() => {
     navigation.navigate('Home');
     navigation.navigate('AddMedicationModal');
     reset();
-  };
+  }, [navigation, reset]);
 
-  const handleContinueHome = () => {
+  const handleTryAgain = useCallback(() => {
+    navigation.navigate('Home');
+    navigation.navigate('AddMedicationModal');
+  }, [navigation]);
+
+  const handleContinueHome = useCallback(() => {
     navigation.navigate('Home');
     reset();
-  };
+  }, [navigation, reset]);
 
   return (
     <Fragment>
@@ -165,7 +170,7 @@ const AddMedicationConfirmationView = ({ navigation }) => {
           We are sorry, but there was a problem adding {medication.name} to your
           medications. Please try again later.
         </ErrorText>
-        <AddMedButton onPress={handleAddAnotherMed}>
+        <AddMedButton onPress={handleTryAgain}>
           <AddMedButtonText>Try again</AddMedButtonText>
         </AddMedButton>
         <ContinueButton onPress={handleContinueHome}>

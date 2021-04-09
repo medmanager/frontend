@@ -28,11 +28,6 @@ const SafeArea = styled.SafeAreaView`
   flex: 1;
 `;
 
-const HeaderText = styled.Text`
-  color: white;
-  font-size: 18px;
-`;
-
 const Form = styled.View`
   flex-direction: column;
   padding: 24px;

@@ -406,22 +406,4 @@ const ErrorText = styled.Text`
   padding-right: 8px;
 `;
 
-const ContinueButton = styled.TouchableOpacity`
-  background-color: ${Colors.blue[500]};
-  margin-left: 16px;
-  margin-right: 16px;
-  margin-vertical: 8px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 16px;
-  padding-right: 16px;
-  align-items: center;
-  border-radius: 8px;
-`;
-
-const ContinueButtonText = styled.Text`
-  color: #fff;
-  font-size: 16px;
-`;
-
 export default EditMedicationView;
