@@ -13,16 +13,16 @@ enableScreens();
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <ActionSheetProvider>
-        <QueryClientProvider client={queryClient}>
-          <NavigationContainer>
-            <ErrorHandler>
+    <ErrorHandler>
+      <SafeAreaProvider>
+        <ActionSheetProvider>
+          <QueryClientProvider client={queryClient}>
+            <NavigationContainer>
               <Root />
-            </ErrorHandler>
-          </NavigationContainer>
-        </QueryClientProvider>
-      </ActionSheetProvider>
-    </SafeAreaProvider>
+            </NavigationContainer>
+          </QueryClientProvider>
+        </ActionSheetProvider>
+      </SafeAreaProvider>
+    </ErrorHandler>
   );
 }

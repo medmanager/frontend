@@ -16,6 +16,8 @@ target 'MedManager' do
 
   pod 'react-native-config', :path => '../node_modules/react-native-config'
 
+  pod 'react-native-restart', :path => '../node_modules/react-native-restart'
+
   target 'MedManagerTests' do
     inherit! :complete
     # Pods for testing

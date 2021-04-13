@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/MedManager/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.8.0",
@@ -32,6 +33,7 @@
     "react-native-modal": "^11.6.1",
     "react-native-push-notification": "^7.2.2",
     "react-native-reanimated": "^1.13.2",
+    "react-native-restart": "^0.0.22",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.17.1",
     "react-native-sensitive-info": "^6.0.0-alpha.9",
