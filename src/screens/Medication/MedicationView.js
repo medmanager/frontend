@@ -1,8 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import { useMutation, useQueryClient } from 'react-query';
 import styled from 'styled-components/native';
 import Label from '../../components/Label';
+import Modal from '../../components/Modal';
 import ModalActivityIndicator from '../../components/ModalActivityIndicator';
 import { useAuth } from '../../store/useAuth';
 import useMedication from '../../store/useMedication';
@@ -18,6 +20,7 @@ function MedicationScreen({ route, navigation }) {
   const { medId } = route.params;
   const token = useAuth((state) => state.userToken);
   const { data: medication, status } = useMedication(medId, token);
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const queryClient = useQueryClient();
 
   const stopTaking = useMutation(
@@ -32,7 +35,7 @@ function MedicationScreen({ route, navigation }) {
       },
       onError: () => {
         // Show error modal
-        // setShowErrorModal(true);
+        setShowErrorModal(true);
       },
     },
   );
@@ -49,14 +52,14 @@ function MedicationScreen({ route, navigation }) {
       },
       onError: () => {
         // Show error modal
-        // setShowErrorModal(true);
+        setShowErrorModal(true);
       },
     },
   );
 
   const handleEditPress = useCallback(() => {
-    navigation.navigate('EditMedication', { medId });
-  }, [navigation, medId]);
+    navigation.navigate('EditMedication', { medication, medId });
+  }, [navigation, medication, medId]);
 
   const handleStopTakingPress = useCallback(() => {
     Alert.alert(
@@ -157,6 +160,19 @@ function MedicationScreen({ route, navigation }) {
           </ActionItemText>
         </ActionItem>
       </ActionArea>
+      <Modal
+        title="Something went wrong"
+        showModal={showErrorModal}
+        showActionBar={false}
+        toggleModal={() => setShowErrorModal(!showErrorModal)}>
+        <IconContainer>
+          <Icon name="alert-circle" color="#EF4444" size={48} />
+        </IconContainer>
+        <ErrorText>
+          We are sorry, but there was a problem with our systems. Please try
+          again later.
+        </ErrorText>
+      </Modal>
     </SafeArea>
   );
 }
@@ -216,6 +232,20 @@ const ActionItemText = styled.Text`
   font-size: 16px;
   text-align: center;
   color: ${Colors.blue[500]};
+`;
+
+const IconContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+`;
+
+const ErrorText = styled.Text`
+  font-size: 16px;
+  color: ${Colors.gray[700]};
+  margin-bottom: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
 `;
 
 export default MedicationScreen;

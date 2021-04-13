@@ -11,7 +11,7 @@ import useCurrentUser from '../../store/useCurrentUser';
 
 const AccountSettingsScreen = ({ navigation }) => {
   const token = useAuth((state) => state.userToken);
-  const { data: user, status } = useCurrentUser(token);
+  const { data: user } = useCurrentUser(token);
   const { setFirstName, setLastName, setEmail, commit } = useAccountSettings(
     (state) => ({
       setFirstName: state.setFirstName,

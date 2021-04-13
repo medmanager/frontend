@@ -16,7 +16,6 @@ import MedicationNameAutocompleteInput from '../../components/MedicationNameAuto
 import Modal from '../../components/Modal';
 import ModalActivityIndicator from '../../components/ModalActivityIndicator';
 import { useAuth } from '../../store/useAuth';
-import useMedication from '../../store/useMedication';
 import { useMedicationState } from '../../store/useMedicationState';
 import { Colors, deepEqual } from '../../utils';
 import apiCalls from '../../utils/api-calls';
@@ -27,12 +26,11 @@ import {
 } from '../../utils/medication';
 
 const EditMedicationView = ({ navigation, route }) => {
-  const { medId } = route.params;
+  const { medication, medId } = route.params;
   const queryClient = useQueryClient();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const token = useAuth((state) => state.userToken);
-  const { data: medication } = useMedication(medId, token);
   const initialValues = {
     name: medication ? medication.name : '',
   };
@@ -121,7 +119,6 @@ const EditMedicationView = ({ navigation, route }) => {
         // Invalidate all calendar occurrences due to new medication being added
         await queryClient.invalidateQueries('occurrences');
         await queryClient.invalidateQueries('medications');
-        await queryClient.invalidateQueries(['medication', medId]);
         await navigation.navigate('Home');
       },
       onError: () => {

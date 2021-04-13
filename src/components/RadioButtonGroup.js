@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components/native';
 import { Colors } from '../utils';
@@ -32,9 +32,12 @@ const SelectedCircle = styled.View`
 
 const RadioGroupIdSelector = ({ data, selectedId, onChange }) => {
   const navigator = useNavigation();
-  const handleChange = (id, value) => {
-    onChange(id, value);
-  };
+  const handleChange = useCallback(
+    (id, value) => {
+      onChange(id, value);
+    },
+    [onChange],
+  );
 
   return (
     <Container>
@@ -74,9 +77,12 @@ const RadioGroupIdSelector = ({ data, selectedId, onChange }) => {
 };
 
 const RadioGroupValueSelector = ({ data, selectedValue, onChange }) => {
-  const handleChange = (value) => {
-    onChange(value);
-  };
+  const handleChange = useCallback(
+    (value) => {
+      onChange(value);
+    },
+    [onChange],
+  );
 
   return (
     <Container>

@@ -21,6 +21,7 @@ const OccurrenceListItem = ({ occurrence, onTakeDose }) => {
   const takeDose = useMutation(
     () => apiCalls.takeCalendarOccurrence(occurrence._id, token),
     {
+      retry: 3, // retry three times if the mutation fails
       onSuccess: async () => {
         // take dose callback from the view
         onTakeDose(occurrence._id);

@@ -105,20 +105,12 @@ const useMedicationState = create(
       }),
     setStateValuesFromMedicationObject: (medication) =>
       set((state) => {
-        if (medication.strength) {
-          state.strength = String(medication.strength);
-          state.strengthUnit = medication.strengthUnit;
-        }
-        if (medication.name) {
-          state.name = medication.name;
-        }
-        if (medication.amount) {
-          state.amount = medication.amount;
-          state.amountUnit = medication.amountUnit;
-        }
-        if (medication.color) {
-          state.color = medication.color;
-        }
+        state.name = medication.name;
+        state.strength = String(medication.strength);
+        state.strengthUnit = medication.strengthUnit;
+        state.amount = medication.amount;
+        state.amountUnit = medication.amountUnit;
+        state.color = medication.color;
         state.condition = medication.condition;
 
         state.selectedFrequency = null;
@@ -128,6 +120,7 @@ const useMedicationState = create(
             state.selectedFrequency = frequency.id;
             break;
           } else {
+            // if the two frequency objects are not equal then assume it is a custom frequency
             state.selectedFrequency = 4; // custom frequency
             state.frequencies[4].value.interval = medication.frequency.interval;
             state.frequencies[4].value.intervalUnit =
@@ -140,50 +133,48 @@ const useMedicationState = create(
         state.frequencies[4].route = 'EditMedicationCustomFrequency';
 
         state.selectedDosages = [];
-        for (const dosage of state.dosages) {
-          for (const dosageObject of medication.dosages) {
-            const reminderTime = dayjs(dosageObject.reminderTime);
+        for (const dosage of medication.dosages) {
+          const reminderTime = dayjs(dosage.reminderTime);
 
-            const firstInterval = morningInterval();
-            const secondInterval = afternoonInterval();
-            const thirdInterval = eveningInterval();
+          const firstInterval = morningInterval();
+          const secondInterval = afternoonInterval();
+          const thirdInterval = eveningInterval();
 
-            if (dosage.value.reminderTime.getHours() === reminderTime.hour()) {
-              reminderTime.isBetween(firstInterval.lower, firstInterval.upper);
-            } else if (
-              reminderTime.hour() >= firstInterval.lower.hour() &&
-              reminderTime.hour() <= firstInterval.upper.hour()
-            ) {
-              state.dosages[0].value.reminderTime = reminderTime.toDate();
-              state.dosages[0].value.dose = dosageObject.dose;
-              state.dosages[0].value.sendReminder = dosageObject.sendReminder;
-              state.dosages[0].value._id = dosageObject._id;
-              state.selectedDosages = [0];
-            } else if (
-              reminderTime.hour() >= secondInterval.lower.hour() &&
-              reminderTime.hour() <= secondInterval.upper.hour()
-            ) {
-              state.dosages[1].value.reminderTime = reminderTime.toDate();
-              state.dosages[1].value.dose = dosageObject.dose;
-              state.dosages[1].value.sendReminder = dosageObject.sendReminder;
-              state.dosages[1].value._id = dosageObject._id;
-              state.selectedDosages = [1];
-            } else if (
-              reminderTime.hour() >= thirdInterval.lower.hour() &&
-              reminderTime.hour() <= thirdInterval.upper.hour()
-            ) {
-              state.dosages[2].value.reminderTime = reminderTime.toDate();
-              state.dosages[2].value.dose = dosageObject.dose;
-              state.dosages[2].value.sendReminder = dosageObject.sendReminder;
-              state.dosages[2].value._id = dosageObject._id;
-              state.selectedDosages = [2];
-            } else {
-              state.dosages[3].value.reminderTime = reminderTime.toDate();
-              state.dosages[3].value.dose = dosageObject.dose;
-              state.dosages[3].value.sendReminder = dosageObject.sendReminder;
-              state.dosages[3].value._id = dosageObject._id;
-              state.selectedDosages = [3];
-            }
+          // set the dosages based on the hour of the reminder time
+          // state.dosages will have four values for morning, afternoon, evening, and nightime
+          if (
+            reminderTime.hour() >= firstInterval.lower.hour() &&
+            reminderTime.hour() <= firstInterval.upper.hour()
+          ) {
+            state.dosages[0].value.reminderTime = reminderTime.toDate();
+            state.dosages[0].value.dose = dosage.dose;
+            state.dosages[0].value.sendReminder = dosage.sendReminder;
+            state.dosages[0].value._id = dosage._id;
+            state.selectedDosages.push(0);
+          } else if (
+            reminderTime.hour() >= secondInterval.lower.hour() &&
+            reminderTime.hour() <= secondInterval.upper.hour()
+          ) {
+            state.dosages[1].value.reminderTime = reminderTime.toDate();
+            state.dosages[1].value.dose = dosage.dose;
+            state.dosages[1].value.sendReminder = dosage.sendReminder;
+            state.dosages[1].value._id = dosage._id;
+            state.selectedDosages.push(1);
+          } else if (
+            reminderTime.hour() >= thirdInterval.lower.hour() &&
+            reminderTime.hour() <= thirdInterval.upper.hour()
+          ) {
+            state.dosages[2].value.reminderTime = reminderTime.toDate();
+            state.dosages[2].value.dose = dosage.dose;
+            state.dosages[2].value.sendReminder = dosage.sendReminder;
+            state.dosages[2].value._id = dosage._id;
+            state.selectedDosages.push(2);
+          } else {
+            state.dosages[3].value.reminderTime = reminderTime.toDate();
+            state.dosages[3].value.dose = dosage.dose;
+            state.dosages[3].value.sendReminder = dosage.sendReminder;
+            state.dosages[3].value._id = dosage._id;
+            state.selectedDosages.push(3);
           }
         }
       }),
