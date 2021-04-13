@@ -96,11 +96,13 @@ function HomeScreen() {
 
   useEffect(() => {
     console.log('CALENDAR:');
-    for (let i = 0; i < occurrences.length; i++) {
-      const dayOfweek = dayjs().day(i);
-      console.log(dayOfweek.format('dddd'));
-      console.log(`${occurrences[i].length} occurrences`);
-      console.log(occurrences[i]);
+    if (occurrences) {
+      for (let i = 0; i < occurrences.length; i++) {
+        const dayOfweek = dayjs().day(i);
+        console.log(dayOfweek.format('dddd'));
+        console.log(`${occurrences[i].length} occurrences`);
+        console.log(occurrences[i]);
+      }
     }
   }, []);
 

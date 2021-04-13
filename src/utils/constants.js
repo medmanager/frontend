@@ -70,6 +70,10 @@ export const amountUnitChoices = [
 
 export const dayChoices = [
   {
+    value: 'sunday',
+    label: 'Sunday',
+  },
+  {
     value: 'monday',
     label: 'Monday',
   },
@@ -93,10 +97,6 @@ export const dayChoices = [
     value: 'saturday',
     label: 'Saturday',
   },
-  {
-    value: 'sunday',
-    label: 'Sunday',
-  },
 ];
 
 export const morningInterval = (now = new Date()) => ({
@@ -116,6 +116,11 @@ export const eveningInterval = (now = new Date()) => ({
  * Used for storing the auth token
  */
 export const TOKEN_KEY = 'token';
+
+/**
+ * Used for storing the device timezone
+ */
+export const TIMEZONE_KEY = 'timezone';
 
 /**
  * Used for storing the device token for notifications
