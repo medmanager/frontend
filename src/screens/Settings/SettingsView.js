@@ -1,31 +1,44 @@
 import React, { useCallback, useEffect, useLayoutEffect } from 'react';
-import { Platform } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import Icon from 'react-native-vector-icons/Feather';
+import { useMutation, useQueryClient } from 'react-query';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import styled from 'styled-components/native';
 import BellIcon from '../../components/icons/bell';
 import PhoneIcon from '../../components/icons/phone';
 import UserIcon from '../../components/icons/user';
+import ModalActivityIndicator from '../../components/ModalActivityIndicator';
 import { useAuth } from '../../store/useAuth';
 import useCurrentUser from '../../store/useCurrentUser';
 import useSettings from '../../store/useSettings';
-import {
-  Colors,
-  defaultNavigatorScreenOptions,
-  getDeviceToken,
-} from '../../utils';
+import { Colors, defaultNavigatorScreenOptions } from '../../utils';
 import apiCalls from '../../utils/api-calls';
 import AccountSettingsScreen from './AccountSettingsView';
 import CaregiverContactSettingsScreen from './CaregiverContactSettingsView';
 import NotificationSettingsScreen from './NotificationSettingsView';
 
+const demoUser = {
+  email: 'tomsmith@gmail.com',
+  password: '123456',
+};
+
 const SettingsScreen = ({ navigation }) => {
   const token = useAuth((state) => state.userToken);
   const signOut = useAuth((state) => state.signOut);
+  const signIn = useAuth((state) => state.signIn);
   const { data: user, status } = useCurrentUser(token);
   const setSettingsState = useSettings((state) => state.setState);
+  const queryClient = useQueryClient();
+
+  const resetDatabase = useMutation(() => apiCalls.seedDatabase(), {
+    onSuccess: async () => {
+      // Sign in with new user
+      signOut();
+      await signIn(demoUser.email, demoUser.password);
+      await queryClient.invalidateQueries();
+    },
+  });
 
   const handleAccountSettingsPress = useCallback(() => {
     navigation.navigate('AccountSettings');
@@ -44,14 +57,8 @@ const SettingsScreen = ({ navigation }) => {
   }, [signOut]);
 
   const handleResetDatabase = useCallback(async () => {
-    const deviceToken = await getDeviceToken();
-    const deviceOS = Platform.OS;
-    const deviceInfo = {
-      token: deviceToken,
-      os: deviceOS,
-    };
-    apiCalls.seedDatabase(deviceInfo);
-  }, []);
+    await resetDatabase.mutateAsync();
+  }, [resetDatabase]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -75,6 +82,10 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <Container>
+      <ModalActivityIndicator
+        loadingMessage="Seeding database..."
+        show={resetDatabase.isLoading}
+      />
       <Flex>
         <UserInfoContainer>
           <Avatar>

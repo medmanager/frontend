@@ -443,14 +443,13 @@ export default {
   /**
    * Seeds the database
    */
-  async seedDatabase(deviceInfo) {
+  async seedDatabase() {
     const url = API_URL + '/seedDatabase';
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(deviceInfo),
     });
     return response.json();
   },
