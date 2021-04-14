@@ -3,10 +3,20 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
+pod 'react-native-camera', path: '../node_modules/react-native-camera', subspecs: [
+  'TextDetector',
+  'BarcodeDetectorMLKit'
+]
+pod 'Firebase/Core'
+
 target 'MedManager' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
+
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
+  pod 'react-native-restart', :path => '../node_modules/react-native-restart'
 
   target 'MedManagerTests' do
     inherit! :complete
