@@ -18,6 +18,8 @@ target 'MedManager' do
 
   pod 'react-native-restart', :path => '../node_modules/react-native-restart'
 
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'MedManagerTests' do
     inherit! :complete
     # Pods for testing
