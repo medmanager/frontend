@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
+import { Platform } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import Icon from 'react-native-vector-icons/Feather';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -9,7 +11,12 @@ import UserIcon from '../../components/icons/user';
 import { useAuth } from '../../store/useAuth';
 import useCurrentUser from '../../store/useCurrentUser';
 import useSettings from '../../store/useSettings';
-import { Colors, defaultNavigatorScreenOptions } from '../../utils';
+import {
+  Colors,
+  defaultNavigatorScreenOptions,
+  getDeviceToken,
+} from '../../utils';
+import apiCalls from '../../utils/api-calls';
 import AccountSettingsScreen from './AccountSettingsView';
 import CaregiverContactSettingsScreen from './CaregiverContactSettingsView';
 import NotificationSettingsScreen from './NotificationSettingsView';
@@ -35,6 +42,26 @@ const SettingsScreen = ({ navigation }) => {
   const handleSignOutPress = useCallback(() => {
     signOut();
   }, [signOut]);
+
+  const handleResetDatabase = useCallback(async () => {
+    const deviceToken = await getDeviceToken();
+    const deviceOS = Platform.OS;
+    const deviceInfo = {
+      token: deviceToken,
+      os: deviceOS,
+    };
+    apiCalls.seedDatabase(deviceInfo);
+  }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleResetDatabase}>
+          <HeaderText>Reset</HeaderText>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, handleResetDatabase]);
 
   useEffect(() => {
     // update the store with the settings recieved from the current user object
@@ -124,9 +151,9 @@ const Flex = styled.View`
   flex: 1;
 `;
 
-const Centered = styled.View`
-  flex-direction: column;
-  justify-content: center;
+const HeaderText = styled.Text`
+  color: white;
+  font-size: 18px;
 `;
 
 const UserInfoContainer = styled.View`

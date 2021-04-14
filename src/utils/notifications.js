@@ -5,6 +5,7 @@ import { setDeviceToken } from '../utils';
 export const setupPushNotifications = (handleNotification) => {
   PushNotification.configure({
     onRegister: async ({ token }) => {
+      console.log({ token });
       await setDeviceToken(token);
     },
 
