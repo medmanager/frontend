@@ -1,24 +1,44 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import Icon from 'react-native-vector-icons/Feather';
+import { useMutation, useQueryClient } from 'react-query';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import styled from 'styled-components/native';
 import BellIcon from '../../components/icons/bell';
 import PhoneIcon from '../../components/icons/phone';
 import UserIcon from '../../components/icons/user';
+import ModalActivityIndicator from '../../components/ModalActivityIndicator';
 import { useAuth } from '../../store/useAuth';
 import useCurrentUser from '../../store/useCurrentUser';
 import useSettings from '../../store/useSettings';
 import { Colors, defaultNavigatorScreenOptions } from '../../utils';
+import apiCalls from '../../utils/api-calls';
 import AccountSettingsScreen from './AccountSettingsView';
 import CaregiverContactSettingsScreen from './CaregiverContactSettingsView';
 import NotificationSettingsScreen from './NotificationSettingsView';
 
+const demoUser = {
+  email: 'tomsmith@gmail.com',
+  password: '123456',
+};
+
 const SettingsScreen = ({ navigation }) => {
   const token = useAuth((state) => state.userToken);
   const signOut = useAuth((state) => state.signOut);
+  const signIn = useAuth((state) => state.signIn);
   const { data: user, status } = useCurrentUser(token);
   const setSettingsState = useSettings((state) => state.setState);
+  const queryClient = useQueryClient();
+
+  const resetDatabase = useMutation(() => apiCalls.seedDatabase(), {
+    onSuccess: async () => {
+      // Sign in with new user
+      signOut();
+      await signIn(demoUser.email, demoUser.password);
+      await queryClient.invalidateQueries();
+    },
+  });
 
   const handleAccountSettingsPress = useCallback(() => {
     navigation.navigate('AccountSettings');
@@ -36,6 +56,20 @@ const SettingsScreen = ({ navigation }) => {
     signOut();
   }, [signOut]);
 
+  const handleResetDatabase = useCallback(async () => {
+    await resetDatabase.mutateAsync();
+  }, [resetDatabase]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleResetDatabase}>
+          <HeaderText>Reset</HeaderText>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, handleResetDatabase]);
+
   useEffect(() => {
     // update the store with the settings recieved from the current user object
     if (user && 'settings' in user) {
@@ -48,6 +82,10 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <Container>
+      <ModalActivityIndicator
+        loadingMessage="Seeding database..."
+        show={resetDatabase.isLoading}
+      />
       <Flex>
         <UserInfoContainer>
           <Avatar>
@@ -124,9 +162,9 @@ const Flex = styled.View`
   flex: 1;
 `;
 
-const Centered = styled.View`
-  flex-direction: column;
-  justify-content: center;
+const HeaderText = styled.Text`
+  color: white;
+  font-size: 18px;
 `;
 
 const UserInfoContainer = styled.View`
