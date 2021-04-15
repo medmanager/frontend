@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import Icon from 'react-native-vector-icons/Feather';
 import { useMutation, useQueryClient } from 'react-query';
