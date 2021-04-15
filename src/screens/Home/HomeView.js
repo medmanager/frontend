@@ -99,9 +99,10 @@ function HomeScreen() {
     if (occurrences) {
       for (let i = 0; i < occurrences.length; i++) {
         const dayOfweek = dayjs().day(i);
-        console.log(dayOfweek.format('dddd'));
+        console.group(dayOfweek.format('dddd'));
         console.log(`${occurrences[i].length} occurrences`);
         console.log(occurrences[i]);
+        console.groupEnd();
       }
     }
   }, []);
