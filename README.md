@@ -144,24 +144,30 @@ For Android, please refer the [official guide](https://reactnative.dev/docs/sign
 
 ### Troubleshooting
 
+TODO: write troublshooting steps
+
 ## Release Notes
 
 ### v1.0
 
 #### Features
 
-- Registration and login screens
-- Add medication screens
-- Edit medication screens
-- Medication calendar screen
-- Medication dosage notification screen
-- Medication compliance tracking screen
-- Medication list screen
-- Medication detail view screen
-- Settings screen
-- Account settings screen
-- Notification settings screen
-- Caregiver contact settings screen
+- Users are able to register and login when they initially launch the application
+- Ability to add a medication with a pre-defined frequency or a custom frequency and select up to four dosage times. Reminders for the dosages can be disabled or enabled on a per-dosage basis.
+- Ability to update previously added medications by changing their info or updating the scheduled doages times and their frequency.
+- The initial screen presented to the user displays all the medication dosage occurrences for the current day in a list. You can then select each one to take the dose or view more information about the medication.
+- A screen will automatically pop up when the user needs to take their medications by being in the app or by clicking on it's notification. The screen will contain the medications they need to take that they can then mark as taken.
+- You can now see a tab which contains all of their active medications compliance data that they can show their doctors whenever they have their next appointment.
+- You can see a tab which contains a list of all their active and inactive medications. Users can also click on each medication in the list to view more information about that medication.
+- You can now see a tab which contains their settings. From this view they will be able to see the first and last name captured during the registration process.
+- You can now see an option in the settings to update their account information. These fields include the first name, last name, and email associated with the account.
+- You can now configure settings that control how they receive medication dosage reminders. These include: a setting which disables all notifications, and a setting which hides medication names in the reminder.
+- You can now configure settings that control whether a caregiver contact will receive alerts when you do not take a medication within a certain time window. The settings include the name and phone number of the caregiver.
+
+#### Fixes
+
+- Medication autocomplete styles are not longer inconsitent with what is shown on iOS. Both operating systems now display the same thing!
+- Date time picker styles are now consistent with both iOS and Android.
 
 #### Known Bugs and Defects
 
@@ -173,6 +179,6 @@ For Android, please refer the [official guide](https://reactnative.dev/docs/sign
 - The fatal error screen is unstyled and did not have designs made for it.
 - The loading screen is unstyled and did not have designs made for it.
 - There are some dependencies listed in `package.json` that are not used anywhere in the application.
-- There are likely options that are missing for the medication amount units found in `constants.js`.
-- The autocomplete input can be slow and sluggish.
-- No error recovery when an authentication token becomes invalid
+- There are likely options that are missing for the medication amount units found in `src/utils/constants.js`.
+- The autocomplete input can sometimes be slow and sluggish.
+- There is no error recovery when an authentication token becomes invalid.
