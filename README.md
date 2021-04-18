@@ -5,39 +5,39 @@
 
 ## Things to Keep in Mind
 
-This project was bootstrapped using a bare React Native template via the React Native CLI. This means that we **did not** use an all-in-one development kit like Expo. If you are looking at guides on the React Native documentation website, please follow the ones listed under `React Native CLI`, `bare React Native` or some other variation.
+This project was bootstrapped using a bare React Native template via the React Native CLI. This means that we **did not** use an all-in-one development kit like Expo. If User are looking at guides on the React Native documentation website, please follow the ones listed under `React Native CLI`, `bare React Native` or some other variation.
 
 ## Install Guide
 
 ### Pre-requisites
 
-The pre-requisites for setting up a react-native environment are outlined in detail on the official react-native website. However, we also outline below a list of software that you should install before looking at the official enviornment setup guide.
+The pre-requisites for setting up a react-native environment are outlined in detail on the official react-native website. However, we also outline below a list of software that User should install before looking at the official enviornment setup guide.
 
 #### (iOS) Register for an Apple Development Account
 
-In order to build for iOS, you first need to regster for an [Apple Developer Account](https://developer.apple.com/). To enable iOS notification support and/or distribute the application to the app store you will also need an account that is enrolled in the [Apple Developer Program](https://developer.apple.com/programs/) which has a 99 USD annual fee.
+In order to build for iOS, User first need to regster for an [Apple Developer Account](https://developer.apple.com/). To enable iOS notification support and/or distribute the application to the app store User will also need an account that is enrolled in the [Apple Developer Program](https://developer.apple.com/programs/) which has a 99 USD annual fee.
 
 #### (iOS) Install XCode
 
-You can download and install XCode for macOS [here](https://apps.apple.com/us/app/xcode/id497799835?mt=12).
+User can download and install XCode for macOS [here](https://apps.apple.com/us/app/xcode/id497799835?mt=12).
 
 #### (Android) Install Android Studio
 
-You can download and install Android Studio for both macOS and Windows [here](https://developer.android.com/studio).
+User can download and install Android Studio for both macOS and Windows [here](https://developer.android.com/studio).
 
 #### Install Git
 
-You can download and install git for both macOS and Windows [here](https://git-scm.com/downloads).
+User can download and install git for both macOS and Windows [here](https://git-scm.com/downloads).
 
 #### Install Node.js
 
-You can download and install Node.js for both macOS and Windows [here](https://nodejs.org/en/download/).
+User can download and install Node.js for both macOS and Windows [here](https://nodejs.org/en/download/).
 
 (Optional) Download and install _yarn_ [here](https://classic.yarnpkg.com/en/docs/install/#mac-stable).
 
 #### Enviornment
 
-To setup your enviroment for React Native you must follow [this](https://reactnative.dev/docs/environment-setup) official in-depth guide. The guide has options for selecting your machines operating system and the device operating system you want to run the application on. Please follow all of the previous steps before referring to the guide.
+To setup your enviroment for React Native User must follow [this](https://reactnative.dev/docs/environment-setup) official in-depth guide. The guide has options for selecting your machines operating system and the device operating system User want to run the application on. Please follow all of the previous steps before referring to the guide.
 
 ### Download Instructions
 
@@ -49,13 +49,13 @@ git clone https://github.com/medmanager/frontend.git
 
 ### Define Environment Variables
 
-If you haven't already, in the root of the project create a `.env` file. Inside of the file define an `API_URL` like so:
+If User haven't already, in the root of the project create a `.env` file. Inside of the file define an `API_URL` like so:
 
 ```
 API_URL=http://127.0.0.1:4000
 ```
 
-If running the backend on your local machine AND in an emulator, use the appropriate local host IP address for the platform you are running on. If you are running on `android` then the host should be `10.0.2.2`, otherwise it should be `127.0.0.1`.
+If running the backend on your local machine AND in an emulator, use the appropriate local host IP address for the platform User are running on. If User are running on `android` then the host should be `10.0.2.2`, otherwise it should be `127.0.0.1`.
 
 If running the backend on your local machine AND on a physical device, use your networks IP address as the host.
 
@@ -79,7 +79,7 @@ A list of dependencies for the project can be found in the `package.json` file i
 
 ### Build and Run Instructions for a Physical Device
 
-First, plug in the device you want to build to via USB to your machine. Next, follow the instructions below for your devices operating system. If you cannot get the project to build to your device, please refer to the official [guide](https://reactnative.dev/docs/running-on-device) and select your devices operating system.
+First, plug in the device User want to build to via USB to your machine. Next, follow the instructions below for your devices operating system. If User cannot get the project to build to your device, please refer to the official [guide](https://reactnative.dev/docs/running-on-device) and select your devices operating system.
 
 #### Android
 
@@ -101,14 +101,14 @@ The app should then build to your device using the connected USB cable.
 
 1. Open the project in Xcode by navigating to the ios folder located in the root of the repository, then open the .xcodeproj file.
 2. Select your project in the Xcode Project Navigator, then select your main target (it should share the same name as your project). Look for the "General" tab. Go to "Signing" and make sure your Apple developer account or team is selected under the Team dropdown.
-3. Determine whether you want to build the app for release or development. For development, we recommend that the application is built using the debug build configuration so that changes can be made without having to build the app again. To configure this setting in Xcode, select the `Product -> Scheme -> Edit Scheme...` menu item. Select the `Run` Scheme and configure the `Build Configuration` item to be either `Release` or `Debug`.
-4. If everything is set up correctly, your device will be listed as the build target in the Xcode toolbar, and it will also appear in the Devices pane. You can now press the build and run button.
+3. Determine whether User want to build the app for release or development. For development, we recommend that the application is built using the debug build configuration so that changes can be made without having to build the app again. To configure this setting in Xcode, select the `Product -> Scheme -> Edit Scheme...` menu item. Select the `Run` Scheme and configure the `Build Configuration` item to be either `Release` or `Debug`.
+4. If everything is set up correctly, your device will be listed as the build target in the Xcode toolbar, and it will also appear in the Devices pane. User can now press the build and run button.
 
 ### Build and Run Instructions for Simulator
 
 #### iOS
 
-**Note**: In order to run the iOS simulator, you must first have Xcode installed and have a valid [Apple Developer Account](https://developer.apple.com/) outlined in previous steps.
+**Note**: In order to run the iOS simulator, User must first have Xcode installed and have a valid [Apple Developer Account](https://developer.apple.com/) outlined in previous steps.
 
 To launch the iOS simulator, run the following command:
 
@@ -144,7 +144,7 @@ For Android, please refer the [official guide](https://reactnative.dev/docs/sign
 
 ### Troubleshooting
 
-TODO: write troublshooting steps
+TODO: write troubleshooting steps
 
 ## Release Notes
 
@@ -155,14 +155,14 @@ TODO: write troublshooting steps
 - Users are able to register and login when they initially launch the application
 - Ability to add a medication with a pre-defined frequency or a custom frequency and select up to four dosage times. Reminders for the dosages can be disabled or enabled on a per-dosage basis.
 - Ability to update previously added medications by changing their info or updating the scheduled doages times and their frequency.
-- The initial screen presented to the user displays all the medication dosage occurrences for the current day in a list. You can then select each one to take the dose or view more information about the medication.
+- The initial screen presented to the user displays all the medication dosage occurrences for the current day in a list. User can then select each one to take the dose or view more information about the medication.
 - A screen will automatically pop up when the user needs to take their medications by being in the app or by clicking on it's notification. The screen will contain the medications they need to take that they can then mark as taken.
-- You can now see a tab which contains all of their active medications compliance data that they can show their doctors whenever they have their next appointment.
-- You can see a tab which contains a list of all their active and inactive medications. Users can also click on each medication in the list to view more information about that medication.
-- You can now see a tab which contains their settings. From this view they will be able to see the first and last name captured during the registration process.
-- You can now see an option in the settings to update their account information. These fields include the first name, last name, and email associated with the account.
-- You can now configure settings that control how they receive medication dosage reminders. These include: a setting which disables all notifications, and a setting which hides medication names in the reminder.
-- You can now configure settings that control whether a caregiver contact will receive alerts when you do not take a medication within a certain time window. The settings include the name and phone number of the caregiver.
+- User can now see a tab which contains all of their active medications compliance data that they can show their doctors whenever they have their next appointment.
+- User can see a tab which contains a list of all their active and inactive medications. Users can also click on each medication in the list to view more information about that medication.
+- User can now see a tab which contains their settings. From this view they will be able to see the first and last name captured during the registration process. Updates to the settings will be automatically persisted.
+- User can now see an option in the settings to update their account information. These fields include: first name, last name, and email associated with the account.
+- User can now configure settings that control how they receive medication dosage reminders. These include: a setting which disables all notifications, and a setting which hides medication names in the reminder for privacy concerns.
+- User can now configure settings that control whether a caregiver contact will receive alerts when they do not take a medication within a certain time window. The settings include the name and phone number of the caregiver.
 
 #### Fixes
 
