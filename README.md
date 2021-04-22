@@ -159,7 +159,7 @@ For Android, please refer the [official guide](https://reactnative.dev/docs/sign
   * Try running 'react-native start -- --reset-cache
   * Make sure yarn or npm are up to date
 * 'yarn ios' or 'npm run ios' fails
-  * try deleting the node_modules folder, the ios/Pods folder, the ios/build folder, and run 'npm install' or 'yarn install'. Navigate to the ios folder and run 'pod install'. Finally, navigate out of the ios folder and run react-native link
+  * try deleting the node_modules folder, the ios/Pods folder, the ios/build folder, and run 'npm install' or 'yarn install'. Navigate to the ios folder and run 'pod install'. Finally, navigate out of the ios folder and run 'react-native link'
   * make sure node is up to date and try restarting your computer
 * 'yarn android' or 'npm run android' fails
   * make sure you have correctly enabled the developer setting in your phone if you are running on a physical device.
