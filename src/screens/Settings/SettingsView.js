@@ -124,11 +124,6 @@ const Flex = styled.View`
   flex: 1;
 `;
 
-const Centered = styled.View`
-  flex-direction: column;
-  justify-content: center;
-`;
-
 const UserInfoContainer = styled.View`
   flex-direction: column;
   align-items: center;

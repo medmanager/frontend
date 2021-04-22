@@ -60,11 +60,13 @@ const OccurrenceListItem = ({ occurrence, onTakeDose }) => {
           <ActionItemText>Info</ActionItemText>
         </ActionItem>
         <ActionItem
-          disabled={takeDose.isLoading}
+          disabled={takeDose.isLoading || occurrence.isTaken}
           onPress={handleTakePressed}
           activeOpacity={0.7}>
           <Icon name="check" size={24} color={Colors.blue[500]} />
-          <ActionItemText disabled={takeDose.isLoading}>Take</ActionItemText>
+          <ActionItemText disabled={takeDose.isLoading || occurrence.isTaken}>
+            Take
+          </ActionItemText>
         </ActionItem>
       </ActionArea>
     </DoseContainer>

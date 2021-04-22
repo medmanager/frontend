@@ -90,9 +90,15 @@ const DosageOccurrenceListItem = ({
     return null;
   }
 
-  const dosage = medication.dosages.filter(
+  let dosage = medication.dosages.filter(
     (dosage) => dosage._id === dosageId,
   )[0];
+
+  if (!dosage) {
+    dosage = medication.inactiveDosages.filter(
+      (dosage) => dosage._id === dosageId,
+    )[0];
+  }
 
   if (!dosage) {
     return null;

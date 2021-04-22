@@ -69,9 +69,7 @@ const useAuth = create(
       const user = { firstName, lastName, email, password };
 
       try {
-        const registerResponse = await api.registerUser(user);
-        console.log('register response:');
-        console.log(registerResponse);
+        await api.registerUser(user);
 
         // call the sign in action defined above
         await signIn(email, password);
