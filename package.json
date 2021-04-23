@@ -1,6 +1,6 @@
 {
   "name": "MedManager",
-  "version": "1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -23,7 +23,7 @@
     "immer": "^8.0.1",
     "react": "16.13.1",
     "react-error-boundary": "^3.1.0",
-    "react-native": "0.63.4",
+    "react-native": "^0.63.4",
     "react-native-config": "^1.4.2",
     "react-native-exception-handler": "^2.10.9",
     "react-native-gesture-handler": "^1.9.0",
