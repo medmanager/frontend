@@ -200,7 +200,6 @@ For Android, please refer to the [official guide](https://reactnative.dev/docs/s
 - The default horizontal margin of the tracking bar is larger than it should be and overlaps with the names of the medications. This is a minor problem since most users will not have 0% compliance, but is still an edge case that will need to be corrected.
 - The fatal error screen is unstyled and did not have designs made for it.
 - The loading screen is unstyled and did not have designs made for it.
-- There are some dependencies listed in `package.json` that are not used anywhere in the application.
 - There are likely options that are missing for the medication amount units found in `src/utils/constants.js`.
 - The autocomplete input can sometimes be slow and sluggish.
 - There is no error recovery when an authentication token becomes invalid.
