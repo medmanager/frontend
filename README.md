@@ -133,7 +133,7 @@ yarn android
 or
 
 ```
-npm run anroid
+npm run android
 ```
 
 ### Publishing to the the App Store or Google Play Store
@@ -144,7 +144,29 @@ For Android, please refer the [official guide](https://reactnative.dev/docs/sign
 
 ### Troubleshooting
 
-TODO: write troubleshooting steps
+* If 'npm' command is not recognized:
+  * Have you installed nodejs correctly and added the path to your environment variables? Follow this link here for a brief tutorial on how to do so: https://www.tutorialspoint.com/nodejs/nodejs_environment_setup.htm
+* If 'yarn' command is not recognized:
+  * Check that you have followed the correct installation process here: https://classic.yarnpkg.com/en/docs/install/#windows-stable
+* 'yarn' or 'npm install' command has failed
+  * Try running 'npm cache clean'
+  * Use -verbose to view more details about the installation issue
+  * Make sure your npm version is up to date ('npm version')
+  * If you get an error for not having installed 'git', make sure to do so. Instructions can be found here: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+  * Try deleting the node_modules folder if it exists, restart your computer, and try again
+* 'yarn build:android' or 'npm run build:android'
+  * Try running 'npm cache clean' and 'npm install'
+  * Try running 'react-native start -- --reset-cache
+  * Make sure yarn or npm are up to date
+* 'yarn ios' or 'npm run ios' fails
+  * try deleting the node_modules folder, the ios/Pods folder, the ios/build folder, and run 'npm install' or 'yarn install'. Navigate to the ios folder and run 'pod install'. Finally, navigate out of the ios folder and run 'react-native link'
+  * make sure node is up to date and try restarting your computer
+* 'yarn android' or 'npm run android' fails
+  * make sure you have correctly enabled the developer setting in your phone if you are running on a physical device.
+  * make sure you have added your android emulator to your computer's PATH if you are using an emulator, https://www.instamobile.io/run-react-native-app-android/
+  * If you get an ELIFECYCLE ERR and you are running the app on an android emulator, try uninstalling the app from the emulator and rerun 'npm run android'
+  * Check that node and npm are up to date
+  * Check that you have correctly installed the required android packages for use with react native. Follow this guide here: https://blog.pusher.com/debugging-react-native-android/
 
 ## Release Notes
 
