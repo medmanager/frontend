@@ -1,4 +1,3 @@
-import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import React, { Component } from 'react';
 import 'react-native-gesture-handler';
@@ -18,13 +17,11 @@ export default class App extends Component {
     return (
       <ErrorHandler>
         <SafeAreaProvider>
-          <ActionSheetProvider>
-            <QueryClientProvider client={queryClient}>
-              <NavigationContainer>
-                <Root />
-              </NavigationContainer>
-            </QueryClientProvider>
-          </ActionSheetProvider>
+          <QueryClientProvider client={queryClient}>
+            <NavigationContainer>
+              <Root />
+            </NavigationContainer>
+          </QueryClientProvider>
         </SafeAreaProvider>
       </ErrorHandler>
     );
