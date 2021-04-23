@@ -5,8 +5,6 @@ import Config from 'react-native-config';
 // If using a physical device, you must use the ip address of your computer to access the backend
 const API_URL = Config.API_URL;
 
-console.log({ APIHOST: API_URL });
-
 export default {
   /**doesn't return a token yet, but will register user
    * all three fields: email, password, firstName, lastName are required
@@ -433,20 +431,6 @@ export default {
     const url = API_URL + '/medication/search/' + searchStr;
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.json();
-  },
-
-  /**
-   * Seeds the database
-   */
-  async seedDatabase() {
-    const url = API_URL + '/seedDatabase';
-    const response = await fetch(url, {
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
