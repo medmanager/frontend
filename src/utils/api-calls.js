@@ -437,4 +437,18 @@ export default {
     });
     return response.json();
   },
+
+  /**
+   * Seeds the database
+   */
+  async seedDatabase() {
+    const url = API_URL + '/seedDatabase';
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.json();
+  },
 };
