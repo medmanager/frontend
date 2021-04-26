@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { capitalize, days, nthDay } from '.';
+import { capitalize, days } from '.';
 
 export const frequencyRadioInputChoices = () => {
   const now = new Date();
@@ -63,7 +63,7 @@ export const frequencyRadioInputChoices = () => {
     {
       id: 3,
       type: 'RadioButton',
-      label: `Monthly (the ${nthDay(now)})`,
+      label: 'Monthly',
       value: {
         interval: 4,
         intervalUnit: 'weeks',
