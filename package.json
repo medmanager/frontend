@@ -20,7 +20,7 @@
     "@react-navigation/native": "^5.9.0",
     "@react-navigation/stack": "^5.14.2",
     "formik": "^2.2.6",
-    "immer": "^8.0.1",
+    "immer": "^9.0.6",
     "react": "16.13.1",
     "react-error-boundary": "^3.1.0",
     "react-native": "^0.63.4",
